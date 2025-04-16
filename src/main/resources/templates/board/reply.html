@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/board.css}"/>
+    <script th:src="@{/js/board.js}" defer></script>
+</head>
+<body>
+<form th:action="@{/board/reply}" method="post" th:object="${board}">
+<input type="hidden" name="id" th:value="${board.id}" />
+<table class="form-container"> 
+    <tr><td><h2>글쓰기</h2></td></tr>
+	<tr height="10px"><td></td></tr>
+    <tr>
+		<td class="header">제목</td>
+	</tr>
+	<tr height="5px"><td></td></tr>
+    <tr><td><input type="text" th:field="*{title}" placeholder="제목을 입력하세요" name="title"></td></tr>
+	<tr height="10px"><td></td></tr>
+    <tr><td class="header">본문</td></tr>
+	<tr height="5px"><td></td></tr>
+    <tr><td><textarea placeholder="내용을 입력하세요" th:field="*{content}" name="content"></textarea></td></tr>
+	<tr height="10px"><td></td></tr>
+    <tr align="right"><td><input type="submit" value="등록" onclick="alert('답글 작성 완료!')"></td></tr>
+</table>
+</form>
+</body>
+</html>
