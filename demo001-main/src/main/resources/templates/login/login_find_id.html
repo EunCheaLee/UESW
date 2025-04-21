@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login_Find_Id</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}"/>
+    <script th:src="@{/js/login.js}" defer></script>
+</head>
+<body>
+    <img class="bg.img">
+        <div class="login-wrap">
+ 
+            <div class="login-html">
+            <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Find ID</label>
+            <div class="login-form">
+
+
+                <div class="sign-in-htm">
+                <div class="group">
+                    <label for="id" class="label">Account Email</label>
+                    <input id="id" type="text" class="input">
+                </div>
+                <div class="group">
+                    <label for="id" class="label">Phone</label>
+                    <input id="id" type="text" class="input">
+                </div>
+                <div class="group">
+                    <input id="check" type="checkbox" class="check" checked>
+                    <label for="check"><span class="icon"></span> Keep me Signed in</label>
+                </div>
+
+                <button class="button" 
+                        onclick="window.location.href='find_id.html';">
+                        FIND ID
+                </button>
+
+
+
+            </div>
+            </div>
+        </div>
+    </img>
+</body>
+</html>

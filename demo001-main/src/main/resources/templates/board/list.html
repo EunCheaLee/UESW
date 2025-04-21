@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/css/board.css}"/>
+    <script th:src="@{/js/board.js}" defer></script>
+</head>
+<body>
+<table class="table">
+    <thead>
+    <tr>
+        <td colspan="2"><h2>게시판</h2></td>
+        <td colspan="3">
+            <form action="/board" method="get" style="display: flex; justify-content: flex-start; align-items: center;">
+                <label for="count">게시글 갯수:</label>
+                <select name="count" id="count" >
+                    <option value="10" th:selected="${count == 10}">10개</option>
+                    <option value="20" th:selected="${count == 20}">20개</option>
+                    <option value="30" th:selected="${count == 30}">30개</option>
+                </select>
+				<div style="text-align: right;">
+	                <button class="little" type="submit">조회</button>
+				</div>
+            </form>
+        </td>
+    </tr>
+    <tr>
+        <td class="num">번호</td>
+        <td class="title">제목</td>
+        <td class="bar">작성자</td>
+        <td class="bar">작성일</td>
+        <td class="view">조회수</td>
+    </tr>
+    </thead>
+    <tbody>
+        <!-- 게시글 목록 출력 -->
+        <tr th:each="board, iter : ${boardPage.content}">
+            <td th:text="${(currentPage * count) + iter.index + 1}"></td> <!-- 반복 횟수: 1부터 -->
+            <td>
+                <a th:href="@{/board/select/{id}(id=${board.id})}" th:text="${board.title}">제목</a>
+            </td>
+            <td th:text="${board.user != null ? board.user.userName : '비회원'}"></td>
+            <td th:text="${#temporals.format(board.writeDate, 'yy-MM-dd')}"></td>
+            <td th:text="${board.viewNum}">0</td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+<table>
+    <tr>
+        <td><button th:onclick="|location.href='@{/board/insert}'|">글쓰기</button></td>
+    </tr>
+</table>
+
+<!-- 페이지 네비게이션 -->
+<div class="index">
+    <ul>
+        <li th:if="${!boardPage.first}">
+            <a th:href="@{/board/list(page=${currentPage - 1}, count=${count}, keyword=${keyword})}">이전</a>
+        </li>
+
+        <li th:each="i : ${#numbers.sequence(0, boardPage.totalPages - 1)}"
+            th:classappend="${i == currentPage} ? 'active'">
+            <a th:href="@{/board/list(page=${i}, count=${count}, keyword=${keyword})}" th:text="${i + 1}">1</a>
+        </li>
+
+        <li th:if="${!boardPage.last}">
+            <a th:href="@{/board/list(page=${currentPage + 1}, count=${count}, keyword=${keyword})}">다음</a>
+        </li>
+    </ul>
+</div>
+
+<!-- 검색바 -->
+<div align="center">
+    <form th:action="@{/board/list}" method="get">
+        <input type="text" name="keyword" placeholder="검색어" th:value="${keyword}">
+        <button class="little" type="submit">조회</button>
+    </form>
+</div>
+
+<!-- 검색 결과가 있을 때, 게시글 목록 -->
+<div th:if="${searchMode}">
+    <div th:if="${not #lists.isEmpty(boardPage.content)}">
+        <table class="table">
+            <thead>
+                <tr>
+                    <td class="num">번호</td>
+                    <td class="title">제목</td>
+                    <td class="bar">작성자</td>
+                    <td class="bar">작성일</td>
+                    <td class="view">조회수</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="board, iter : ${boardPage.content}">
+                    <td th:text="${(currentPage * count) + iter.index + 1}"></td>
+                    <td>
+                        <a th:href="@{/board/select/{id}(id=${board.id})}" th:text="${board.title}">제목</a>
+                    </td>
+                    <td th:text="${board.user.userName}"></td>
+                    <td th:text="${#temporals.format(board.writeDate, 'yy-MM-dd')}"></td>
+                    <td th:text="${board.viewNum}">0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 검색된 게시글이 없으면 -->
+	<div th:if="${boardPage != null}">
+	    <div th:if="${#lists.isEmpty(boardPage.content)}">
+	        <p>게시글이 없습니다.</p>
+	    </div>
+	    <div th:if="${!#lists.isEmpty(boardPage.content)}">
+	        <table class="table">
+	            <!-- 테이블 내용 -->
+	        </table>
+	    </div>
+	</div>
+
+</body>
+</html>

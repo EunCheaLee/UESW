@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>교통사고 통계</title>
+</head>
+<body>
+    <h1>교통사고 통계</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>연도</th>
+                <th>사고건수</th>
+                <th>사망자수</th>
+                <th>중상자수</th>
+                <th>부상자수</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="row : ${data}">
+                <td th:text="${row['year']}"></td>
+                <td th:text="${row['사고건수']}"></td>
+                <td th:text="${row['사망자수']}"></td>
+                <td th:text="${row['중상자수']}"></td>
+                <td th:text="${row['부상자수']}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
