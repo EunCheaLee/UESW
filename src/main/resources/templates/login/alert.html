@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>알림</title>
+	<script th:inline="javascript">
+	    /*<![CDATA[*/
+	    const message = /*[[${message}]]*/ "회원가입 완료!";
+	    const redirectUrl = /*[[${redirectUrl}]]*/ "/";
+
+	    alert(message);
+	    window.location.href = redirectUrl;
+	    /*]]>*/
+	</script>
+</head>
+<body>
+</body>
+</html>
