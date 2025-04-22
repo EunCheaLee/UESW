@@ -1,0 +1,514 @@
+/* ================= Base Styles ================= */
+body {
+	font-family: 'Segoe UI', sans-serif;
+	display: flex;
+	background-color: #f5f5f5;
+	color: #000;
+}
+
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  margin: 4px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+/* pointer-events 설정이 잘못된 경우 제거 */
+.sidebar button {
+  pointer-events: auto; /* 클릭 가능하도록 설정 */
+}
+
+/* ================= Sidebar ================= */
+/* 사이드바의 위치를 맨 왼쪽에 상하 여백 없이 두고, 버튼들을 중앙 정렬 */
+.sidebar {
+  width: 220px;
+  background-color: #263238;
+  color: white;
+  padding: 0; /* 상하 여백 제거 */
+  height: 100vh;
+  position: fixed; /* 화면에 고정 */
+  top: 0;
+  left: 0;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 버튼들을 세로로 중앙 정렬 */
+  align-items: center; /* 버튼들을 수평으로 중앙 정렬 */
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar button {
+  width: 80px;
+  aspect-ratio: 1 / 1;
+  background-color: #37474f;
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  overflow: hidden;
+  border: none;
+  text-decoration: none; /* 링크 밑줄 제거 */
+  cursor: pointer; /* 버튼 클릭 가능 표시 */
+}
+
+/* 링크의 기본 스타일 제거 */
+.sidebar button a {
+  color: white; /* 링크 텍스트 색상 */
+  text-decoration: none; /* 링크 밑줄 제거 */
+}
+
+.sidebar button i {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.sidebar button:hover {
+  background-color: #455a64;
+}
+
+/* 버튼 클릭 시 스타일 */
+.sidebar button:active {
+  background-color: #37474f; /* 클릭 시 배경색 그대로 유지 */
+  color: white; /* 클릭 시 텍스트 색상 유지 */
+}
+
+/* 버튼 포커스 시 스타일 (누른 상태에서 다른 요소로 이동한 후) */
+.sidebar button:focus {
+  outline: none; /* 포커스 시 외곽선 제거 */
+}
+
+/* ================= Main Content ================= */
+.main-content {
+  flex: 1;
+  padding: 40px;
+  margin-top: 170px;
+}
+
+/* ================= Weather ================= */
+.weather-box {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  max-width: 350px;
+  text-align: center;
+}
+
+.weekly-weather,
+.forecast {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.weather-day,
+.forecast-day {
+  background: #e3f2fd;
+  border-radius: 12px;
+  padding: 15px;
+  width: 120px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.weather-day img,
+.forecast-day img {
+  width: 50px;
+  height: 50px;
+}
+
+/* ================= District Buttons ================= */
+.button-container {
+  margin-top: 10px;
+}
+
+.district-button {
+  padding: 8px 12px;
+  margin: 4px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  color: #222;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.district-button:hover {
+  background-color: #039be5;
+  color: #fff;
+}
+
+/* ================= Traffic Box ================= */
+.traffic-box ul {
+  list-style: none;
+  padding: 20px;
+  background-color: #fff3e0;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+}
+
+.traffic-box li {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.good { color: #388e3c; font-weight: bold; }
+.bad { color: #d32f2f; font-weight: bold; }
+.warn { color: #f57c00; font-weight: bold; }
+.normal { color: #1976d2; font-weight: bold; }
+
+/* ================= CCTV & Video ================= */
+.cctv-box {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background-color: #f5f5f5;
+}
+
+video {
+  margin-bottom: 30px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+/* ================= Map ================= */
+#map {
+  height: 500px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+}
+
+/* ================= Popup ================= */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  width: 420px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.popup-content h2 {
+  margin-top: 0;
+  color: #d32f2f;
+}
+
+.popup-content button {
+  margin-top: 20px;
+  padding: 8px 20px;
+  border-radius: 6px;
+  background-color: #f44336;
+  color: white;
+  cursor: pointer;
+}
+
+/* ================= Utilities ================= */
+.hidden {
+  display: none;
+}
+
+/* ================= Dark Mode ================= */
+body.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+body.dark-mode button {
+  background-color: #333;
+  color: #f0f0f0;
+  border: 1px solid #555;
+}
+
+body.dark-mode .district-button {
+  background-color: #333;
+  color: #f0f0f0;
+  border: 1px solid #666;
+}
+
+body.dark-mode .weather-box {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
+
+body.dark-mode .weekly-weather > div {
+  background: #333;
+  color: #f0f0f0;
+}
+
+.sidebar.dark-mode,
+.main-content.dark-mode,
+.popup-content.dark-mode {
+  background-color: #1f1f1f;
+  color: #f0f0f0;
+}
+.favorite-icon {
+  cursor: pointer;
+  color: gray;
+  margin-right: 8px;
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+.favorite-icon.favorited {
+  color: gold;
+}
+
+/* 기존 스타일 유지 */
+video {
+  margin-bottom: 30px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+#map {
+  height: 500px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+}
+
+body.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+.sidebar.dark-mode,
+.main-content.dark-mode,
+.popup-content.dark-mode {
+  background-color: #1f1f1f;
+  color: #f0f0f0;
+}
+
+.button-container {
+  margin-top: 10px;
+}
+
+.district-button {
+  margin: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+/* 기본 버튼 스타일 */
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  margin: 4px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  color: #333;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 다크 모드 버튼 스타일 */
+body.dark-mode button {
+  background-color: #333;
+  color: #f0f0f0;
+  border: 1px solid #555;
+}
+
+body.dark-mode button:hover {
+  background-color: #444;
+  color: #fff;
+}
+
+/* 일반 모드와 다크 모드에서 구분되는 버튼 */
+.district-button {
+  padding: 8px 12px;
+  margin: 4px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  color: #222;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 다크 모드에서의 버튼 */
+body.dark-mode .district-button {
+  background-color: #333;
+  color: #f0f0f0;
+  border: 1px solid #666;
+}
+
+body.dark-mode .district-button:hover {
+  background-color: #444;
+  color: #fff;
+}
+
+/* 날씨 박스 */
+.weather-box {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 다크 모드 날씨 박스 */
+body.dark-mode .weather-box {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
+
+/* 날씨 상태별 스타일 */
+.weather-box.day-clear {
+  background: linear-gradient(to top right, #aee1f9, #fefcea);
+  color: #000;
+}
+
+.weather-box.cloudy {
+  background: linear-gradient(to top right, #bdc3c7, #2c3e50);
+  color: #fff;
+}
+
+.weather-box.rainy {
+  background: linear-gradient(to top right, #4b79a1, #283e51);
+  color: #fff;
+}
+
+.weather-box.snowy {
+  background: linear-gradient(to top right, #e0eafc, #cfdef3);
+  color: #000;
+}
+
+.weather-box.night {
+  background: linear-gradient(to top right, #141e30, #243b55);
+  color: #f0f0f0;
+}
+
+/* Add transitions for smooth effects */
+.weather-box {
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.button-container {
+  display: flex;
+  flex-wrap: wrap;         /* 줄바꿈 허용 */
+  gap: 10px;               /* 버튼 사이 간격 */
+  justify-content: flex-start; /* 왼쪽 정렬 */
+}
+
+.district-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.district-button, .fav-btn {
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #f4f4f4;
+  cursor: pointer;
+}
+
+.fav-btn {
+  background-color: #fffbe6;
+}
+.button-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.district-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.district-button {
+  margin-right: 4px;
+}
+
+.favorite-districts {
+  position: fixed;
+  top: 80px;
+  left: 10px;
+  background: #222;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  max-width: 120px;
+}
+
+.sidebar-fav-btn {
+  display: block;
+  width: 100%;
+  background: gold;
+  color: black;
+  border: none;
+  margin: 5px 0;
+  padding: 5px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.fav-alert-box {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #222;
+  color: #fff;
+  padding: 12px 16px;
+  margin-top: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  z-index: 9999;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.sidebar.collapsed {
+  width: 60px; /* 또는 원하는 최소 너비 */
+}
+
+.sidebar.collapsed .sidebar-text {
+  display: none;
+}

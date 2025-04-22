@@ -1,13 +1,17 @@
+*{
+	background-color: rgba(40,57,101);
+}
+
 body{
     margin:0;
     color:#6a6f8c;
-    
     font:600 16px/18px 'Open Sans',sans-serif;
-  }
-
-  * {
-        background:url("/img/login.png") no-repeat center;
-        background-color: rgba(6, 14, 87, 0.9);
+    background-image: url('/img/login_background.png');
+    background-size: cover; /*화면에 꽉 차게*/
+    background-repeat: no-repeat; /* 반복하지 않게 */
+    background-position: center center; 
+    margin: 0;
+    padding: 0;
   }
 
   *,:after,:before{box-sizing:border-box}
@@ -93,6 +97,8 @@ body{
     padding:15px 20px;
     border-radius:25px;
     background:rgba(255,255,255,.1);
+        display: flex;
+    flex-direction: column;
   }
   .login-form .group input[data-type="password"]{
     -webkit-text-security:circle;
@@ -101,9 +107,19 @@ body{
     color:#aaa;
     font-size:12px;
   }
-  .login-form .group .button{
-    background:#1161ee;
+  /* 버튼을 가로로 중앙 정렬 */
+  .login-form .group .button {
+    background: #1161ee;
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 25px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;  /* 모든 변화가 0.3초에 걸쳐 일어나도록 */
   }
+
   .login-form .group label .icon{
     width:15px;
     height:15px;
@@ -173,4 +189,23 @@ body{
   }
   .foot-lnk{
     text-align:center;
+  }
+
+  .button {
+    width: 100%;
+    font-weight: 600;
+    background-color: #1c77da;  /* 파란색 */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 20px;    
+    transition: all 0.3s ease;  /* 모든 변화가 0.3초에 걸쳐 일어나도록 */
+  }
+
+  .button:hover {
+    color: #022a55;
+    background-color: #0056b3;  /* hover 시 더 진한 파란색 */
+    transform: translateY(2px);  /* 위로 약간 올라가며 볼록한 효과 */
   }

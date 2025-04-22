@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>사이드바</title>
+  <link rel="stylesheet" th:href="@{/css/home.css}">
+  <link rel="stylesheet" href="/css/sidebar.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <style>
+
+
+  </style>
+</head>
+<body>
+	  <!-- 넷바 -->
+	  <nav class="navbar">
+	    <div class="container-fluid">
+	        <!-- 브랜드 영역 -->
+	        <a th:href="@{/home}" class="navbar-brand">
+	            <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
+	        </a>
+
+				<!-- 넷바 -->
+				<nav class="navbar">
+				  <div class="container-fluid">
+				      <!-- 브랜드 영역 -->
+				      <a th:href="@{/home}" class="navbar-brand">
+				          <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
+				      </a>
+
+	        <!-- 메뉴 -->
+	        <ul class="menu">
+	            <li>
+	                <a href="#">교통상황</a>
+	                <ul class="submenu">
+	                    <li><a th:href="@{/opendata/}">교통정보</a></li>
+	                    <li><a href="#">CCTV</a></li>
+	                    <li><a href="#">돌발상황</a></li>
+	                    <li><a href="#">기상정보</a></li>
+	                </ul>
+	            </li>
+	            <li>
+	                <a href="#">교통자료</a>
+	                <ul class="submenu">
+	                    <li><a href="#">교통사고 데이터</a></li>
+	                    <li><a href="#">년도별</a></li>
+	                    <li><a href="#">요일별</a></li>
+	                </ul>
+	            </li>
+	            <li><a th:href="@{/board}">게시판</a></li>
+	            <li>
+	                <a th:href="@{/info}">회원정보</a>
+	                <ul class="submenu">
+	                    <li><a th:href="@{/login}">로그인</a></li>
+	                    <li><a th:href="@{/login}">회원가입</a></li>
+	                    <li><a href="#">비밀번호 찾기</a></li>
+	                </ul>
+	            </li>
+	        </ul>
+
+	        <!-- 로그인 아이콘 -->
+	        <a th:href="@{/login}" id="auth-link" class="icon2">
+	            <img id="auth-icon" src="/img/Login.png" alt="Login Icon" class="icon2">
+	            <span id="auth-text">Login</span>
+	        </a>
+	    </div>
+	</nav>
+
+  <div class="sidebar">
+	<ul>
+	  <li><button onclick="showContent('traffic')"><i class="fa-solid fa-car"></i> 교통<br>속보</button></li>
+	  <li><button onclick="showContent('weather')"><i class="fa-solid fa-cloud-sun"></i> 기상<br>정보</button></li>
+	  <li><button onclick="showContent('cctv')"><i class="fa-solid fa-video"></i> CCTV<br>검색</button></li>
+	  <li><button onclick="showContent('logout')"><i class="fa-solid fa-right-from-bracket"></i> 로그<br>아웃</button></li>
+	  <li><button onclick="showContent('settings')"><i class="fa-solid fa-gear"></i> 설정</button></li>
+	</ul>
+  </div>
+
+  <div class="main-content" id="main-content">
+    <h1>메인 콘텐츠</h1>
+    <p>여기에 본문 내용이 들어갑니다.</p>
+  </div>
+
+  <script src="/js/sidebar.js"></script>
+
+</body>
+</html>

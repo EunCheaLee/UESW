@@ -17,7 +17,7 @@ public class UserController {
 
 	private final UserService service;
 	
-	@GetMapping("/")
+	@GetMapping({"/","/home","/main"})
 	public String homePage() {
 		
 		return "home";
@@ -36,15 +36,16 @@ public class UserController {
 		return "alert";	// alert.html 뷰로 이동
 	}
 	
-	@GetMapping("/register")
-	public String showRegisterForm() {
-		return "login";
+	@GetMapping("/sidebar")
+	public String sideBar() {
+		
+		return "/home/sidebar";
 	}
 	
-	@GetMapping("/login")
+	@GetMapping({"/login","/register"})
 	public String login(@RequestParam(value = "tab", required = false) String tab, Model model) {
 		model.addAttribute("activeTab", tab);
-		return "login";
+		return "/login/login";
 	}
 	
 	@GetMapping("/login/findId")
