@@ -13,11 +13,41 @@
 </head>
 
 <body>
-<div class="home-container">
-  <div class="home-content1">
+	<div class="home-container">
+	    <div class="home-content1">
 
+	        <h1>교통 사고 데이터</h1>
 
+	        <div>
+	            <h3>Labels:</h3>
+	            <ul>
+	                <li th:each="label : ${flask.labels}" th:text="${label}"></li>
+	            </ul>
+	        </div>
 
+	        <div>
+	            <h3>사고건수:</h3>
+	            <ul>
+	                <li th:each="accident : ${flask.사고건수}" th:text="${accident}"></li>
+	            </ul>
+	        </div>
+
+	        <div>
+	            <h3>사망자수:</h3>
+	            <ul>
+	                <li th:each="death : ${flask.사망자수}" th:text="${death}"></li>
+	            </ul>
+	        </div>
+
+	        <div>
+	            <h3>부상자수:</h3>
+	            <ul>
+	                <li th:each="injury : ${flask.부상자수}" th:text="${injury}"></li>
+	            </ul>
+	        </div>
+
+	    </div>
+	</div>
 
       <script>
         window.onload = function() {
@@ -112,7 +142,7 @@
           <a th:href="@{/home}" class="navbar-brand">
               <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
           </a>
-              <span class="brandname">교통정보사이트</span>
+             <!-- <span class="brandname">교통정보사이트</span>-->
 
           <!-- 메뉴 -->
           <ul class="menu">

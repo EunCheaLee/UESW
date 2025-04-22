@@ -2,17 +2,24 @@ package com.project.demo001;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
+import com.project.demo001.service.FlaskService;
+
 import jakarta.annotation.PostConstruct;
 
 @SpringBootApplication
-public class Demo001Application {
+public class Demo001Application implements CommandLineRunner {
 
+	@Autowired
+	private FlaskService flaskService;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(Demo001Application.class, args);
 	}
@@ -26,15 +33,11 @@ public class Demo001Application {
         }
     }
     
-    @PostConstruct
-    public void runFlask() {
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder("python", "경로/your_flask_file.py");
-            processBuilder.redirectErrorStream(true);
-            processBuilder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void run(String... args) throws Exception {
+    	flaskService.startFlaskServer();
     }
+    
+    
 
 }

@@ -11,7 +11,7 @@ def index():
 @app.route('/data/<int:year>/<region>')
 def get_region_data(year, region):
     # 다중 헤더 CSV 읽기
-    df = pd.read_csv("월별.csv", header=[0, 1], encoding="utf-8")
+    df = pd.read_csv("/python/month/월별.csv", header=[0, 1], encoding="utf-8")
     
     # 필요한 메타컬럼만 수동 처리
     df.columns = pd.MultiIndex.from_tuples(
@@ -48,5 +48,5 @@ def get_region_data(year, region):
     return jsonify(result)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': 
     app.run(debug=True)

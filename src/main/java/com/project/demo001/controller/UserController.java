@@ -1,12 +1,17 @@
 package com.project.demo001.controller;
 
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.project.demo001.domain.Flask;
 import com.project.demo001.domain.User;
+import com.project.demo001.service.FlaskService;
 import com.project.demo001.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -17,9 +22,34 @@ public class UserController {
 
 	private final UserService service;
 	
+	@Autowired
+	private FlaskService flaskService;
+	
 	@GetMapping({"/","/home","/main"})
-	public String homePage() {
+	public String homePage(@RequestParam(value = "year", required = false) Integer year, 
+            @RequestParam(value = "region", required = false) String region, 
+            Model model) {
 		
+	    // year와 region에 기본값 설정
+	    year = (year != null) ? year : 2025;  // 기본값 2025 설정
+	    region = (region != null) ? region : "defaultRegion";  // 기본값 "defaultRegion" 설정
+	    
+	    // Flask API로부터 데이터 받기
+	    Flask flask = flaskService.getTrafficData(year, region);
+	    
+	    // flask 객체가 null이면 기본값 설정
+	    if (flask == null) {
+	        flask = new Flask();  // 기본값 설정
+	        flask.setLabels(new ArrayList<>());
+	        flask.set사고건수(new ArrayList<>());
+	        flask.set사망자수(new ArrayList<>());
+	        flask.set부상자수(new ArrayList<>());
+	    }
+	    
+	    // 받은 데이터를 Thymeleaf 모델에 추가
+	    model.addAttribute("flask", flask);
+		
+//		ThymeLeaf 템플릿 이름 반환
 		return "home";
 	}
 	

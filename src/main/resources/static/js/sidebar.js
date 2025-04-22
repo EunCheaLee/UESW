@@ -285,26 +285,6 @@ function getTodayDateStr() {
   return new Date().toISOString().split("T")[0];
 }
 
-function showPopup(message) {
-  document.getElementById('popup-text').textContent = message;
-  document.getElementById('popup').classList.remove('hidden');
-}
-
-function closePopup() {
-  const doNotShow = document.getElementById('doNotShowToday').checked;
-  if (doNotShow) {
-    localStorage.setItem('popup-shown-date', getTodayDateStr());
-  }
-  document.getElementById('popup').classList.add('hidden');
-}
-
-function showPopupOncePerDay(message) {
-  const today = getTodayDateStr();
-  const lastShown = localStorage.getItem('popup-shown-date');
-  if (lastShown !== today) {
-    showPopup(message);
-  }
-}
 
 document.addEventListener("DOMContentLoaded", function () {
   showPopupOncePerDay("🚧 성수대교 인근 2차로 사고 발생! 주의하세요.");
