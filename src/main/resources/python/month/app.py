@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify
 import pandas as pd
+import os
 
 app = Flask(__name__)
 
@@ -11,7 +12,9 @@ def index():
 @app.route('/data/<int:year>/<region>')
 def get_region_data(year, region):
     # 다중 헤더 CSV 읽기
-    df = pd.read_csv("/python/month/월별.csv", header=[0, 1], encoding="utf-8")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(base_dir, "month.csv")
+    df = pd.read_csv(csv_path, header=[0, 1], encoding="utf-8")
     
     # 필요한 메타컬럼만 수동 처리
     df.columns = pd.MultiIndex.from_tuples(
@@ -47,6 +50,5 @@ def get_region_data(year, region):
 
     return jsonify(result)
 
-
-if __name__ == '__main__': 
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)

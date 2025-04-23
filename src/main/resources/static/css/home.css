@@ -236,6 +236,11 @@ body {
 	background-color: #0247a1;
 }
 
+iframe{
+	margin-top: 200px;
+	margin-left: 200px;
+}
+
     .logo {
         width: 170px;   /* 너비 조절 */
         height: auto;  /* 높이 조절 */

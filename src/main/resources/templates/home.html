@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/home.css}">
 	<link rel="stylesheet" th:href="@{/css/sidebar.css}">
 	<script src="/js/home.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="text/javascript" 
     src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=decabf1a98a2b15f0b977ba76ec9095c&autoload=false">
     </script>
@@ -14,41 +15,10 @@
 
 <body>
 	<div class="home-container">
-	    <div class="home-content1">
-
-	        <h1>교통 사고 데이터</h1>
-
-	        <div>
-	            <h3>Labels:</h3>
-	            <ul>
-	                <li th:each="label : ${flask.labels}" th:text="${label}"></li>
-	            </ul>
-	        </div>
-
-	        <div>
-	            <h3>사고건수:</h3>
-	            <ul>
-	                <li th:each="accident : ${flask.사고건수}" th:text="${accident}"></li>
-	            </ul>
-	        </div>
-
-	        <div>
-	            <h3>사망자수:</h3>
-	            <ul>
-	                <li th:each="death : ${flask.사망자수}" th:text="${death}"></li>
-	            </ul>
-	        </div>
-
-	        <div>
-	            <h3>부상자수:</h3>
-	            <ul>
-	                <li th:each="injury : ${flask.부상자수}" th:text="${injury}"></li>
-	            </ul>
-	        </div>
-
-	    </div>
-	</div>
-
+	    <div class="home-content1"> 
+			  <iframe src="monthly" width="100%" height="500px"style="border:none;"></iframe>
+		</div>
+		
       <script>
         window.onload = function() {
           // 페이지가 로드될 때 기본 이미지를 설정
@@ -158,7 +128,7 @@
               <li>
                   <a href="#">교통자료</a>
                   <ul class="submenu">
-                      <li><a href="#">교통사고 데이터</a></li>
+                      <li><a href="#">교통사고<br>데이터</a></li>
                       <li><a href="#">년도별</a></li>
                       <li><a href="#">요일별</a></li>
                   </ul>
