@@ -198,8 +198,6 @@ function showContent(section) {
       document.querySelector(".popup-content").classList.toggle("dark-mode", isDark);
       localStorage.setItem("dark-mode", isDark);
     });
-  } else if (section === 'logout') {
-    content.innerHTML = `<h1>로그아웃</h1><p>정말 로그아웃 하시겠습니까?</p><button onclick="alert('로그아웃 되었습니다')">확인</button>`;
   } else if (section === 'cctv') {
 	content.innerHTML = `
 	          <h1>CCTV 검색</h1>

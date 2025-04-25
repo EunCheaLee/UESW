@@ -36,6 +36,7 @@ import com.project.demo001.service.BoardService;
 import com.project.demo001.service.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -52,9 +53,14 @@ public class BoardController {
     public String listBoards(@RequestParam(required = false) String keyword,
                              @RequestParam(defaultValue = "0") int page,          // 현재 페이지 번호
                              @RequestParam(defaultValue = "10") int count,        // 한 페이지당 게시글 수
-                             Model model) {
+                             Model model, HttpSession session) {
         System.out.println("BoardController의 listBoards() 메서드 실행");
 
+     // 로그인한 사용자 정보 가져오기
+        User loggedInUser = (User) session.getAttribute("loggedInUser");
+        System.out.println("로그인한 사용자: " + (loggedInUser != null ? loggedInUser.getUserName() : "비회원"));
+
+        
         Pageable pageable = PageRequest.of(page, count, Sort.by(
         		Sort.Order.asc("refer"),
         		Sort.Order.asc("step"),
@@ -63,7 +69,6 @@ public class BoardController {
                 Sort.Order.desc("createAt"),
                 Sort.Order.desc("id")
         ));
-
 
         boolean searchMode = false;
         Page<Board> boardPage;
@@ -98,6 +103,10 @@ public class BoardController {
 
         // 검색어도 모델에 담아서 전달
         model.addAttribute("keyword", keyword);
+        // 로그인한 사용자 정보를 전달하는 부분 (필요에 따라)
+        if (loggedInUser != null) {
+            model.addAttribute("loggedInUser", loggedInUser);
+        }
         
         return "board/list";  // 반환할 뷰 페이지
     }
@@ -106,6 +115,10 @@ public class BoardController {
 	public String insert(Model model){
 		System.out.println("BoardController의 insert() 메서드 실행");
 		model.addAttribute("board", new Board());
+		
+		Board board = new Board();
+		System.out.println("board.user: " + board.getUser());
+		System.out.println("board.user.userName: " + (board.getUser() != null ? board.getUser().getUserName() : "null"));
 		
 		return "board/insert";
 	}
@@ -119,17 +132,21 @@ public class BoardController {
 
 	    User user = new User();
 	    
+	    // HttpServletRequest 객체를 통해 세션을 가져옴
+	    HttpSession session = request.getSession();  // 세션을 가져옴
 	    // 로그인한 사용자 정보 바인딩
-	    if (principal != null) {
-	        user.setUserName(principal.getName());   // 로그인한 사용자의 이름 설정
+	    User loggedInUser = (User) session.getAttribute("loggedInUser");
+	    if (loggedInUser != null) {
+	        user.setUserName(loggedInUser.getUserName());   // 로그인한 사용자의 이름 설정
 	    } else {
-	    	// 비회원이면 IP 주소로 표시
-	    	String ip = request.getHeader("X-Forwarded-For");
-	    	if(ip==null||ip.isEmpty()) {
-	    		ip=request.getRemoteAddr();	// 클라이언트 IP
-	    	}
-	    	user.setUserName("비회원("+ip+")");
+	        // 비회원이면 IP 주소로 표시
+	        String ip = request.getHeader("X-Forwarded-For");
+	        if (ip == null || ip.isEmpty()) {
+	            ip = request.getRemoteAddr();  // 클라이언트 IP
+	        }
+	        user.setUserName("비회원(" + ip + ")");
 	    }
+
 	    
 	    board.setUser(user);	// Board 엔티티의 외래키로 연결
 	    
@@ -163,8 +180,9 @@ public class BoardController {
 	    board.setUser(user);           // 로그인한 사용자 정보 저장 (User 객체 필요)
 	    System.out.println("파일 이름: " + file.getOriginalFilename());
 	    System.out.println("파일 사이즈: " + file.getSize());
-	    // 게시글을 DB에 저장
-	    boardService.save(board);
+	    
+	    board.setUser(user);  // 로그인한 사용자 정보 저장 (User 객체 필요)
+	    boardService.save(board);  // 게시글을 DB에 저장
 
 	    // 게시글 등록 메시지
 	    return "redirect:/board/list";  // 게시글 목록 페이지로 리디렉션

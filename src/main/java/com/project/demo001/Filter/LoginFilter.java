@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.springframework.stereotype.Component;
 
+import com.project.demo001.domain.User;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -21,30 +23,22 @@ public class LoginFilter implements Filter {
 	@Override
 	public void init(FilterConfig filterConfig) {}
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-		
-		HttpSession session = httpServletRequest.getSession(false);
-	
-        // 세션이 없으면 새로 생성하여 사용자 정보를 세션에 저장
-        if (session == null) {
-            session = httpServletRequest.getSession(true); // 새로운 세션 생성
-            Object user = "someUserObject"; // 사용자 정보 (로그인 후 설정한 정보)
-            session.setAttribute("user", user); // 세션에 사용자 정보 저장
-        }
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
 
-        // 세션 정보가 있을 경우, 필요한 로직을 계속 처리
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+
+        HttpSession session = httpRequest.getSession(false); // 세션이 없으면 null
         if (session != null) {
-            Object user = session.getAttribute("user"); // 세션에서 사용자 정보 가져오기
-            // 세션에 저장된 사용자 정보로 필요한 처리를 진행
+            User loggedInUser = (User) session.getAttribute("loggedInUser");
+            if (loggedInUser != null) {
+                // 로그인한 사용자 정보를 request에 넣어줌 (컨트롤러에서 꺼내쓰기 편하게)
+                httpRequest.setAttribute("loginUser", loggedInUser);
+            }
         }
 
-        // 다음 필터나 서블릿으로 요청을 전달
-        chain.doFilter(request, response);
-		
-	}
+        chain.doFilter(request, response); // 계속 진행
+    }
 	@Override
 	public void destroy() {}
 	
