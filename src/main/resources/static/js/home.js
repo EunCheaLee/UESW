@@ -6,17 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // 로컬스토리지에서 로그인 상태 확인
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
 
-    // 상태 업데이트 함수
-    function updateAuthUI(loggedIn) {
-        if (loggedIn) {
-            authIcon.src = '/img/login.png';  // 로그아웃 아이콘
-            authText.textContent = 'Logout';
-        } else {
-            authIcon.src = '/img/login.png';   // 로그인 아이콘
-            authText.textContent = 'Login';
-        }
-    }
-
     // 페이지 로딩 시 로그인 상태에 맞게 UI 업데이트
     updateAuthUI(isLoggedIn);
 

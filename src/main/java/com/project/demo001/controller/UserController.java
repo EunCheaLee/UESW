@@ -3,11 +3,14 @@ package com.project.demo001.controller;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.project.demo001.domain.Flask;
 import com.project.demo001.domain.User;
@@ -15,6 +18,7 @@ import com.project.demo001.repository.UserRepository;
 import com.project.demo001.service.FlaskService;
 import com.project.demo001.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +31,17 @@ public class UserController {
 	
 	@Autowired
 	private FlaskService flaskService;
+	
+	@GetMapping("/session/refresh")
+	@ResponseBody
+	public ResponseEntity<String> refreshSession(HttpSession session) {
+	    if (session == null || session.getAttribute("user") == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session expired");
+	    }
+
+	    session.setAttribute("refreshed", System.currentTimeMillis());
+	    return ResponseEntity.ok("OK");
+	}
 	
 	@GetMapping({"/","/home","/main"})
 	public String homePage(HttpSession session,
@@ -78,33 +93,33 @@ public class UserController {
 		return "/home/sidebar";
 	}
 	
-	@GetMapping({"/login","/register"})
-	public String login(@RequestParam(value = "tab", required = false) String tab, Model model) {
-		model.addAttribute("activeTab", tab);
-		return "/login/login";
-	}
+    @GetMapping("/login")
+    public String loginPage(HttpSession session) {
+        if (session != null && session.getAttribute("loggedInUser") != null) {
+            session.invalidate();
+            return "redirect:/logout";
+        }
+        return "login/login";
+    }
 	
-	@PostMapping("/login")
-	public String loginSuccess(@RequestParam String account,@RequestParam String password, HttpSession session, Model model) {
-	    try {
-	        User user = userservice.login(account, password);
-	        
-	        if (user != null) {
-	            // 로그인 성공 시, 세션에 사용자 정보 저장
-	            session.setAttribute("loggedInUser", user);
-	            return "redirect:/home";  // 메인 화면으로 리다이렉트
-	        } else {
-	            // 로그인 실패 시 오류 메시지 전달
-	            model.addAttribute("errorMessage", "아이디 또는 비밀번호가 틀렸습니다.");
-	            return "redirect:/login?error";
-	        }
-	    } catch (Exception e) {
-	        // 예외 처리: 로그인 실패 시 오류 메시지 출력
-	        model.addAttribute("errorMessage", "로그인 처리 중 오류가 발생했습니다.");
-	        return "redirect:/login?error";
-	    }
-	}
-	
+    @PostMapping("/login")
+    public String login(HttpSession session, @RequestParam String account, @RequestParam String password) {
+        // 사용자 인증 로직 (아이디, 비밀번호 체크)
+        if (userservice.isValidUser(account, password)) {
+            // 인증이 성공하면 세션에 사용자 정보 저장
+        	User loggedInUser = userservice.getUserByAccount(account);
+            session.setAttribute("loggedInUser", loggedInUser);
+            return "redirect:/home";  // 로그인 후 홈으로 리디렉션
+        }
+        return "login/login";  // 인증 실패 시 로그인 페이지로 돌아옴
+    }
+    
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // 세션 무효화
+        return "redirect:/login"; // ✅ 템플릿 말고 바로 리디렉션
+    }
+
 	@GetMapping("/login/findId")
 	public String findId() {
 		return "login_find_id";
@@ -115,12 +130,6 @@ public class UserController {
 		return "login_find_pw";
 	}
 	
-//	로그아웃 처리
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.invalidate();	// 세션 무효화(로그아웃)
-		return "redirect:/login/login";
-	}
 	
 	@GetMapping("/info")
 	public String myPage(HttpSession session, Model model) {

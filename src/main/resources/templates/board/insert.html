@@ -6,6 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" th:href="@{/css/board.css}"/>
     <script th:src="@{/js/board.js}" defer></script>
+	<script th:src="@{/js/session.js}"></script>
 </head>
 <body>
 <form th:action="@{/board/save}" method="post" th:object="${board}" enctype="multipart/form-data">

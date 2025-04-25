@@ -7,6 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/home.css}">
 	<link rel="stylesheet" th:href="@{/css/sidebar.css}">
 	<script src="/js/home.js" defer></script>
+	<script th:src="@{/js/session.js}"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="text/javascript" 
     src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=decabf1a98a2b15f0b977ba76ec9095c&autoload=false">
@@ -14,7 +15,20 @@
 </head>
 
 <body>
-
+<!--		<header>
+			<table class="main-header">
+				<tr class="main-info">
+					<td class="main-news">
+						<iframe></iframe>
+					</td>
+					<td class="main-sns">
+						<img src=""/>
+						<img src=""/>
+						<img src=""/>
+					</td>
+				</tr>
+			</table>
+		</header>-->
 		
 		<!-- 넷바 -->
 		    <nav class="navbar">
@@ -54,7 +68,7 @@
 		          <!-- 로그인 아이콘 -->
 		          <a th:href="@{/login}" class="login-button" >
 		              <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
-		              <span id="login-txt">Login</span>
+		              <span id="login-txt" th:text="${session.loggedInUser != null ? 'Logout' : 'Login'}"></span>
 		          </a>
 		      </div>
 		  </nav>
@@ -128,6 +142,12 @@
 		</div>
 		<div class="home-content3">
 		</div>
+		
+		<div>
+			<footer class="main-footbar">
+			</footer>
+		</div>
+		
 			<script>
 				kakao.maps.load(function () {
 				    var container = document.getElementById('home-map');

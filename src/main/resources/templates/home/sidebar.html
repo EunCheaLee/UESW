@@ -10,6 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="/js/session.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
@@ -62,11 +63,11 @@
 					              </li>
 					          </ul>
 
-					          <!-- 로그인 아이콘 -->
-					          <a th:href="@{/login}" class="login-button" >
-					              <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
-					              <span id="login-txt">Login</span>
-					          </a>
+							  <!-- 로그인 아이콘 -->
+							  <a th:href="@{/login}" class="login-button" >
+							      <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
+							      <span id="login-txt" th:text="${session.loggedInUser != null ? 'Logout' : 'Login'}"></span>
+							  </a>
 					      </div>
 					  </nav>
 

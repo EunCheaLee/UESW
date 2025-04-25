@@ -41,16 +41,21 @@ public class UserService {
     	}
     }
 
-	public User login(String account, String password) {
+    public User login(String account, String password) {
+        User user = userRepository.findByAccount(account);
+        if (user != null && user.getPassword().equals(password)) {
+            return user;
+        }
+        return null;
+    }
+	
+	public boolean isValidUser(String account, String password) {
+	    User user = userRepository.findByAccount(account); // 👈 수정
+	    return user != null && user.getPassword().equals(password);
+	}
 
-	    if (account == null || password == null) {
-	        return null;  // null 값 처리
-	    }
-
-	    // Optional을 안전하게 처리
-	    return Optional.ofNullable(userRepository.findByAccountAndPassword(account, password))
-	                   .orElse(null);
-		
+	public User getUserByAccount(String account) {
+	    return userRepository.findByAccount(account); // account가 unique 키라고 가정
 	}
     
 	
