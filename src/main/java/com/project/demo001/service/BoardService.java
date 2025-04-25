@@ -2,6 +2,7 @@ package com.project.demo001.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -125,30 +126,30 @@ public class BoardService {
 		return boardRepository.findByTitleContaining(keyword);  // 예시로 제목에 포함된 검색어를 찾음
 	}
 	
-	@Transactional
-	public Board addReply(Long id, String title, String content, User user) {
-	    // 기존 Board 객체를 조회하여 답글 생성 로직
-	    Board board = boardRepository.findById(id)
-	            .orElseThrow(() -> new IllegalArgumentException("본글을 찾을 수 없습니다."));
+	public Board addComment(Long id, String content, User user) {
+		Board parent = boardRepository.findById(id)
+	            .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-		
-		Board reply = Board.builder()
-				.title(title)
-				.content(content)
-				.user(user)
-				.refer(board.getRefer())	// 같은 그룹(refer) 사용
-				.step(board.getStep()+1)		// 부모글보다 step을 1 증가
-				.depth(board.getDepth()+1)	// 부모글보다 depth를 1 증가
-				.build();
-		
-//		원본 글의 답글 수 증가
-		board.incrementReplyNum();
-		
-//		원본 글 저장(답글 수 증가 반영)
-		boardRepository.save(board);
-		
-//		답글 저장
-		return boardRepository.save(reply);
+	    Board comment = Board.builder()
+	            .title("") // 댓글은 제목 생략
+	            .content(content)
+	            .user(user)
+	            .refer(parent.getId().intValue()) // 댓글은 부모 글 ID를 refer로
+	            .step(parent.getStep() + 1)
+	            .depth(1) // 댓글은 depth 1로 고정
+	            .build();
+
+	    parent.incrementReplyNum(); // 댓글 수 증가
+	    boardRepository.save(parent);
+
+	    return boardRepository.save(comment);
+	}
+
+	public List<Board> getCommentsForBoard(Long parentId) {
+		return boardRepository.findByReferOrderByStepAsc(parentId.intValue())
+	            .stream()
+	            .filter(b -> b.getDepth() == 1) // 댓글만 가져오기
+	            .collect(Collectors.toList());
 	}
 	
 	

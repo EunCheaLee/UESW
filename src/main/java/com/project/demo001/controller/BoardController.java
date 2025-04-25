@@ -35,6 +35,7 @@ import com.project.demo001.repository.BoardRepository;
 import com.project.demo001.service.BoardService;
 import com.project.demo001.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -112,16 +113,26 @@ public class BoardController {
 	@PostMapping("/board/save")
 	public String save(@ModelAttribute Board board, 
 	                   @RequestParam("file") MultipartFile file, 
-	                   User user, 
-	                   Principal principal) throws IOException {
+	                   Principal principal,
+	                   HttpServletRequest request) throws IOException {
 	    System.out.println("BoardController의 save() 메서드 실행");
 
+	    User user = new User();
+	    
 	    // 로그인한 사용자 정보 바인딩
 	    if (principal != null) {
-	        user.setUserName(principal.getName());  // 로그인한 사용자의 이름 설정
+	        user.setUserName(principal.getName());   // 로그인한 사용자의 이름 설정
 	    } else {
-	        user.setUserName("비회원");  // 기본값 설정
+	    	// 비회원이면 IP 주소로 표시
+	    	String ip = request.getHeader("X-Forwarded-For");
+	    	if(ip==null||ip.isEmpty()) {
+	    		ip=request.getRemoteAddr();	// 클라이언트 IP
+	    	}
+	    	user.setUserName("비회원("+ip+")");
 	    }
+	    
+	    board.setUser(user);	// Board 엔티티의 외래키로 연결
+	    
 
 	    // 파일 업로드 처리
 	    if (!file.isEmpty()) {
@@ -193,10 +204,12 @@ public class BoardController {
 	public String select(@PathVariable("id") Long id, Model model) {
 		System.out.println("BoardController의 select() 메서드 실행");
 		Board board = boardService.getBoardAndIncreaseView(id);
+		List<Board> comments = boardService.getCommentsForBoard(id); // 댓글 조회
 	    if (board.getUser() == null) {
 	        board.setUser(new User());  // user가 null이면 기본값으로 새로운 User 객체를 설정
 	    }
 		model.addAttribute("board",board);
+		model.addAttribute("comments", comments);
 		return "board/select";
 	}
 	
@@ -220,18 +233,16 @@ public class BoardController {
 		return "redirect:/board/list";
 	}
 	
-	@GetMapping("/board/reply/{id}")
-	public String reply(@PathVariable("id") Long id, Model model) {
-		Board board = boardService.getBoard(id);
-		model.addAttribute("board",board);
-		return "board/reply";
-	}
-	
-	@PostMapping("/board/reply/{id}")
-	public String replyBoard(@PathVariable Long id, @RequestParam String title, @RequestParam String content, @RequestParam Long userId) {
-		User user = userService.findUserById(userId);	// 유저 정보 가져오기
-		Board reply = boardService.addReply(id, title, content, user);
-		return "redirect:/board/select/"+reply.getId();	// 답글 작성 후 해당 글 페이지로 이동
+	// 댓글 작성 폼은 그대로 사용 가능
+
+	@PostMapping("/board/{id}/comment")
+	public String addComment(@PathVariable Long id,
+	                         @RequestParam String content,
+	                         @RequestParam Long userId) {
+
+	    User user = userService.findUserById(userId);
+	    boardService.addComment(id, content, user);
+	    return "redirect:/board/select/" + id;
 	}
 	
 

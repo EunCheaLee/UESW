@@ -64,5 +64,6 @@ public class Board extends BaseEntity {
         return user != null ? user.getPassword() : null;  // Lombok이 자동으로 getter를 생성
     }
 
+    
 
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,63 +7,78 @@
 	<link rel="stylesheet" th:href="@{/css/home.css}">
     <link rel="stylesheet" th:href="@{/css/board.css}"/>
     <script th:src="@{/js/board.js}" defer></script>
+	<style>
+		body{
+			margin-top: 200px;
+			position: fixed;
+				}
+		.list-etc{
+			position: fixed; /* 화면 고정 */
+			margin-top:70px;
+			left: 50%; /* 화면 중앙으로 이동 */
+			transform: translateX(-50%); /* 정확한 중앙 정렬 */
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 1000; /* 다른 요소들보다 앞에 오도록 설정 */
+		}
+
+	</style>
+		
+	
 </head>
 <body>
 	<!-- 넷바 -->
-	<nav class="navbar">
-	  <div class="container-fluid">
-	      <!-- 브랜드 영역 -->
-	      <a th:href="@{/home}" class="navbar-brand">
-	          <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
-	      </a>
-	          <span class="brandname">교통정보사이트</span>
+	    <nav class="navbar">
+	      <div class="container-fluid">
+	          <!-- 브랜드 영역 -->
+	          <a th:href="@{/home}" class="navbar-brand">
+	              <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
+	          </a>
 
-	        <!-- 메뉴 -->
-	        <ul class="menu">
-	            <li>
-	                <a href="#">교통상황</a>
-	                <ul class="submenu">
-	                    <li><a th:href="@{/opendata/}">교통정보</a></li>
-	                    <li><a href="#">CCTV</a></li>
-	                    <li><a href="#">돌발상황</a></li>
-	                    <li><a href="#">기상정보</a></li>
-	                </ul>
-	            </li>
-	            <li>
-	                <a href="#">교통자료</a>
-	                <ul class="submenu">
-	                    <li><a href="#">교통사고 데이터</a></li>
-	                    <li><a href="#">년도별</a></li>
-	                    <li><a href="#">요일별</a></li>
-	                </ul>
-	            </li>
-	            <li><a th:href="@{/board}">게시판</a></li>
-	            <li>
-	                <a th:href="@{/info}">회원정보</a>
-	                <ul class="submenu">
-	                    <li><a th:href="@{/login}">로그인</a></li>
-	                    <li><a th:href="@{/login}">회원가입</a></li>
-	                    <li><a href="#">비밀번호 찾기</a></li>
-	                </ul>
-	            </li>
-	        </ul>
+	          <!-- 메뉴 -->
+	          <ul class="menu">
+	              <li>
+	                  <a href="#">교통상황</a>
+	                  <ul class="submenu">
+	                      <li><a th:href="@{/opendata/}">교통정보</a></li>
+	                      <li><a th:href="@{/sidebar(section='traffic')}">돌발상황</a></li>
+	                      <li><a th:href="@{/sidebar(section='weather')}">기상정보</a></li>
+	                  </ul>
+	              </li>
+	              <li>
+	                  <a href="#">교통자료</a>
+	                  <ul class="submenu">
+	                      <li><a href="#">교통사고<br>데이터</a></li>
+	                      <li><a th:href="@{/sidebar(section='cctv')}">CCTV</a></li>
+	                  </ul>
+	              </li>
+	              <li><a th:href="@{/board}">게시판</a></li>
+	              <li>
+	                  <a th:href="@{/info}">회원정보</a>
+	                  <ul class="submenu">
+	                      <li><a th:href="@{/login}">로그인<br/>/회원가입</a></li>
+	                      <li><a href="@{/}">회원정보 찾기</a></li>
+	                  </ul>
+	              </li>
+	          </ul>
 
-	        <!-- 로그인 아이콘 -->
-	        <a th:href="@{/login}" id="auth-link" class="icon2">
-	            <img id="auth-icon" src="/img/Login.png" alt="Login Icon" class="icon2">
-	            <span id="auth-text">Login</span>
-	        </a>
-	    </div>
-	</nav>
+	          <!-- 로그인 아이콘 -->
+	          <a th:href="@{/login}" class="login-button" >
+	              <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
+	              <span id="login-txt">Login</span>
+	          </a>
+	      </div>
+	  </nav>
 
 
-<table class="table">
+<table class="list">
     <thead>
     <tr>
         <td colspan="2"><h2>게시판</h2></td>
         <td colspan="3">
             <form action="/board" method="get" style="display: flex; justify-content: flex-start; align-items: center;">
-                <label for="count">게시글 갯수:</label>
+                <label for="count">게시글 갯수:&nbsp;</label>
                 <select name="count" id="count" >
                     <option value="10" th:selected="${count == 10}">10개</option>
                     <option value="20" th:selected="${count == 20}">20개</option>
@@ -88,86 +103,59 @@
         <tr th:each="board, iter : ${boardPage.content}">
             <td th:text="${(currentPage * count) + iter.index + 1}"></td> <!-- 반복 횟수: 1부터 -->
             <td>
-                <a th:href="@{/board/select/{id}(id=${board.id})}" th:text="${board.title}">제목</a>
+                <a class="title" th:href="@{/board/select/{id}(id=${board.id})}" th:text="${board.title}">제목</a>
             </td>
-            <td th:text="${board.user != null ? board.user.userName : '비회원'}"></td>
+            <td>
+				<span th:if="${board.user != null and board.user.userName != null and board.user.userName.startsWith('비회원')}" th:text="'비회원'"></span>
+				<span th:if="${board.user != null and board.user.userName != null and not board.user.userName.startsWith('비회원')}" th:text="${board.user.userName}"></span>
+				<span th:if="${board.user == null}" th:text="'비회원'"></span>
+			</td> 
             <td th:text="${#temporals.format(board.writeDate, 'yy-MM-dd')}"></td>
             <td th:text="${board.viewNum}">0</td>
         </tr>
     </tbody>
 </table>
+<table class="list-etc">
 
-<br>
-<table>
-    <tr>
-        <td><button th:onclick="|location.href='@{/board/insert}'|">글쓰기</button></td>
-    </tr>
+	<tr>
+		<td>
+			<!-- 페이지 네비게이션 -->
+			<div class="index">
+			    <ul>
+			        <li th:if="${!boardPage.first}">
+			            <a th:href="@{/board/list(page=${currentPage - 1}, count=${count}, keyword=${keyword})}">이전</a>
+			        </li>
+
+			        <li th:each="i : ${#numbers.sequence(0, boardPage.totalPages - 1)}"
+			            th:classappend="${i == currentPage} ? 'active'">
+			            <a th:href="@{/board/list(page=${i}, count=${count}, keyword=${keyword})}" th:text="${i + 1}">1</a>
+			        </li>
+
+			        <li th:if="${!boardPage.last}">
+			            <a th:href="@{/board/list(page=${currentPage + 1}, count=${count}, keyword=${keyword})}">다음</a>
+			        </li>
+			    </ul>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<!-- 검색바 -->
+			<div align="center">
+			    <form th:action="@{/board/list}" method="get">
+			        <input type="text" name="keyword" placeholder="검색어" th:value="${keyword}">
+			        <button id="search" type="submit">검색</button>
+			    </form>
+			</div>
+		</td>
+	</tr>
+	<tr>
+	    <td id="write-button"><button th:onclick="|location.href='@{/board/insert}'|">글쓰기</button></td>
+	</tr>
 </table>
 
-<!-- 페이지 네비게이션 -->
-<div class="index">
-    <ul>
-        <li th:if="${!boardPage.first}">
-            <a th:href="@{/board/list(page=${currentPage - 1}, count=${count}, keyword=${keyword})}">이전</a>
-        </li>
 
-        <li th:each="i : ${#numbers.sequence(0, boardPage.totalPages - 1)}"
-            th:classappend="${i == currentPage} ? 'active'">
-            <a th:href="@{/board/list(page=${i}, count=${count}, keyword=${keyword})}" th:text="${i + 1}">1</a>
-        </li>
 
-        <li th:if="${!boardPage.last}">
-            <a th:href="@{/board/list(page=${currentPage + 1}, count=${count}, keyword=${keyword})}">다음</a>
-        </li>
-    </ul>
-</div>
-
-<!-- 검색바 -->
-<div align="center">
-    <form th:action="@{/board/list}" method="get">
-        <input type="text" name="keyword" placeholder="검색어" th:value="${keyword}">
-        <button class="little" type="submit">조회</button>
-    </form>
-</div>
-
-<!-- 검색 결과가 있을 때, 게시글 목록 -->
-<div th:if="${searchMode}">
-    <div th:if="${not #lists.isEmpty(boardPage.content)}">
-        <table class="table">
-            <thead>
-                <tr>
-                    <td class="num">번호</td>
-                    <td class="title">제목</td>
-                    <td class="bar">작성자</td>
-                    <td class="bar">작성일</td>
-                    <td class="view">조회수</td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="board, iter : ${boardPage.content}">
-                    <td th:text="${(currentPage * count) + iter.index + 1}"></td>
-                    <td>
-                        <a th:href="@{/board/select/{id}(id=${board.id})}" th:text="${board.title}">제목</a>
-                    </td>
-                    <td th:text="${board.user.userName}"></td>
-                    <td th:text="${#temporals.format(board.writeDate, 'yy-MM-dd')}"></td>
-                    <td th:text="${board.viewNum}">0</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- 검색된 게시글이 없으면 -->
-	<div th:if="${boardPage != null}">
-	    <div th:if="${#lists.isEmpty(boardPage.content)}">
-	        <p>게시글이 없습니다.</p>
-	    </div>
-	    <div th:if="${!#lists.isEmpty(boardPage.content)}">
-	        <table class="table">
-	            <!-- 테이블 내용 -->
-	        </table>
-	    </div>
-	</div>
 
 </body>
 </html>

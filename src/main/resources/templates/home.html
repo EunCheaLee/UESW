@@ -6,7 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" th:href="@{/css/home.css}">
 	<link rel="stylesheet" th:href="@{/css/sidebar.css}">
-	<script src="/js/home.js"></script>
+	<script src="/js/home.js" defer></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="text/javascript" 
     src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=decabf1a98a2b15f0b977ba76ec9095c&autoload=false">
@@ -14,213 +14,199 @@
 </head>
 
 <body>
-	<div class="home-container">
-	    <div class="home-content1"> 
-			  <iframe src="monthly" width="100%" height="500px"style="border:none;"></iframe>
-		</div>
+
 		
-      <script>
-        window.onload = function() {
-          // 페이지가 로드될 때 기본 이미지를 설정
-          const imageContainer = document.querySelector(".image-container");
-          const imageElement = imageContainer.querySelector(".toggle-image");
-      
-          // 기본 이미지로 설정할 경로
-          const defaultImageSrc = "traffic_2018.png";
-      
-          // 기본 이미지 설정
-          imageElement.src = defaultImageSrc;
-          imageContainer.style.display = "block"; // 이미지 컨테이너 보이기
-        };
-      
-        function toggleSub(button) {
-          const currentSub = button.nextElementSibling;
-          const allSubButtons = document.querySelectorAll('.sub-buttons');
-        
-          allSubButtons.forEach(sub => {
-            // 현재 클릭한 하위 버튼 외의 모든 하위 버튼 닫기
-            if (sub !== currentSub) {
-              sub.classList.remove('active');
-            }
-          });
-        
-          // 현재 클릭한 하위 버튼은 토글
-          currentSub.classList.toggle('active');
-        }
-      
-        function showImage(button) {
-          const imageContainer = document.querySelector(".image-container");
-          const imageElement = imageContainer.querySelector(".toggle-image");
-      
-          // 클릭된 버튼에서 data-image 속성값을 가져와서 이미지 소스로 설정
-          const imageSrc = button.getAttribute("data-image");
-      
-          // 이미지 소스를 설정하고 이미지 보이게 하기
-          imageElement.src = imageSrc;
-          imageContainer.style.display = "block"; // 이미지 표시
-        }
-      </script>
-      
-      
+		<!-- 넷바 -->
+		    <nav class="navbar">
+		      <div class="container-fluid">
+		          <!-- 브랜드 영역 -->
+		          <a th:href="@{/home}" class="navbar-brand">
+		              <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
+		          </a>
 
+		          <!-- 메뉴 -->
+		          <ul class="menu">
+		              <li>
+		                  <a href="#">교통상황</a>
+		                  <ul class="submenu">
+		                      <li><a th:href="@{/opendata/}">교통정보</a></li>
+		                      <li><a th:href="@{/sidebar(section='traffic')}">돌발상황</a></li>
+		                      <li><a th:href="@{/sidebar(section='weather')}">기상정보</a></li>
+		                  </ul>
+		              </li>
+		              <li>
+		                  <a href="#">교통자료</a>
+		                  <ul class="submenu">
+		                      <li><a href="#">교통사고<br>데이터</a></li>
+		                      <li><a th:href="@{/sidebar(section='cctv')}">CCTV</a></li>
+		                  </ul>
+		              </li>
+		              <li><a th:href="@{/board}">게시판</a></li>
+		              <li>
+		                  <a th:href="@{/info}">회원정보</a>
+		                  <ul class="submenu">
+		                      <li><a th:href="@{/login}">로그인<br/>/회원가입</a></li>
+		                      <li><a href="@{/}">회원정보 찾기</a></li>
+		                  </ul>
+		              </li>
+		          </ul>
 
-      <!-- 이미지 컨테이너 -->
-      <div class="image-container">
-        <img src="traffic_2018.png" alt="Image" class="toggle-image">
-      </div>
-    </div>
-    
+		          <!-- 로그인 아이콘 -->
+		          <a th:href="@{/login}" class="login-button" >
+		              <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
+		              <span id="login-txt">Login</span>
+		          </a>
+		      </div>
+		  </nav>
+		  
+		  <!-- 고정 사이드바 -->
+		    <div class="sidebar">
+		      
+		      <!-- Font Awesome CDN 추가 -->
+		      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+		    <ul>
+		      <li>
+		        <button type="button" class="sidebar-button">
+		          <a th:href="@{/sidebar(section='traffic')}">
+		  			<i class="fa-solid fa-car"></i> <br>교통<br>속보
+		  		</a>
+		        </button>
+		      </li>
+		      <li>
+		        <button type="button" class="sidebar-button">
+		  			<a th:href="@{/sidebar(section='weather')}">
+		  				<i class="fa-solid fa-cloud-sun"></i> <br>기상<br>정보
+		  			</a>
+		  		</button>
+		      </li>
+		      <li>
+		        <button type="button" class="sidebar-button" >
+		  		<a th:href="@{/sidebar(section='cctv')}">
+		  			<i class="fa-solid fa-video"></i> <br>CCTV<br>검색
+		  		</a>
+		        </button>
+		      </li>
+		      <li>
+		        <button type="button" class="sidebar-button" >
+		          <i class="fa-solid fa-right-from-bracket"></i> 로그<br>아웃
+		        </button>
+		      </li>
+		      <li>
+		        <button type="button" class="sidebar-button" >
+		  		<a th:href="@{/sidebar(section='settings')}">
+		  	        <i class="fa-solid fa-gear"></i> <br>설정
+		  		</a>
+		        </button>
+		      </li>
+		    </ul>
+		<!-- 사이드바 스크립트 -->
+		<script src="/js/sidebar.js"></script>
+	    </div>
+		
+		
+		
+	<div class="home-container">
+		<div class="scrollBox">
+			<div class="scroll_ani">
+			    <p>Scroll Here !</p>
+			</div>
+		
 
-  
-      <div class="scroll_down_box map">
-        <div class="scroll_ani">
-          <p>Scroll Here !</p>
-        </div>
-        
-          <!-- 스크립트는 아래에 -->
-          <script>
-            document.addEventListener('DOMContentLoaded', () => {
-  const scrollBox = document.querySelector('.scroll_ani');
+	    <div class="home-content1"> 
+			  <iframe src="monthly" width="80%" height="700px"style="border:none;"></iframe>
+		</div>
+		<div class="home-content2">
+			<div class="map-button">
+				<button onclick="setOverlayMapTypeId('traffic')">교통정보 보기</button> 
+				<button onclick="setOverlayMapTypeId('roadview')">로드뷰 도로정보 보기</button> 
+				<button onclick="setOverlayMapTypeId('terrain')">지형정보 보기</button>
+				<button onclick="setOverlayMapTypeId('use_district')">지적편집도 보기</button>
+				<button onclick="setOverlayMapTypeId('roadmap')">일반지도 보기</button>
+			</div>
+		    <!-- 지도 -->
+			<div id="home-map" style="background-color: rgb(71, 62, 52);"> </div>
+		</div>
+		<div class="home-content3">
+		</div>
+			<script>
+				kakao.maps.load(function () {
+				    var container = document.getElementById('home-map');
+				    var options = {
+				        center: new kakao.maps.LatLng(37.570715, 126.985324),
+				        level: 3
+				    };
+				    window.map = new kakao.maps.Map(container, options);
+					
+					// 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+					var zoomControl = new kakao.maps.ZoomControl();
+					map.addControl(zoomControl, kakao.maps.ControlPosition.BOTTOMLEFT);
+					
+				});
+				// 지도에 추가된 지도타입정보를 가지고 있을 변수입니다
+				var currentTypeId;
 
-  if (scrollBox) {
-    scrollBox.addEventListener('wheel', (e) => {
-      e.preventDefault(); // 기본 휠 동작 막기
-      const direction = e.deltaY > 0 ? 1 : -1;
-      console.log(`Scroll direction: ${direction}`);
-      window.scrollBy({
-        top: direction * window.innerHeight,
-        behavior: 'smooth'
-      });
-    }, { passive: false });
-  } else {
-    console.warn('.scroll_ani 요소를 찾을 수 없습니다!');
-  }
-});
+				// 버튼이 클릭되면 호출되는 함수입니다
+				function setOverlayMapTypeId(maptype) {
+				    var changeMaptype;
+				    
+				    // maptype에 따라 지도에 추가할 지도타입을 결정합니다
+				    if (maptype === 'traffic') {            
+				        
+				        // 교통정보 지도타입
+				        changeMaptype = kakao.maps.MapTypeId.TRAFFIC;     
+				        
+				    } else if (maptype === 'roadview') {        
+				        
+				        // 로드뷰 도로정보 지도타입
+				        changeMaptype = kakao.maps.MapTypeId.ROADVIEW;    
 
-          </script>
-        
+				    } else if (maptype === 'terrain') {
+				        
+				        // 지형정보 지도타입
+				        changeMaptype = kakao.maps.MapTypeId.TERRAIN;    
 
-    </div>
+				    } else if (maptype === 'use_district') {
+				        
+				        // 지적편집도 지도타입
+				        changeMaptype = kakao.maps.MapTypeId.USE_DISTRICT;           
+				    } else if (maptype === 'roadmap') {
+				        changeMaptype = kakao.maps.MapTypeId.ROADMAP; 
+				    }
+				    
+				    // maptype에 해당하는 지도타입을 지도에 추가합니다
+				    map.addOverlayMapTypeId(changeMaptype);
+				    
+				    // 지도에 추가된 타입정보를 갱신합니다
+				    currentTypeId = changeMaptype;        
+				}
+			</script>
+			
+			<script>
+				document.addEventListener('DOMContentLoaded', () => {
+				    const scrollBox = document.querySelector('.scroll_ani');
 
-  </div>
-  
-  
-    <!-- 넷바 -->
-    <nav class="navbar">
-      <div class="container-fluid">
-          <!-- 브랜드 영역 -->
-          <a th:href="@{/home}" class="navbar-brand">
-              <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
-          </a>
-             <!-- <span class="brandname">교통정보사이트</span>-->
+				    if (scrollBox) {
+				        // 내부 스크롤을 허용하도록 설정
+				        scrollBox.style.overflow = 'auto';
 
-          <!-- 메뉴 -->
-          <ul class="menu">
-              <li>
-                  <a href="#">교통상황</a>
-                  <ul class="submenu">
-                      <li><a th:href="@{/opendata/}">교통정보</a></li>
-                      <li><a href="#">CCTV</a></li>
-                      <li><a href="#">돌발상황</a></li>
-                      <li><a href="#">기상정보</a></li>
-                  </ul>
-              </li>
-              <li>
-                  <a href="#">교통자료</a>
-                  <ul class="submenu">
-                      <li><a href="#">교통사고<br>데이터</a></li>
-                      <li><a href="#">년도별</a></li>
-                      <li><a href="#">요일별</a></li>
-                  </ul>
-              </li>
-              <li><a th:href="@{/board}">게시판</a></li>
-              <li>
-                  <a th:href="@{/info}">회원정보</a>
-                  <ul class="submenu">
-                      <li><a th:href="@{/login}">로그인</a></li>
-                      <li><a th:href="@{/login}">회원가입</a></li>
-                      <li><a href="#">비밀번호 찾기</a></li>
-                  </ul>
-              </li>
-          </ul>
+				        // 휠 스크롤 이벤트 처리
+				        scrollBox.addEventListener('wheel', (e) => {
+				            // 기본 휠 동작을 막지 않음
+				            const direction = e.deltaY > 0 ? 1 : -1;
+				            console.log(`Scroll direction: ${direction}`);
 
-          <!-- 로그인 아이콘 -->
-          <a th:href="@{/login}" id="auth-link" class="icon2">
-              <img id="auth-icon" src="http://localhost:9/img/Login.png" alt="Login Icon" class="icon2">
-              <span id="auth-text">Login</span>
-          </a>
-      </div>
-  </nav>
-        
-        
-    <!-- 고정 사이드바 -->
-    <div class="sidebar">
-      
-      <!-- Font Awesome CDN 추가 -->
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-	  <ul>
-	    <li>
-	      <button type="button" class="sidebar-button">
-	        <a th:href="@{/sidebar(section='traffic')}">
-				<i class="fa-solid fa-car"></i> <br>교통<br>속보
-			</a>
-	      </button>
-	    </li>
-	    <li>
-	      <button type="button" class="sidebar-button">
-				<a th:href="@{/sidebar(section='weather')}">
-					<i class="fa-solid fa-cloud-sun"></i> <br>기상<br>정보
-				</a>
-			</button>
-	    </li>
-	    <li>
-	      <button type="button" class="sidebar-button" >
-			<a th:href="@{/sidebar(section='cctv')}">
-				<i class="fa-solid fa-video"></i> <br>CCTV<br>검색
-			</a>
-	      </button>
-	    </li>
-	    <li>
-	      <button type="button" class="sidebar-button" >
-	        <i class="fa-solid fa-right-from-bracket"></i> 로그<br>아웃
-	      </button>
-	    </li>
-	    <li>
-	      <button type="button" class="sidebar-button" >
-			<a th:href="@{/sidebar(section='settings')}">
-		        <i class="fa-solid fa-gear"></i> <br>설정
-			</a>
-	      </button>
-	    </li>
-	  </ul>
-    </div>
-  
-      <!-- 사이드바 스크립트 -->
-  	<script src="/js/sidebar.js"></script>
-  
-
-        <!-- 지도 -->
-	<div id="home-map" style="background-color: rgb(71, 62, 52);"> 지도 지도 </div>
-
-        
-        <!-- 지도 스크립트 -->
-        <script>
-            kakao.maps.load(function () {
-                var container = document.getElementById('home-map');
-                var options = {
-                    center: new kakao.maps.LatLng(37.570715, 126.985324),
-                    level: 3
-                };
-                var map = new kakao.maps.Map(container, options);
-            });
-        </script>
-  
-    
-  </div>
-
-  <div class="home-content3">
-	개발 예정
-  </div>
-</div>
+				            // 페이지 스크롤
+				            window.scrollBy({
+				                top: direction * window.innerHeight,
+				                behavior: 'smooth'
+				            });
+				        }, { passive: true }); // passive: true로 설정하여 기본 동작을 허용
+				    } else {
+				        console.warn('.scroll_ani 요소를 찾을 수 없습니다!');
+				    }
+				});
+			</script>
+		</div>
+	</div>
   </body>
 </html>

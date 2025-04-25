@@ -33,6 +33,7 @@ public class User extends BaseEntity {
 	private String userName;	// 유저 이름
 	private String fullAddress;	// 유저 주소
 	private String phoneNum;	// 유저 휴대폰 번호
+	private String birth;
 	
 	@OneToMany(mappedBy = "user")
 	private List<Board> board = new ArrayList<>();

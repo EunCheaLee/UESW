@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+	<link rel="stylesheet" th:href="@{/css/sidebar.css}">
+	<script src="/js/home.js"></script>
+</head>
+<body>
+	
+	<div>
+		<div>
+		  <!-- 넷바 -->
+		  	<nav class="navbar">
+		    <div class="container-fluid">
+		        <!-- 브랜드 영역 -->
+		        <a th:href="@{/home}" class="navbar-brand">
+		            <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
+		        </a>
+		           <!-- <span class="brandname">교통정보사이트</span>-->
+	
+		        <!-- 메뉴 -->
+		        <ul class="menu">
+		            <li>
+		                <a href="#">교통상황</a>
+		                <ul class="submenu">
+		                    <li><a th:href="@{/opendata/}">교통정보</a></li>
+		                    <li><a href="#">CCTV</a></li>
+		                    <li><a href="#">돌발상황</a></li>
+		                    <li><a href="#">기상정보</a></li>
+		                </ul>
+		            </li>
+		            <li>
+		                <a href="#">교통자료</a>
+		                <ul class="submenu">
+		                    <li><a href="#">교통사고<br>데이터</a></li>
+		                    <li><a href="#">년도별</a></li>
+		                    <li><a href="#">요일별</a></li>
+		                </ul>
+		            </li>
+		            <li><a th:href="@{/board}">게시판</a></li>
+		            <li>
+		                <a th:href="@{/info}">회원정보</a>
+		                <ul class="submenu">
+		                    <li><a th:href="@{/login}">로그인</a></li>
+		                    <li><a th:href="@{/login}">회원가입</a></li>
+		                    <li><a href="#">비밀번호 찾기</a></li>
+		                </ul>
+		            </li>
+		        </ul>
+	
+		        <!-- 로그인 아이콘 -->
+		        <a th:href="@{/login}" id="auth-link" class="icon2">
+		            <img id="auth-icon" src="http://localhost:9/img/Login.png" alt="Login Icon" class="icon2">
+		            <span id="auth-text">Login</span>
+		        </a>
+		    </div>
+			</nav>
+
+		<div>
+			<!-- 고정 사이드바 -->
+			<div class="sidebar">
+			  
+			  <!-- Font Awesome CDN 추가 -->
+			  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+			<ul>
+			  <li>
+			    <button type="button" class="sidebar-button">
+			      <a th:href="@{/sidebar(section='traffic')}">
+					<i class="fa-solid fa-car"></i> <br>교통<br>속보
+				</a>
+			    </button>
+			  </li>
+			  <li>
+			    <button type="button" class="sidebar-button">
+					<a th:href="@{/sidebar(section='weather')}">
+						<i class="fa-solid fa-cloud-sun"></i> <br>기상<br>정보
+					</a>
+				</button>
+			  </li>
+			  <li>
+			    <button type="button" class="sidebar-button" >
+				<a th:href="@{/sidebar(section='cctv')}">
+					<i class="fa-solid fa-video"></i> <br>CCTV<br>검색
+				</a>
+			    </button>
+			  </li>
+			  <li>
+			    <button type="button" class="sidebar-button" >
+			      <i class="fa-solid fa-right-from-bracket"></i> 로그<br>아웃
+			    </button>
+			  </li>
+			  <li>
+			    <button type="button" class="sidebar-button" >
+				<a th:href="@{/sidebar(section='settings')}">
+			        <i class="fa-solid fa-gear"></i> <br>설정
+				</a>
+			    </button>
+			  </li>
+			</ul>
+			</div>
+
+			  <!-- 사이드바 스크립트 -->
+			<script src="/js/sidebar.js"></script>
+			</div>
+			<h1>마이페이지</h1>
+
+			<!-- 로그인된 사용자 정보 출력 -->
+			<div class="mypage">
+			    <p><strong>아이디:</strong> <span th:text="${user.account}"></span></p>
+			    <p><strong>이름:</strong> <span th:text="${user.userName}"></span></p>
+			    <p><strong>생년월일:</strong> <span th:text="${user.birth}"></span></p>
+			    <p><strong>이메일:</strong> <span th:text="${user.email}"></span></p>
+			</div>
+		</div>
+	</div>
+	      
+	      
+		
+		
+</body>
+</html>

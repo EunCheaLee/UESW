@@ -28,7 +28,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	List<Board> findAll();
 	
 	// 같은 그룹(refer)에 속한 글들을 step 순서대로 가져옴
-	 List<Board> findByReferOrderByStepAsc(int refer);  
+	List<Board> findByReferOrderByStepAsc(int refer); 
 	
 	@Modifying
 	@Query("UPDATE Board b SET b.viewNum = b.viewNum + 1 WHERE b.id = :id")

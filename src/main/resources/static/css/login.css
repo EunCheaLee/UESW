@@ -1,11 +1,8 @@
-*{
-	background-color: rgba(40,57,101);
-}
-
 body{
     margin:0;
     color:#6a6f8c;
     font:600 16px/18px 'Open Sans',sans-serif;
+	background:rgba(40,57,101,.9);
     background-image: url('/img/login_background.png');
     background-size: cover; /*화면에 꽉 차게*/
     background-repeat: no-repeat; /* 반복하지 않게 */

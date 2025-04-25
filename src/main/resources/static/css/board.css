@@ -1,10 +1,20 @@
 table {
     margin: auto;
-	margin-top: 10%;
+	margin-bottom: -5%;
     width: 700px;
     border-radius: 5px;
     border-collapse: collapse;
     border-top: none;
+}
+
+.select-table{
+	height: 150px;
+	border: 1px black;
+}
+#write-button{
+	display: flex; /* td를 flexbox 컨테이너로 만듬 */
+	justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
+	margin-top: 10px;
 }
 
 .little{
@@ -14,7 +24,8 @@ table {
 }
 
 #search{
-	width: 100px;
+	width: 70px;
+	height: 30px;
 }
 
 .indent { margin-left: 20px; }
@@ -23,7 +34,7 @@ table {
     background-color: rgb(218, 231, 255);
     text-align: center;
 }
-.table td, .table th {
+.list td, .list th {
     border-bottom: 1px lightgray solid; 
     height: 30px;
     font-size: 14px;
@@ -31,14 +42,16 @@ table {
 .num {
     width: 50px;
 }
-.title {
-    width: 420px;
+tbody tr td a.title {
+	display: block;  /* a 태그를 블록 요소로 변환 */
+	width: 420px;    /* 원하는 너비 적용 */
+	text-align: left; /* 왼쪽 정렬 */
 }
-.body {
+.title{
+	text-align: left;
+}
+body {
     text-align: center;
-}
-.body .title {
-    text-align: left;
 }
 
 .bar{
@@ -56,9 +69,9 @@ button {
     border: 0;
     outline: 1.5px rgb(68, 136, 244) solid;
     border-radius: 5px;
-    padding-left: 10px;
     background-color: rgb(164, 199, 255);
 }
+
 button:active {
     border-radius: 5px;
     outline: 1.5px rgb(27, 76, 155) solid;
@@ -145,4 +158,78 @@ input[type="submit"]:active {
     font-weight: bold; /* 현재 페이지는 굵게 표시 */
     background-color: #007bff; /* 활성화된 페이지 색 */
     color: white; /* 글자 색 */
+}
+
+.view-container{
+	display: grid;
+	place-items: center;
+	height: 100vh;
+	overflow: hidden;  /* 컨텐츠가 화면을 넘어가지 않도록 제한 */
+}
+
+.view-content{
+	width: 700px; /* 화면 크기에 맞는 너비로 수정 */
+	text-align: center;
+}
+
+.view-button-container{
+	margin-top:10px;
+	display: flex;
+	justify-content: flex-start; /* 버튼을 왼쪽에 정렬 */
+	gap: 10px; /* 버튼 간 간격 조정 */
+}
+
+.view-button {
+	display: inline-block;
+	width: 60px;
+	height: 30px;
+	border-radius: 30px;
+	background-color: #01367e;
+	color: #ffffff;
+	border: none;
+	outline: none; /* 포커스 시 외곽선 제거 */
+	font-size: 15px;
+}
+
+#reply-insert{
+	width: 100%;
+	height: 20%;
+}
+
+.view-reply{
+	margin-bottom: 10%;
+	display: flex;
+	justify-content: left;
+}
+
+#comment-notice{
+	margin-top: 10px;
+	margin-right: 10px;
+	font-weight: bold;
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column; /* 요소들을 세로로 정렬 */
+    gap: 10px; /* 각 요소 간 간격 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+}
+
+textarea {
+    width: 100%; /* 텍스트 영역 너비 100% */
+    height: 100px; /* 높이 100px */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    resize: none; /* 크기 조정 불가 */
+}
+
+#reply-button {
+    width: 120px;
+    height: 40px;
+    font-size: 16px;
+    background-color: #01367e;
+    color: white;
+    border: none;
+    border-radius: 5px;
 }

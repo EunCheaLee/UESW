@@ -1,43 +1,134 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="${board.title}">게시글 보기</title>
+	<link rel="stylesheet" th:href="@{/css/board.css}"/>
+	<link rel="stylesheet" th:href="@{/css/home.css}"/>
+	<style>
+		body{
+			margin-top: 100px;
+		}
+	</style>
 </head>
 <body>
-    <h2 th:text="${board.title}">제목</h2>
-    <p><strong>작성자:</strong> <span th:text="${board.user.userName}"></span></p>
-    <p><strong>작성일:</strong> <span th:text="${#temporals.format(board.writeDate, 'yy-MM-dd HH:mm')}"></span></p>
-	<p>조회수: <span th:text="${board.viewNum}"></span></p>
-	<hr>
-    <div>
-        <p th:text="${board.content}">본문 내용</p>
-    </div>
-    <hr>
-		<tr>
-		    <th>첨부 파일</th>
-		    <td colspan="3">
-		        <span th:if="${board.filename == null}">첨부된 파일이 없습니다.</span>
-				<a th:if="${board.filename != null}" th:href="@{'/board/upload/' + ${board.filename}}"
-				   th:text="${board.filename}">파일 다운로드</a>
-		    </td>
-		</tr>
-	
-		<form action="/board/list" method="get" style="display:inline;">
-		    <button type="submit">목록</button>
-		</form>
-		<form th:action="@{/board/update/{id}(id=${board.id})}" method="get" style="display:inline;">
-		    <button type="submit">수정</button>
-		</form>
-		<form th:action="@{/board/delete}" method="post" style="display:inline;">
-		    <input type="hidden" th:name="id" th:value="${board.id}" />
-		    <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
-		</form>
-		<form th:action="@{'/board/reply/' + ${board.id}}" method="get" style="display: inline;">
-			<button type="submit">답글</button>
-		</form>
-		
-		
 
+	<!-- 넷바 -->
+	    <nav class="navbar">
+	      <div class="container-fluid">
+	          <!-- 브랜드 영역 -->
+	          <a th:href="@{/home}" class="navbar-brand">
+	              <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
+	          </a>
+
+	          <!-- 메뉴 -->
+	          <ul class="menu">
+	              <li>
+	                  <a href="#">교통상황</a>
+	                  <ul class="submenu">
+	                      <li><a th:href="@{/opendata/}">교통정보</a></li>
+	                      <li><a th:href="@{/sidebar(section='traffic')}">돌발상황</a></li>
+	                      <li><a th:href="@{/sidebar(section='weather')}">기상정보</a></li>
+	                  </ul>
+	              </li>
+	              <li>
+	                  <a href="#">교통자료</a>
+	                  <ul class="submenu">
+	                      <li><a href="#">교통사고<br>데이터</a></li>
+	                      <li><a th:href="@{/sidebar(section='cctv')}">CCTV</a></li>
+	                  </ul>
+	              </li>
+	              <li><a th:href="@{/board}">게시판</a></li>
+	              <li>
+	                  <a th:href="@{/info}">회원정보</a>
+	                  <ul class="submenu">
+	                      <li><a th:href="@{/login}">로그인<br/>/회원가입</a></li>
+	                      <li><a href="@{/}">회원정보 찾기</a></li>
+	                  </ul>
+	              </li>
+	          </ul>
+
+	          <!-- 로그인 아이콘 -->
+	          <a th:href="@{/login}" class="login-button" >
+	              <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
+	              <span id="login-txt">Login</span>
+	          </a>
+	      </div>
+	  </nav>
+	
+	<div class="view-container">
+		<div class="view-content">
+			<table class="select-table">
+				<tr>
+					<td style="width: 300px;"><h2 style="text-align: left;">게시글</h2></td>
+					
+				</tr>
+				<tr>
+					<th style="width: 200px;"><p>조회수: <span th:text="${board.viewNum}"></span></p></thstyle="width: 300px;">
+					<th align="right" colspan="3">
+						<td colspan="3" style="width:400px; display: flex; justify-content: end; align-items: center;">
+							<div class="view-button-container">
+								<form action="/board/list" method="get" style="display:inline;">
+								    <button class="view-button" type="submit">목록</button>
+								</form>
+								<form th:action="@{/board/update/{id}(id=${board.id})}" method="get" style="display:inline;">
+								    <button class="view-button" type="submit">수정</button>
+								</form>
+								<form th:action="@{/board/delete}" method="post" style="display:inline;">
+								    <input type="hidden" th:name="id" th:value="${board.id}" />
+								    <button class="view-button" type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+								</form>
+								<form th:action="@{'/board/reply/' + ${board.id}}" method="get" style="display: inline;">
+									<button class="view-button" type="submit">답글</button>
+								</form>
+							</div>
+						</td>
+					</th>
+				</tr>
+				<tr>
+					<th style="width: 700px;" colspan="4"><strong>제목</strong><span th:text="${board.title}"></th>
+				</tr>
+				<tr>
+					<th style="width: 350px;" colspan="2"><strong>작성자:</strong> <p><span th:text="${board.user.userName}"></span></p></th>
+					<th style="width: 350px;" colspan="2"><strong>작성일:</strong><p><span th:text="${#temporals.format(board.writeDate, 'yy-MM-dd HH:mm')}"></span></p></th>
+				</tr>
+
+			</table>
+			
+			<hr>
+				<div>
+					<p th:text="${board.content}">본문 내용</p>
+						<hr>
+						<tr class="select-file-group">
+						    <th class="select-file"><strong>첨부 파일 |</strong></th>
+						    <td colspan="3">
+						        <span th:if="${board.filename == null}">첨부된 파일이 없습니다.</span>
+								<a th:if="${board.filename != null}" th:href="@{'/board/upload/' + ${board.filename}}"
+								   th:text="${board.filename}">파일 다운로드</a>
+						    </td>
+						</tr>
+			    	</div>
+
+		</div>
+		<div class="view-reply">
+		<span id="comment-notice">댓글 작성</span>
+			<!-- ✅ 댓글 작성 -->
+			<form id="comment-form" th:action="@{'/board/' + ${board.id} + '/comment'}" method="post">
+			    <textarea id="reply-insert" name="content" placeholder="댓글을 입력하세요" rows="3" cols="60" required></textarea><br>
+			    <button id="reply-button" type="submit">댓글 등록</button>
+			</form>
+			<!-- ✅ 댓글 목록 -->
+			<ul>
+			    <li th:each="comment : ${comments}">
+			        <p>
+			            <strong th:text="${comment.user != null ? comment.user.userName : '익명'}">작성자</strong>
+			            <span th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+			        </p>
+			        <p th:text="${comment.content}">댓글 내용</p>
+			        <hr>
+			    </li>
+			</ul>
+		</div>
+	</div>
 </body>
 </html>
