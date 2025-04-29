@@ -20,7 +20,8 @@ body{
     background:rgba(40,57,101,.9);
   }
 
-  .login-wrap{
+  .login-wrap, 
+  .find-wrap{
     width:100%;
     margin:auto;
     max-width:525px;
@@ -29,7 +30,8 @@ body{
     box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
   }
 
-  .login-html{
+  .login-html, 
+  .find-html{
     width:100%;
     height:100%;
     position:absolute;
@@ -37,7 +39,9 @@ body{
     background:rgba(40,57,101,.9);
   }
   .login-html .sign-in-htm,
-  .login-html .sign-up-htm{
+  .login-html .sign-up-htm,
+  .find-html .find-id-htm,
+  .find-html .find-pw-htm{
     top:0;
     left:0;
     right:0;
@@ -51,15 +55,22 @@ body{
   }
   .login-html .sign-in,
   .login-html .sign-up,
-  .login-form .group .check{
+  .login-form .group .check,
+  .find-html .find-id,
+  .find-html .find-pw,
+  .find-form .group .check{
     display:none;
   }
   .login-html .tab,
   .login-form .group .label,
-  .login-form .group .button{
+  .login-form .group .button,
+  .find-html .tab,
+  .find-form .group .label,
+  .find-form .group .button {
     text-transform:uppercase;
   }
-  .login-html .tab{
+  .login-html .tab,
+  .find-html .tab {
     font-size:22px;
     margin-right:15px;
     padding-bottom:5px;
@@ -68,44 +79,63 @@ body{
     border-bottom:2px solid transparent;
   }
   .login-html .sign-in:checked + .tab,
-  .login-html .sign-up:checked + .tab{
+  .login-html .sign-up:checked + .tab,
+  .find-html .find-id:checked + .tab,
+  .find-html .find-pw:checked + .tab {
     color:#fff;
     border-color:#1161ee;
   }
-  .login-form{
+  .login-form,
+  .find-form {
     min-height:345px;
     position:relative;
     perspective:1000px;
     transform-style:preserve-3d;
   }
-  .login-form .group{
+  .login-form .group,
+  .find-form .group {
     margin-bottom:15px;
   }
   .login-form .group .label,
   .login-form .group .input,
-  .login-form .group .button{
+  .login-form .group .button,
+  .find-form .group .label,
+  .find-form .group .input,
+  .find-form .group .button{
     width:100%;
     color:#fff;
     display:block;
   }
   .login-form .group .input,
-  .login-form .group .button{
+  .find-form .group .input{
+	border: none;
+	padding: 15px 20px;
+	border-radius: 25px;
+	background: rgba(255,255,255,.1);
+	width: 100%;
+	color: #fff;
+	display: block; /* ✅ 수정: flex -> block */
+  }
+  .login-form .group .button,
+  .find-form .group .button {
     border:none;
     padding:15px 20px;
     border-radius:25px;
     background:rgba(255,255,255,.1);
-        display: flex;
+    display: flex;
     flex-direction: column;
   }
   .login-form .group input[data-type="password"]{
     -webkit-text-security:circle;
   }
-  .login-form .group .label{
+  .login-form .group .label,
+  .find-form .group .label{
     color:#aaa;
     font-size:12px;
   }
   /* 버튼을 가로로 중앙 정렬 */
-  .login-form .group .button {
+  .login-form .group .button, 
+  .find-form .group .button{
     background: #1161ee;
     width: 100%;
     padding: 15px 20px;
@@ -117,7 +147,8 @@ body{
     transition: all 0.3s ease;  /* 모든 변화가 0.3초에 걸쳐 일어나도록 */
   }
 
-  .login-form .group label .icon{
+  .login-form .group label .icon,
+  .find-form .group label .icon{
     width:15px;
     height:15px;
     border-radius:2px;
@@ -126,7 +157,9 @@ body{
     background:rgba(255,255,255,.1);
   }
   .login-form .group label .icon:before,
-  .login-form .group label .icon:after{
+  .login-form .group label .icon:after,
+  .find-form .group label .icon:before,
+  .find-form .group label .icon:after{
     content:'';
     width:10px;
     height:2px;
@@ -134,26 +167,32 @@ body{
     position:absolute;
     transition:all .2s ease-in-out 0s;
   }
-  .login-form .group label .icon:before{
+  .login-form .group label .icon:before,
+  .find-form .group label .icon:before{
     left:3px;
     width:5px;
     bottom:6px;
     transform:scale(0) rotate(0);
   }
-  .login-form .group label .icon:after{
+  .login-form .group label .icon:after,
+  .find-form .group label .icon:after{
     top:6px;
     right:0;
     transform:scale(0) rotate(0);
   }
-  .login-form .group .check:checked + label{
+  .login-form .group .check:checked + label,
+  .find-form .group .check:checked + label{
     color:#fff;
     
   }
-  .login-form .group .check:checked + label .icon{
+  .login-form .group .check:checked + label .icon,
+  .find-form .group .check:checked + label .icon{
     background:#1161ee;
   }
   .login-html .sign-in-htm,
-  .login-html .sign-up-htm {
+  .login-html .sign-up-htm,
+  .find-html .find-id-htm,
+  .find-html .find-pw-htm {
     position: absolute;
     top: 0;
     left: 0;
@@ -165,14 +204,16 @@ body{
   }
   
   /* 로그인 탭 선택 시 로그인 폼이 슬라이드인 */
-  .login-html .sign-in:checked ~ .login-form .sign-in-htm {
+  .login-html .sign-in:checked ~ .login-form .sign-in-htm,
+  .find-html .find-id:checked ~ .find-form .find-id-htm {
     transform: translateX(0%);
     opacity: 1;
     z-index: 1;
   }
   
   /* 회원가입 탭 선택 시 회원가입 폼이 슬라이드인 */
-  .login-html .sign-up:checked ~ .login-form .sign-up-htm {
+  .login-html .sign-up:checked ~ .login-form .sign-up-htm, 
+  .find-html .find-pw:checked ~ .find-form .find-pw-htm {
     transform: translateX(0%);
     opacity: 1;
     z-index: 1;

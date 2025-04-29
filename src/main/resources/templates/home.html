@@ -67,7 +67,7 @@
 		              <li>
 		                  <a>교통상황</a>
 		                  <ul class="submenu">
-		                      <li><a th:href="@{/opendata/}">교통정보</a></li>
+		                      <li><a th:href="@{/opendata}">교통정보</a></li>
 		                      <li><a th:href="@{/sidebar(section='traffic')}">돌발상황</a></li>
 		                      <li><a th:href="@{/sidebar(section='weather')}">기상정보</a></li>
 		                  </ul>
@@ -75,7 +75,7 @@
 		              <li>
 		                  <a>교통자료</a>
 		                  <ul class="submenu">
-		                      <li><a href="#">교통사고<br>데이터</a></li>
+		                      <li><a th:href="@{/carAccidentdata}">교통사고<br>데이터</a></li>
 		                      <li><a th:href="@{/sidebar(section='cctv')}">CCTV</a></li>
 		                  </ul>
 		              </li>
@@ -83,8 +83,8 @@
 		              <li>
 		                  <a>회원정보</a>
 		                  <ul class="submenu">
-		                      <li><a href="#" onclick="checkLoginStatus()">로그인<br/>/회원가입</a></li>
-		                      <li><a th:href="@{/}">회원정보 찾기</a></li>
+		                      <li><a th:href="@{/login}">로그인<br/>/회원가입</a></li>
+		                      <li><a th:href="@{/login_find}">회원정보 찾기</a></li>
 							  <li><a th:href="@{/info}">마이페이지</a></li>
 						  </ul>
 		              </li>
@@ -96,25 +96,6 @@
 		              <span id="login-txt" th:text="${session.loggedInUser != null ? 'Logout' : 'Login'}"></span>
 		          </a>
 		      </div>
-			  <script>
-				function checkLoginStatus() {
-					fetch('/api/menu-login')
-					    .then(response => response.text())
-					    .then(status => {
-					        if (status === 'already-logged-in') {
-					            if (confirm('로그아웃 하시겠습니까?')) {
-					                window.location.href = '/logout'; // 로그아웃 처리
-					            }
-					        } else {
-					            window.location.href = '/menu-login'; // 로그인/회원가입 페이지로 이동
-					        }
-					    })
-					    .catch(error => {
-					        console.error('에러 발생:', error);
-					        alert('오류가 발생했습니다. 다시 시도해 주세요.');
-					    });
-				}
-			  </script>
 		  </nav>
 		  
 		  <!-- 고정 사이드바 -->

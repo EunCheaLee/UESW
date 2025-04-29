@@ -127,16 +127,11 @@ public class UserController {
         return "redirect:/login";  // 로그인 페이지로 리다이렉션
     }
 
-	@GetMapping("/login/findId")
-	public String findId() {
-		return "login_find_id";
+	@GetMapping("/login_find")
+	public String loginFind() {
+		
+		return "login/login_find";
 	}
-	
-	@GetMapping("/login/findPw")
-	public String findPw() {
-		return "login_find_pw";
-	}
-	
 	
 	@GetMapping("/info")
 	public String myPage(HttpSession session, Model model) {

@@ -52,4 +52,16 @@ public class CarAccidentController {
         return "carAccident"; // src/main/resources/templates/carAccident.html
     }
 	
+	@GetMapping("/opendata")
+	public String trafficData() {
+		
+		return "traffic/opendata";
+	}
+	
+	@GetMapping("/carAccidentdata")
+	public String carAccident() {
+		
+		return "traffic/carAccident";
+	}
+	
 }
