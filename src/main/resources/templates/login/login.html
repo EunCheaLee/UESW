@@ -10,6 +10,7 @@
 <body>
   <div class="login-wrap">
     <div class="login-html">
+
       <!-- 탭 버튼 -->
       <input id="tab-1" type="radio" name="tab" class="sign-in" checked>
       <label for="tab-1" class="tab">로그인</label>
@@ -17,54 +18,48 @@
       <label for="tab-2" class="tab">회원가입</label>
 
       <div class="login-form">
+
         <!-- 로그인 폼 -->
         <div class="sign-in-htm">
-          <form id="loginForm" th:action="@{/login}" method="post">
+          <form id="loginForm">
             <div class="group">
-              <label for="account" class="label">아이디</label>
-              <input id="account" type="text" class="input" required>
+              <label for="loginAccount" class="label">아이디</label>
+              <input id="loginAccount" type="text" class="input" required>
             </div>
             <div class="group">
-              <label for="password" class="label">비밀번호</label>
-              <input id="password" type="password" class="input" required>
+              <label for="loginPassword" class="label">비밀번호</label>
+              <input id="loginPassword" type="password" class="input" required>
             </div>
             <div class="group">
               <input id="check" type="checkbox" class="check" checked>
               <label for="check"><span class="icon"></span> 로그인 유지</label>
             </div>
 
-            <!-- 메시지 출력 영역 -->
             <div id="error-message" style="color: red; font-size: 14px;"></div>
             <div id="message" style="color: lime; font-size: 14px;"></div>
 
             <button type="submit" class="button">로그인</button>
-			<!-- 로그인 실패 시 alert 창 띄우기 -->
-			<div th:if="${errorMessage}">
-			    <script type="text/javascript">
-					alert("${errorMessage}");
-			    </script>
-			</div>
           </form>
 
           <div class="hr"></div>
           <div class="foot-lnk">
-            <a href="@{/login/Login_find_id.html}">아이디</a>
+            <a href="/login/Login_find_id.html">아이디</a>
             <a>/</a>
-            <a href="@{/login/Login_find_pw.html}">비밀번호</a>
+            <a href="/login/Login_find_pw.html">비밀번호</a>
             <a>찾기</a>
           </div>
         </div>
 
         <!-- 회원가입 폼 -->
         <div class="sign-up-htm">
-          <form>
+          <form id="registerForm">
             <div class="group">
-              <label for="account" class="label">아이디</label>
-              <input id="account" type="text" class="input" required/>
+              <label for="registerAccount" class="label">아이디</label>
+              <input id="registerAccount" type="text" class="input" required/>
             </div>
             <div class="group">
-              <label for="password" class="label">비밀번호</label>
-              <input id="password" type="password" class="input" required/>
+              <label for="registerPassword" class="label">비밀번호</label>
+              <input id="registerPassword" type="password" class="input" required/>
             </div>
             <div class="group">
               <label for="userName" class="label">이름</label>
@@ -76,8 +71,8 @@
             </div>
             <div class="group">
               <label for="email" class="label">이메일</label>
-              <input id="email" type="text" class="input" required/>
-			  <span id="emailFeedback"></span>
+              <input id="email" type="email" class="input" required/>
+              <span id="emailFeedback"></span>
             </div>
             <div class="group">
               <label for="birth" class="label">생년월일</label>
@@ -89,116 +84,124 @@
             </div>
             <button type="submit" class="button">회원가입</button>
           </form>
-		  
-		  <script>
-		    const registerForm = document.getElementById("registerForm");
-
-		    registerForm.addEventListener("submit", function (event) {
-		      event.preventDefault();
-
-		      const data = {
-		        account: document.getElementById("account").value,
-		        password: document.getElementById("password").value,
-		        userName: document.getElementById("userName").value,
-		        phoneNum: document.getElementById("phoneNum").value,
-		        email: document.getElementById("email").value,
-		        birth: document.getElementById("birth").value,
-		        fullAddress: document.getElementById("fullAddress").value,
-		      };
-
-		      fetch("/api/register", {
-		        method: "POST",
-		        headers: {
-		          "Content-Type": "application/json",
-		        },
-		        body: JSON.stringify(data),
-		      })
-		      .then((response) => {
-		        if (!response.ok) {
-		          return response.text().then(text => { throw new Error(text); });
-		        }
-		        return response.text();
-		      })
-		      .then((result) => {
-		        alert(result); // 성공 메시지
-		      })
-		      .catch((error) => {
-		        alert("회원가입 실패: " + error.message);
-		      });
-		    });
-		  </script>
 
           <div class="hr"></div>
           <div class="foot-lnk">
             <label for="tab-1">이미 회원이신가요?</label>
           </div>
         </div>
-		
+
       </div>
     </div>
   </div>
 
-  <!-- 로그인 실패 스크립트 -->
+  <!-- JavaScript 영역 -->
   <script>
-    const loginForm = document.getElementById('loginForm');
-    const errorMessage = document.getElementById('error-message');
-    const message = document.getElementById('message');
+	// 로그인 실패 관련
+	let failedAttempts = 0;
+	const maxAttempts = 3;
 
-    loginForm.addEventListener('submit', function(event) {
+	const loginForm = document.getElementById('loginForm');
+	const errorMessage = document.getElementById('error-message');
+	const message = document.getElementById('message');
+
+	loginForm.addEventListener('submit', function(event) {
+	  event.preventDefault();
+
+	  const account = document.getElementById('loginAccount').value;
+	  const password = document.getElementById('loginPassword').value;
+
+	  fetch("/api/login", {
+	    method: "POST",
+	    headers: { "Content-Type": "application/json" },
+	    body: JSON.stringify({ account, password })
+	  })
+	  .then(response => response.json())  
+	  .then(data => {
+	    if (data.success) {
+	      message.textContent = '로그인 성공!';
+	      errorMessage.textContent = '';
+	      window.location.href = "/main";  // 로그인 성공하면 이동
+	    } else {
+	      failedAttempts++;
+	      message.textContent = '';
+	      if (failedAttempts >= maxAttempts) {
+	        errorMessage.textContent = '비밀번호 틀린 횟수가 너무 많습니다. 잠시 후 다시 시도해주세요.';
+	      } else {
+	        errorMessage.textContent = `비밀번호가 틀렸습니다. ${failedAttempts}번 틀렸습니다.`;
+	      }
+	    }
+	  })
+	  .catch(err => {
+	    errorMessage.textContent = "서버 오류: " + err.message;
+	  });
+	});
+
+    // 회원가입 처리
+    const registerForm = document.getElementById('registerForm');
+
+    registerForm.addEventListener('submit', function(event) {
       event.preventDefault();
 
-      const account = document.getElementById('account').value;
-      const password = document.getElementById('password').value;
+      const data = {
+        account: document.getElementById('registerAccount').value,
+        password: document.getElementById('registerPassword').value,
+        userName: document.getElementById('userName').value,
+        phoneNum: document.getElementById('phoneNum').value,
+        email: document.getElementById('email').value,
+        birth: document.getElementById('birth').value,
+        fullAddress: document.getElementById('fullAddress').value,
+      };
 
-      // 로그인 API 호출
-      fetch('/login', {
-        method: 'POST',
-        body: new URLSearchParams({
-          account: account,
-          password: password
-        })
+      fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       })
-      .then(response => {
-        if (response.ok) {
-          // 로그인 성공 시 메인 화면으로 리다이렉트
-          window.location.href = "/main";
-        } else {
-          response.text().then(error => {
-            errorMessage.textContent = error;
-          });
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text); });
         }
+        return response.text();
       })
-      .catch(err => {
-        errorMessage.textContent = "로그인 실패: " + err.message;
+	  .then((result) => {
+	    alert(result);
+	    registerForm.reset();  // 폼 초기화
+	  })
+      .catch((error) => {
+        alert("회원가입 실패: " + error.message);
       });
     });
-	
-	<!--이메일 중복 체크-->
-	const emailInput = document.getElementById("email");
-	const feedback = document.getElementById("emailFeedback");
 
-	emailInput.addEventListener("blur", () => {
-	  const email = emailInput.value;
+    // 이메일 중복 체크
+    const emailInput = document.getElementById("email");
+    const feedback = document.getElementById("emailFeedback");
 
-	  if (!email) return;
+    emailInput.addEventListener("blur", () => {
+      const email = emailInput.value;
+      if (!email) return;
 
-	  fetch(`/api/check-email?email=${encodeURIComponent(email)}`)
-	    .then(response => response.json())
-	    .then(isDuplicate => {
-	      if (isDuplicate) {
-	        feedback.textContent = "이미 사용 중인 이메일입니다.";
-	        feedback.style.color = "red";
-	      } else {
-	        feedback.textContent = "사용 가능한 이메일입니다.";
-	        feedback.style.color = "green";
-	      }
-	    })
-	    .catch(err => {
-	      feedback.textContent = "확인 중 오류가 발생했습니다.";
-	      feedback.style.color = "orange";
-	    });
+      fetch(`/api/check-email?email=${encodeURIComponent(email)}`)
+        .then(response => response.json())
+        .then(isDuplicate => {
+          if (isDuplicate) {
+            feedback.textContent = "이미 사용 중인 이메일입니다.";
+            feedback.style.color = "red";
+          } else {
+            feedback.textContent = "사용 가능한 이메일입니다.";
+            feedback.style.color = "green";
+          }
+        })
+        .catch(err => {
+          feedback.textContent = "확인 중 오류가 발생했습니다.";
+          feedback.style.color = "orange";
+        });
+    });
+	emailInput.addEventListener("input", () => {
+	  feedback.textContent = "";
 	});
-	
   </script>
 </body>
 </html>

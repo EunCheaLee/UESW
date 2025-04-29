@@ -28,7 +28,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-
+function checkLoginStatus() {
+    fetch("/menu-login")
+        .then(response => response.text())  // 응답이 text 형태로 오므로 .text() 사용
+        .then(status => {
+            if (status === "already-logged-in") {
+                alert("이미 로그인 하셨습니다!");
+            } else if (status === "not-logged-in") {
+                window.location.href = "/login";  // 로그인 페이지로 리다이렉트
+            }
+        })
+        .catch(err => {
+            console.error("로그인 상태 확인 실패:", err);
+        });
+}
 
 
 

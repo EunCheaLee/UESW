@@ -48,60 +48,58 @@
 					              </li>
 					          </ul>
 
-							  <!-- 로그인 아이콘 -->
-							  <a th:href="@{/login}" class="login-button" >
-							      <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
-							      <span id="login-txt" th:text="${session.loggedInUser != null ? 'Logout' : 'Login'}"></span>
-							  </a>
+					          <!-- 로그인 아이콘 -->
+					          <a th:href="@{/login}" class="login-button" >
+					              <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
+					              <span id="login-txt" th:text="${session.loggedInUser != null ? 'Logout' : 'Login'}"></span>
+					          </a>
 					      </div>
 					  </nav>
-
-					    <!-- 고정 사이드바 -->
-					      <div class="sidebar">
-					        
-					        <!-- Font Awesome CDN 추가 -->
-					        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-					      <ul>
-					        <li>
-					          <button type="button" class="sidebar-button">
-					            <a th:href="@{/sidebar(section='traffic')}">
-					    			<i class="fa-solid fa-car"></i> <br>교통<br>속보
-					    		</a>
-					          </button>
-					        </li>
-					        <li>
-					          <button type="button" class="sidebar-button">
-					    			<a th:href="@{/sidebar(section='weather')}">
-					    				<i class="fa-solid fa-cloud-sun"></i> <br>기상<br>정보
-					    			</a>
-					    		</button>
-					        </li>
-					        <li>
-					          <button type="button" class="sidebar-button" >
-					    		<a th:href="@{/sidebar(section='cctv')}">
-					    			<i class="fa-solid fa-video"></i> <br>CCTV<br>검색
-					    		</a>
-					          </button>
-					        </li>
-					        <li>
-					          <button type="button" class="sidebar-button" >
-					  			<a th:href="@{/info}">
-					            	<i class="fa-solid fa-user"></i> <br>마이<br>페이지
-					          </button>
-					        </li>
-					        <li>
-					          <button type="button" class="sidebar-button" >
-					    		<a th:href="@{/sidebar(section='settings')}">
-					    	        <i class="fa-solid fa-gear"></i> <br>설정
-					    		</a>
-					          </button>
-					        </li>
-					      </ul>
-					  </div>
-
-			  <!-- 사이드바 스크립트 -->
-			<script src="/js/sidebar.js"></script>
-			</div>
+					  
+					  <!-- 고정 사이드바 -->
+					    <div class="sidebar">
+					      
+					      <!-- Font Awesome CDN 추가 -->
+					      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+					    <ul>
+					      <li>
+					        <button type="button" class="sidebar-button">
+					          <a th:href="@{/sidebar(section='traffic')}">
+					  			<i class="fa-solid fa-car"></i> <br>교통<br>속보
+					  		</a>
+					        </button>
+					      </li>
+					      <li>
+					        <button type="button" class="sidebar-button">
+					  			<a th:href="@{/sidebar(section='weather')}">
+					  				<i class="fa-solid fa-cloud-sun"></i> <br>기상<br>정보
+					  			</a>
+					  		</button>
+					      </li>
+					      <li>
+					        <button type="button" class="sidebar-button" >
+					  		<a th:href="@{/sidebar(section='cctv')}">
+					  			<i class="fa-solid fa-video"></i> <br>CCTV<br>검색
+					  		</a>
+					        </button>
+					      </li>
+					      <li>
+					        <button type="button" class="sidebar-button" >
+								<a th:href="@{/info}">
+					          	<i class="fa-solid fa-user"></i> <br>마이<br>페이지
+					        </button>
+					      </li>
+					      <li>
+					        <button type="button" class="sidebar-button" >
+					  		<a th:href="@{/sidebar(section='settings')}">
+					  	        <i class="fa-solid fa-gear"></i> <br>설정
+					  		</a>
+					        </button>
+					      </li>
+					    </ul>
+					<!-- 사이드바 스크립트 -->
+					<script src="/js/sidebar.js"></script>
+				    </div>
 			<h1>마이페이지</h1>
 
 			<!-- 로그인된 사용자 정보 출력 -->

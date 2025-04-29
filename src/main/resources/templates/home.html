@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>UESW 교통안전페이지</title>
     <link rel="stylesheet" th:href="@{/css/home.css}">
 	<link rel="stylesheet" th:href="@{/css/sidebar.css}">
 	<script src="/js/home.js" defer></script>
@@ -15,8 +15,8 @@
 </head>
 
 <body>
-<!--		<header>
-			<table class="main-header">
+		<header>
+<!--			<table class="main-header">
 				<tr class="main-info">
 					<td class="main-news">
 						<iframe></iframe>
@@ -27,8 +27,32 @@
 						<img src=""/>
 					</td>
 				</tr>
-			</table>
-		</header>-->
+			</table>-->
+			<!-- 여기가 모달 -->
+			<div id="notice-modal-container" style="display: none; position: fixed; top: 0; left: 0;
+			  width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+			  <div id="notice-modal-content"></div>
+			</div>
+
+			<script>
+			  // '오늘 하루 그만보기' 기능 삭제하고, 무조건 모달 띄우기
+			  fetch('/notice')
+			    .then(res => res.text())
+			    .then(html => {
+			      document.getElementById('notice-modal-content').innerHTML = html;
+			      document.getElementById('notice-modal-container').style.display = 'flex';
+
+			      // 닫기 버튼만 남기기 (있으면)
+			      const btn = document.querySelector('#notice-modal-content .hide-today-btn');
+			      if (btn) {
+			        btn.addEventListener('click', () => {
+			          document.getElementById('notice-modal-container').style.display = 'none';
+			        });
+			      }
+			    });
+			</script>
+		</header>
+		
 		
 		<!-- 넷바 -->
 		    <nav class="navbar">
@@ -41,7 +65,7 @@
 		          <!-- 메뉴 -->
 		          <ul class="menu">
 		              <li>
-		                  <a href="#">교통상황</a>
+		                  <a>교통상황</a>
 		                  <ul class="submenu">
 		                      <li><a th:href="@{/opendata/}">교통정보</a></li>
 		                      <li><a th:href="@{/sidebar(section='traffic')}">돌발상황</a></li>
@@ -49,7 +73,7 @@
 		                  </ul>
 		              </li>
 		              <li>
-		                  <a href="#">교통자료</a>
+		                  <a>교통자료</a>
 		                  <ul class="submenu">
 		                      <li><a href="#">교통사고<br>데이터</a></li>
 		                      <li><a th:href="@{/sidebar(section='cctv')}">CCTV</a></li>
@@ -57,11 +81,12 @@
 		              </li>
 		              <li><a th:href="@{/board}">게시판</a></li>
 		              <li>
-		                  <a th:href="@{/info}">회원정보</a>
+		                  <a>회원정보</a>
 		                  <ul class="submenu">
-		                      <li><a th:href="@{/login}">로그인<br/>/회원가입</a></li>
-		                      <li><a href="@{/}">회원정보 찾기</a></li>
-		                  </ul>
+		                      <li><a href="#" onclick="checkLoginStatus()">로그인<br/>/회원가입</a></li>
+		                      <li><a th:href="@{/}">회원정보 찾기</a></li>
+							  <li><a th:href="@{/info}">마이페이지</a></li>
+						  </ul>
 		              </li>
 		          </ul>
 
@@ -71,6 +96,25 @@
 		              <span id="login-txt" th:text="${session.loggedInUser != null ? 'Logout' : 'Login'}"></span>
 		          </a>
 		      </div>
+			  <script>
+				function checkLoginStatus() {
+					fetch('/api/menu-login')
+					    .then(response => response.text())
+					    .then(status => {
+					        if (status === 'already-logged-in') {
+					            if (confirm('로그아웃 하시겠습니까?')) {
+					                window.location.href = '/logout'; // 로그아웃 처리
+					            }
+					        } else {
+					            window.location.href = '/menu-login'; // 로그인/회원가입 페이지로 이동
+					        }
+					    })
+					    .catch(error => {
+					        console.error('에러 발생:', error);
+					        alert('오류가 발생했습니다. 다시 시도해 주세요.');
+					    });
+				}
+			  </script>
 		  </nav>
 		  
 		  <!-- 고정 사이드바 -->
@@ -117,6 +161,7 @@
 		<!-- 사이드바 스크립트 -->
 		<script src="/js/sidebar.js"></script>
 	    </div>
+		<div class="favorite-districts"></div>
 		
 		
 		

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-	<link rel="stylesheet" th:href="@{/css/home.css}">
+	<link rel="stylesheet" th:href="@{/css/home.css}"/>
     <link rel="stylesheet" th:href="@{/css/board.css}"/>
     <script th:src="@{/js/board.js}" defer></script>
 	<script th:src="@{/js/session.js}"></script>
@@ -16,7 +16,7 @@
 				}
 		.list-etc{
 			position: fixed; /* 화면 고정 */
-			margin-top:70px;
+			padding: 100px 50px;
 			left: 50%; /* 화면 중앙으로 이동 */
 			transform: translateX(-50%); /* 정확한 중앙 정렬 */
 			display: flex;
@@ -31,47 +31,49 @@
 </head>
 <body class="scroll-enabled">
 	<!-- 넷바 -->
-	    <nav class="navbar">
-	      <div class="container-fluid">
-	          <!-- 브랜드 영역 -->
-	          <a th:href="@{/home}" class="navbar-brand">
-	              <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
-	          </a>
+			    <nav class="navbar">
+			      <div class="container-fluid">
+			          <!-- 브랜드 영역 -->
+			          <a th:href="@{/home}" class="navbar-brand">
+			              <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
+			          </a>
 
-	          <!-- 메뉴 -->
-	          <ul class="menu">
-	              <li>
-	                  <a href="#">교통상황</a>
-	                  <ul class="submenu">
-	                      <li><a th:href="@{/opendata/}">교통정보</a></li>
-	                      <li><a th:href="@{/sidebar(section='traffic')}">돌발상황</a></li>
-	                      <li><a th:href="@{/sidebar(section='weather')}">기상정보</a></li>
-	                  </ul>
-	              </li>
-	              <li>
-	                  <a href="#">교통자료</a>
-	                  <ul class="submenu">
-	                      <li><a href="#">교통사고<br>데이터</a></li>
-	                      <li><a th:href="@{/sidebar(section='cctv')}">CCTV</a></li>
-	                  </ul>
-	              </li>
-	              <li><a th:href="@{/board}">게시판</a></li>
-	              <li>
-	                  <a th:href="@{/info}">회원정보</a>
-	                  <ul class="submenu">
-	                      <li><a th:href="@{/login}">로그인<br/>/회원가입</a></li>
-	                      <li><a href="@{/}">회원정보 찾기</a></li>
-	                  </ul>
-	              </li>
-	          </ul>
+			          <!-- 메뉴 -->
+			          <ul class="menu">
+			              <li>
+			                  <a href="#">교통상황</a>
+			                  <ul class="submenu">
+			                      <li><a th:href="@{/opendata/}">교통정보</a></li>
+			                      <li><a th:href="@{/sidebar(section='traffic')}">돌발상황</a></li>
+			                      <li><a th:href="@{/sidebar(section='weather')}">기상정보</a></li>
+			                  </ul>
+			              </li>
+			              <li>
+			                  <a href="#">교통자료</a>
+			                  <ul class="submenu">
+			                      <li><a href="#">교통사고<br>데이터</a></li>
+			                      <li><a th:href="@{/sidebar(section='cctv')}">CCTV</a></li>
+			                  </ul>
+			              </li>
+			              <li><a th:href="@{/board}">게시판</a></li>
+			              <li>
+			                  <a th:href="@{/info}">회원정보</a>
+			                  <ul class="submenu">
+			                      <li><a th:href="@{/login}">로그인<br/>/회원가입</a></li>
+			                      <li><a href="@{/}">회원정보 찾기</a></li>
+			                  </ul>
+			              </li>
+			          </ul>
 
-	          <!-- 로그인 아이콘 -->
-	          <a th:href="@{/login}" class="login-button" >
-	              <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
-	              <span id="login-txt" th:text="${session.loggedInUser != null ? 'Logout' : 'Login'}"></span>
-	          </a>
-	      </div>
-	  </nav>
+			          <!-- 로그인 아이콘 -->
+			          <a th:href="@{/login}" class="login-button" >
+			              <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
+			              <span id="login-txt" th:text="${session.loggedInUser != null ? 'Logout' : 'Login'}"></span>
+			          </a>
+			      </div>
+			  </nav>
+			  
+
 
 
 <table class="list">
@@ -123,8 +125,8 @@
     </tbody>
 </table>
 <table class="list-etc">
-
 	<tr>
+	
 		<td>
 			<!-- 페이지 네비게이션 -->
 			<div class="index">
@@ -144,9 +146,10 @@
 			    </ul>
 			</div>
 		</td>
+	    <td id="write-button"><button th:onclick="|location.href='@{/board/insert}'|">글쓰기</button></td>
 	</tr>
 	<tr>
-		<td>
+		<td colspan="2">
 			<!-- 검색바 -->
 			<div align="center">
 			    <form th:action="@{/board/list}" method="get">
@@ -156,9 +159,7 @@
 			</div>
 		</td>
 	</tr>
-	<tr>
-	    <td id="write-button"><button th:onclick="|location.href='@{/board/insert}'|">글쓰기</button></td>
-	</tr>
+	
 </table>
 
 

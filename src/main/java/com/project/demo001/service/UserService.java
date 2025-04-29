@@ -54,9 +54,9 @@ public class UserService {
 	    return user != null && user.getPassword().equals(password);
 	}
 
-	public User getUserByAccount(String account) {
-	    return userRepository.findByAccount(account); // account가 unique 키라고 가정
-	}
+    public User getUserByAccount(String account) {
+        return userRepository.findByAccount(account);
+    }
     
 	
 }

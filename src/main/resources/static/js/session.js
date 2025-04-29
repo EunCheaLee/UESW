@@ -1,11 +1,15 @@
-setInterval(function() {
-    fetch("/session/refresh", { 
-        method: "GET" 
-    })
-    .then(response => {
-        if (response.status === 401) {  // 세션이 없을 경우 401 반환
-            clearInterval(this);  // 리프레시 중단
-            window.location.href = "/login";  // 로그인 페이지로 리디렉션
-        }
-    });
-}, 5 * 60 * 1000); // 5분마다
+
+    // 5분(300000ms)마다 세션을 새로고침
+    setInterval(function() {
+        fetch('/session/refresh')
+            .then(response => {
+                if (response.status === 401) {
+                    // 세션 만료된 경우 로그인 페이지로 이동
+                    alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+                    window.location.href = '/login';
+                }
+            })
+            .catch(error => {
+                console.error('Session refresh error:', error);
+            });
+    }, 300000); // 5분마다 실행 (5 * 60 * 1000ms)

@@ -164,16 +164,16 @@ function showContent(section) {
   const content = document.getElementById('main-content');
 
   if (section === 'traffic') {
-    content.innerHTML = `<h1>교통속보</h1><div id="map"></div>`;
-    setTimeout(() => {
-      mapInstance = L.map("map").setView([37.55, 127.0], 12);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors"
-      }).addTo(mapInstance);
-      markerCluster = L.markerClusterGroup();
-      mapInstance.addLayer(markerCluster);
-      loadTrafficEvents();
-    }, 0);
+	content.innerHTML = `<h1>교통속보</h1><div id="map"></div>`;
+	setTimeout(() => {
+	  mapInstance = L.map("map").setView([37.55, 127.0], 11);
+	  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+	    attribution: "&copy; OpenStreetMap contributors"
+	  }).addTo(mapInstance);
+	  markerCluster = L.markerClusterGroup();
+	  mapInstance.addLayer(markerCluster);
+	  loadTrafficEvents();
+	}, 0);
   } else if (section === 'weather') {
     content.innerHTML = `<h1>서울 기상정보</h1><div class="button-container"></div>`;
     renderDistrictButtons();
@@ -208,7 +208,7 @@ function showContent(section) {
 	          <button id="load-cctv-btn">📡 CCTV 불러오기</button>
 	          <div id="map"></div>`;
 	        setTimeout(() => {
-	          mapInstance = L.map("map").setView([37.55, 127.0], 12);
+	          mapInstance = L.map("map").setView([37.55, 127.0], 10);
 	          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 	            attribution: "&copy; OpenStreetMap contributors"
 	          }).addTo(mapInstance);
@@ -257,36 +257,57 @@ function loadCctv(sourceType) {
 }
 
 function loadTrafficEvents() {
-  const apiKey = "49586b55684d414436315377796157";
-  const url = `https://openapi.its.go.kr:9443/eventInfo?apiKey=${apiKey}&type=all&getType=json`;
-  fetch(url)
-    .then(res => res.json())
-    .then(data => {
-      data.body.items.forEach(ev => {
-        const lat = parseFloat(ev.coordy);
-        const lon = parseFloat(ev.coordx);
-        const type = ev.eventtype;
-        const color = type.includes("사고") ? "red" : type.includes("정체") ? "orange" : "gray";
-        const marker = L.marker([lat, lon], {
-          icon: L.divIcon({
-            className: 'custom-icon',
-            html: `<div style="background:${color};width:20px;height:20px;border-radius:50%;border:2px solid white"></div>`
-          })
-        });
-        marker.bindPopup(`<b>${ev.eventtitle}</b><br>${ev.eventdetail}`);
-        markerCluster.addLayer(marker);
-      });
-    });
+	const apiKey = "dd094983b6bb4bd99860e397c52eae38"; 
+	const url = `https://openapi.its.go.kr:9443/eventInfo?apiKey=${encodeURIComponent(apiKey)}&type=all&getType=json`;
+
+	fetch(url)
+	  .then(res => res.json())
+	  .then(data => {
+	    console.log("ITS 교통 이벤트 응답:", data);
+	    const items = data?.body?.items;
+	    if (!items || !Array.isArray(items)) {
+	      console.warn("🚫 유효한 교통 이벤트 항목이 없습니다.");
+	      return;
+	    }
+	    markerCluster.clearLayers(); // 기존 마커 제거
+	    items.forEach(ev => {
+	      const lat = parseFloat(ev.coordy);
+	      const lon = parseFloat(ev.coordx);
+	      if (isNaN(lat) || isNaN(lon)) {
+	        console.warn("유효하지 않은 좌표:", ev);
+	        return;
+	      }
+	      const type = ev.eventtype || "";
+	      const color = type.includes("사고") ? "red"
+	                  : type.includes("정체") ? "orange"
+	                  : "gray";
+	      const marker = L.marker([lat, lon], {
+	        icon: L.divIcon({
+	          className: "custom-icon",
+	          html: `<div style="background:${color};width:20px;height:20px;border-radius:50%;border:2px solid white"></div>`
+	        })
+	      });
+	      marker.bindPopup(`<b>${ev.eventtitle}</b><br>${ev.eventdetail}`);
+	      markerCluster.addLayer(marker);
+	    });
+	  })
+	  .catch(err => {
+	    console.error("❌ 교통 이벤트 불러오기 실패:", err);
+	  });
+}
+
+function startTrafficEventUpdates() {
+  loadTrafficEvents();
+  setInterval(() => {
+    markerCluster.clearLayers();
+    loadTrafficEvents();
+  }, 5 * 60 * 1000); // 5분마다 갱신
 }
 
 function getTodayDateStr() {
   return new Date().toISOString().split("T")[0];
 }
 
-
-document.addEventListener("DOMContentLoaded", function () {
-  showPopupOncePerDay("🚧 성수대교 인근 2차로 사고 발생! 주의하세요.");
-});
 
 function checkFavoritesAlertConditions() {
   const favorites = JSON.parse(localStorage.getItem('favoriteDistricts')) || [];

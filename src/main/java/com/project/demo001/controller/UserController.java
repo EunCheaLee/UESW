@@ -35,7 +35,7 @@ public class UserController {
 	@GetMapping("/session/refresh")
 	@ResponseBody
 	public ResponseEntity<String> refreshSession(HttpSession session) {
-	    if (session == null || session.getAttribute("user") == null) {
+	    if (session == null || session.getAttribute("loggedInUser") == null) {  // 고쳤어!
 	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session expired");
 	    }
 
@@ -74,6 +74,11 @@ public class UserController {
 		return "home";
 	}
 	
+    @GetMapping("/notice")
+    public String notice() {
+        return "notice"; // templates/notice.html
+    }
+	
 	@PostMapping("/register")
 	public String register(User user, Model model) {
 		userservice.registerUser(user);
@@ -93,7 +98,7 @@ public class UserController {
 		return "/home/sidebar";
 	}
 	
-    @GetMapping("/login")
+    @GetMapping({"/login","/menu-login"})
     public String loginPage(HttpSession session) {
         if (session != null && session.getAttribute("loggedInUser") != null) {
             session.invalidate();
@@ -116,8 +121,10 @@ public class UserController {
     
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate(); // 세션 무효화
-        return "redirect:/login"; // ✅ 템플릿 말고 바로 리디렉션
+        if (session != null) {
+            session.invalidate();  // 세션 전체 무효화
+        }
+        return "redirect:/login";  // 로그인 페이지로 리다이렉션
     }
 
 	@GetMapping("/login/findId")
