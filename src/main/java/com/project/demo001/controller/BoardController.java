@@ -111,17 +111,11 @@ public class BoardController {
         return "board/list";  // 반환할 뷰 페이지
     }
 	
-	@GetMapping("/board/insert")
-	public String insert(Model model){
-		System.out.println("BoardController의 insert() 메서드 실행");
-		model.addAttribute("board", new Board());
-		
-		Board board = new Board();
-		System.out.println("board.user: " + board.getUser());
-		System.out.println("board.user.userName: " + (board.getUser() != null ? board.getUser().getUserName() : "null"));
-		
-		return "board/insert";
-	}
+    @GetMapping("/board/insert")
+    public String insert(Model model){
+        model.addAttribute("board", new Board());
+        return "board/insert";
+    }
 	
 	@PostMapping("/board/save")
 	public String save(@ModelAttribute Board board, 

@@ -3,54 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>게시글 작성</title>
     <link rel="stylesheet" th:href="@{/css/board.css}"/>
+	<link rel="stylesheet" th:href="@{/css/home.css}"/>
     <script th:src="@{/js/board.js}" defer></script>
 	<script th:src="@{/js/session.js}"></script>
+	<!-- Toast UI Editor CSS & JS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+	<style>
+		body{
+			margin-top: 120px;
+		}
+	</style>
 </head>
 <body>
-<form th:action="@{/board/save}" method="post" th:object="${board}" enctype="multipart/form-data">
-<table class="form-container"> 
-    <tr><td><h2>글쓰기</h2></td></tr>
-	<tr height="10px"><td></td></tr>
-    <tr>
-		<td class="header">제목</td>
-		<label>
-		  <input type="checkbox" name="notice" th:checked="${board.notice}" /> 공지사항으로 등록
-		</label>
-	</tr>
-	<tr height="5px"><td></td></tr>
-    <tr><td><input type="text" th:field="*{title}" placeholder="제목을 입력하세요" name="title"></td></tr>
-	<tr height="10px"><td></td></tr>
-    <tr><td class="header">본문</td></tr>
-	<tr height="5px"><td></td></tr>
-    <tr><td><textarea placeholder="내용을 입력하세요" th:field="*{content}" name="content"></textarea></td></tr>
-	<tr height="10px"><td></td></tr>
+	<!-- 넷바 -->
+	    <nav class="navbar">
+	      <div class="container-fluid">
+	          <!-- 브랜드 영역 -->
+	          <a th:href="@{/home}" class="navbar-brand">
+	              <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
+	          </a>
+
+	          <!-- 메뉴 -->
+	          <ul class="menu">
+	              <li>
+	                  <a href="#">교통상황</a>
+	                  <ul class="submenu">
+	                      <li><a th:href="@{/opendata/}">교통정보</a></li>
+	                      <li><a th:href="@{/sidebar(section='traffic')}">돌발상황</a></li>
+	                      <li><a th:href="@{/sidebar(section='weather')}">기상정보</a></li>
+	                  </ul>
+	              </li>
+	              <li>
+	                  <a href="#">교통자료</a>
+	                  <ul class="submenu">
+	                      <li><a href="#">교통사고<br>데이터</a></li>
+	                      <li><a th:href="@{/sidebar(section='cctv')}">CCTV</a></li>
+	                  </ul>
+	              </li>
+	              <li><a th:href="@{/board}">게시판</a></li>
+	              <li>
+	                  <a th:href="@{/info}">회원정보</a>
+	                  <ul class="submenu">
+	                      <li><a th:href="@{/login}">로그인<br/>/회원가입</a></li>
+	                      <li><a href="@{/}">회원정보 찾기</a></li>
+	                  </ul>
+	              </li>
+	          </ul>
+
+	          <!-- 로그인 아이콘 -->
+	          <a th:href="@{/login}" class="login-button" >
+	              <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
+	              <span id="login-txt">Login</span>
+	          </a>
+	      </div>
+	  </nav>
 	
-	<tr >
-	    <td>첨부 파일
-	    
+	<h2 id="write-notice">게시글 작성</h2>
+
+	<form th:action="@{/board/save}" method="post" th:object="${board}" enctype="multipart/form-data">
+
+	    <!-- 제목 -->
+	    <div>
+	        <input type="text" name="title" placeholder="제목" required th:field="*{title}" />
+	    </div>
+
+	    <!-- Toast UI Editor -->
+		<div style="display: flex; justify-content: center; margin-top:10px">
+		    <div id="editor" style="width: 500px; margin: 0 auto;"></div>
+		    <textarea name="content" id="content" th:field="*{content}" style="display: none;"></textarea>
+		</div>
+
+	    <!-- 첨부파일 -->
+	    <div class="file-text-message" style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+	        <label>첨부 파일</label>
 	        <input type="file" name="file" />
-	        
-			<span align="center" th:if="${board != null and board.boardFile == null}"><br/><span>첨부된 파일이 없습니다.</span>
-	        <a th:if="${board != null and board.boardFile != null}" th:href="@{'/boardupload/' + ${board.boardFile}}"
-	           th:text="${board.boardFile}"></a>
+	        <div th:if="${board != null}">
+	            <div th:if="${board.boardFile == null}">첨부된 파일이 없습니다.</div>
+	            <div th:if="${board.boardFile != null}">
+	                <a th:href="@{'/boardupload/' + ${board.boardFile}}" th:text="${board.boardFile}"></a>
+	            </div>
+	        </div>
+	    </div>
 
-	        <!-- 첨부 파일 업로드 버튼 추가 -->
-	    </td>
-	</tr>
+	    <!-- 비밀번호 -->
+	    <div style="text-align: center; margin-top:10px; margin-right: 270px">
+	        <label>비밀번호</label>
+	        <input type="password" th:field="*{user.password}" name="password" placeholder="비밀번호를 입력하세요" />
+	    </div>
 
-	<!-- 비밀번호 입력 필드 추가 -->
-	<tr>
-	    <td class="header">비밀번호</td>
-	</tr>
-	<tr height="5px"><td></td></tr>
-	<tr><td><input type="password" th:field="*{user.password}" placeholder="비밀번호를 입력하세요" name="password"></td></tr>
-	<tr height="10px"><td></td></tr>
+	    <!-- 제출 -->
+	    <div style="margin-top: 10px;">
+	        <button type="submit">작성</button>
+	        <a href="/board/list">
+				<button type="button">목록</button>
+			</a>
+	    </div>
 
-	<tr align="right"><td><input type="submit" value="등록" onclick="alert('작성 완료!')"></td></tr>
-	
-</table>
-</form>
+	</form>
+
+	<script>
+		const editor = new toastui.Editor({
+		        el: document.querySelector('#editor'),
+		        height: '400px',
+		        initialEditType: 'wysiwyg',  // WYSIWYG 편집기로 기본 설정
+		        previewStyle: 'vertical',    // 미리보기 스타일 설정 (선택적)
+		        useCommandShortcut: true,    // 단축키 사용 여부 설정
+		        viewer: false                // 기본적으로 편집기 활성화
+		    });
+	    document.querySelector('form').addEventListener('submit', function (e) {
+	        document.querySelector('#content').value = editor.getMarkdown();
+	        alert('작성 완료!');
+	    });
+	</script>
 </body>
 </html>

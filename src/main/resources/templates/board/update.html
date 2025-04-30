@@ -3,21 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 수정</title>
+	<link rel="stylesheet" th:href="@{/css/board.css}"/>
+	<link rel="stylesheet" th:href="@{/css/home.css}"/>
+	<script th:src="@{/js/board.js}" defer></script>
 	<script th:src="@{/js/session.js}"></script>
+	<!-- Toast UI Editor CSS & JS -->
+	<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
+	<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+	<style>
+		body{
+			margin-top: 120px;
+		}
+	</style>
 </head>
 <body>
-    <h2>게시글 수정</h2>
-    <form th:action="@{/board/update/{id}(id=${board.id})}" th:object="${board}" method="post">
-        <input type="hidden" th:field="*{id}" />
-        
-        <label>제목:</label><br>
-        <input type="text" th:field="*{title}" /><br><br>
-        
-        <label>내용:</label><br>
-        <textarea th:field="*{content}" rows="10" cols="50"></textarea><br><br>
+	<!-- 넷바 -->
+	    <nav class="navbar">
+	      <div class="container-fluid">
+	          <!-- 브랜드 영역 -->
+	          <a th:href="@{/home}" class="navbar-brand">
+	              <img href="#" src="/img/Logo.png" alt="Logo" class="logo">
+	          </a>
 
-        <button type="submit">수정 완료</button>
-		<button type="button" th:onclick="history.back()|">취소</button>
-    </form>
+	          <!-- 메뉴 -->
+	          <ul class="menu">
+	              <li>
+	                  <a href="#">교통상황</a>
+	                  <ul class="submenu">
+	                      <li><a th:href="@{/opendata/}">교통정보</a></li>
+	                      <li><a th:href="@{/sidebar(section='traffic')}">돌발상황</a></li>
+	                      <li><a th:href="@{/sidebar(section='weather')}">기상정보</a></li>
+	                  </ul>
+	              </li>
+	              <li>
+	                  <a href="#">교통자료</a>
+	                  <ul class="submenu">
+	                      <li><a href="#">교통사고<br>데이터</a></li>
+	                      <li><a th:href="@{/sidebar(section='cctv')}">CCTV</a></li>
+	                  </ul>
+	              </li>
+	              <li><a th:href="@{/board}">게시판</a></li>
+	              <li>
+	                  <a th:href="@{/info}">회원정보</a>
+	                  <ul class="submenu">
+	                      <li><a th:href="@{/login}">로그인<br/>/회원가입</a></li>
+	                      <li><a href="@{/}">회원정보 찾기</a></li>
+	                  </ul>
+	              </li>
+	          </ul>
+
+	          <!-- 로그인 아이콘 -->
+	          <a th:href="@{/login}" class="login-button" >
+	              <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
+	              <span id="login-txt">Login</span>
+	          </a>
+	      </div>
+	  </nav>
+	
+    <h2 id="write-notice">게시글 수정</h2>
+	<form th:action="@{/board/update/{id}(id=${board.id})}" th:object="${board}" method="post" onsubmit="return updateContentToTextarea()">
+	    <input type="hidden" th:field="*{id}" />
+	    
+	    <label>제목:</label><br>
+	    <input type="text" th:field="*{title}" /><br><br>
+	    
+	    <label>내용:</label><br>
+	    
+		<!-- Toast UI Editor -->
+		<div style="display: flex; justify-content: center; margin-top:10px">
+		    <div id="editor" style="width: 500px; margin: 0 auto;"></div>
+		    <textarea name="content" id="content" th:field="*{content}" style="display: none;"></textarea>
+		</div>
+	    
+		<!-- 숨겨진 textarea에 초기값 설정 (Thymeleaf가 HTML에서 안전하게 출력 가능) -->
+		<textarea id="initialContent" th:text="${board.content}" style="display: none;"></textarea>
+	    
+	    <br><br>
+	    <button type="submit">수정 완료</button>
+	    <button type="button" onclick="history.back()">취소</button>
+	</form>
+
+	<script>
+	    const initialContent = document.getElementById('initialContent').textContent;
+
+	    const editor = new toastui.Editor({
+	        el: document.querySelector('#editor'),
+	        height: '400px',
+	        initialEditType: 'wysiwyg',
+	        previewStyle: 'vertical',
+	        initialValue: initialContent
+	    });
+
+	    function updateContentToTextarea() {
+	        document.getElementById('hiddenContent').value = editor.getMarkdown();
+	        return true;
+	    }
+	</script>
 </body>
 </html>

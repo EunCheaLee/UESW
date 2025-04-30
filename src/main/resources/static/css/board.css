@@ -6,11 +6,35 @@ table {
     border-collapse: collapse;
     border-top: none;
 }
-
-.select-table{
-	height: 150px;
-	border: 1px black;
+/* 테이블 스타일 */
+.select-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
+
+.select-table td,
+.select-table th {
+    padding: 10px;
+    text-align: left;
+    color: #333333;  /* 기본 텍스트 색상 */
+	margin: 20px 10px;
+}
+
+.select-table th {
+    background-color: #ffffff;  /* 파란색 배경 */
+    color: #000000; /* 흰색 글자 */
+}
+
+
+
+/* 제목 */
+.select-table h2 {
+    margin: 10px 0;
+    font-size: 24px;
+    color: #0247a1;  /* 파란색 제목 */
+}
+
 #write-button{
 	display: flex; /* td를 flexbox 컨테이너로 만듬 */
 	justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
@@ -67,7 +91,6 @@ button {
     height: 40px;
     font-size: 15px;
     border: 0;
-    outline: 1.5px rgb(68, 136, 244) solid;
     border-radius: 5px;
     background-color: rgb(164, 199, 255);
 }
@@ -160,52 +183,67 @@ input[type="submit"]:active {
     color: white; /* 글자 색 */
 }
 
-.view-container{
-	display: grid;
-	place-items: center;
-	height: 100vh;
-	overflow: hidden;  /* 컨텐츠가 화면을 넘어가지 않도록 제한 */
+/* 전체 컨테이너 */
+.view-container {
+    width: 70%;
+    margin: 30px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;  /* 하얀색 배경 */
+    color: #333333; /* 기본 텍스트 색상 */
 }
 
-.view-content{
-	width: 700px; /* 화면 크기에 맞는 너비로 수정 */
-	text-align: center;
+/* 게시글 본문 */
+.view-content {
+    background-color: #ffffff;  /* 하얀색 배경 */
+    border: 0px;  /* 파란색 테두리 */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
-.view-button-container{
-	margin-top:10px;
-	display: flex;
-	justify-content: flex-start; /* 버튼을 왼쪽에 정렬 */
-	gap: 10px; /* 버튼 간 간격 조정 */
+/* 버튼 영역 */
+.view-button-container {
+    text-align: right;
+    margin-top: 20px;
 }
 
 .view-button {
-	display: inline-block;
-	width: 60px;
-	height: 30px;
-	border-radius: 30px;
-	background-color: #01367e;
-	color: #ffffff;
-	border: none;
-	outline: none; /* 포커스 시 외곽선 제거 */
-	font-size: 15px;
+    background-color: #0247a1;  /* 파란색 배경 */
+    color: #ffffff;  /* 흰색 글자 */
+    padding: 8px 16px;
+    border: 0px;
+    border-radius: 5px;
+    margin-left: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
 }
+
+.view-button:hover {
+    background-color: #01367e;  /* 어두운 파란색 */
+}
+
 
 #reply-insert{
 	width: 100%;
 	height: 20%;
 }
 
-.view-reply{
-	margin-bottom: 10%;
-	display: flex;
-	justify-content: left;
+/* 댓글 영역 */
+.view-reply {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f9f9f9;  /* 아주 연한 회색 */
+    border: 1px solid #ddd;
+    border-radius: 10px;
 }
 
-#comment-notice{
-	margin-top: 10px;
-	margin-right: 10px;
-	font-weight: bold;
+#comment-notice {
+    font-weight: bold;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 10px;
+    color: #0247a1;  /* 파란색 */
 }
 
 .comment-form {
@@ -232,4 +270,78 @@ textarea {
     color: white;
     border: none;
     border-radius: 5px;
+}
+
+#write-notice{
+	text-align: center;
+	margin-right: 350px;
+}
+
+/* Toast UI Viewer */
+#viewer-container {
+    margin: 20px auto;
+    text-align: center;  /* 콘텐츠를 가운데 정렬 */
+    width: 80%;  /* 원하는 너비로 조정 */
+}
+
+#viewer {
+    border: 0px ;  /* 파란색 테두리 */
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #ffffff;
+    color: #333333;  /* 기본 텍스트 색상 */
+    display: inline-block;  /* 블록 요소를 inline-block으로 바꾸어 가운데 정렬 */
+    text-align: center; 
+    width: 100%;  /* 너비를 100%로 설정해도 상위 요소의 크기에 맞게 자동 조정 */
+}
+
+/* 댓글 입력 */
+#reply-insert {
+    width: 70%;
+    padding: 10px;
+    resize: vertical;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: inherit;
+}
+
+/* 댓글 등록 버튼 */
+#reply-button {
+    margin-top: 10px;
+    background-color: #0247a1;  /* 파란색 배경 */
+    color: #ffffff;  /* 흰색 글자 */
+    padding: 6px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#reply-button:hover {
+    background-color: #01367e;  /* 어두운 파란색 */
+}
+
+/* 댓글 목록 */
+.view-reply ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 20px;
+}
+
+.view-reply li {
+    margin-bottom: 20px;
+    background-color: #ffffff;  /* 하얀색 배경 */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.view-reply li p {
+    margin: 5px 0;
+    color: #333333;  /* 기본 텍스트 색상 */
+}
+
+.view-reply hr {
+    border: none;
+    border-top: 1px solid #ddd;
 }
