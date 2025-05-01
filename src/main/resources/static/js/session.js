@@ -1,5 +1,5 @@
 
-    // 5분(300000ms)마다 세션을 새로고침
+    // 30분(1800000ms)마다 세션을 새로고침
     setInterval(function() {
         fetch('/session/refresh')
             .then(response => {
@@ -12,4 +12,4 @@
             .catch(error => {
                 console.error('Session refresh error:', error);
             });
-    }, 300000); // 5분마다 실행 (5 * 60 * 1000ms)
+    }, 1800000); // 30분마다 실행 (30 * 60 * 1000ms)

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+	<script th:fragment="headScript">
+	document.addEventListener("DOMContentLoaded", function() {
+	    if (navigator.geolocation) {
+	        navigator.geolocation.getCurrentPosition(async function(position) {
+				const lat = position.coords.latitude;
+			    const lon = position.coords.longitude;
+
+			    const name = await getDistrictName(lat, lon);
+			    getWeatherByDistrict(lat, lon, name);
+
+				// 위치 정보 저장 (이 위치로 이동)
+				fetch("/api/save-location", {
+				    method: "POST",
+				    headers: {
+				        "Content-Type": "application/json"
+				    },
+				    body: JSON.stringify({
+				        lat: lat,
+				        lon: lon,
+				        districtName: name
+				    })
+	            });
+	        });
+	    } else {
+	        alert("위치 정보를 사용할 수 없습니다.");
+	    }
+	});
+	</script>	
+</head>
+<body>
+    
+
+	
+
+</body>
+</html>

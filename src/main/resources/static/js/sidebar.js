@@ -67,10 +67,11 @@ function renderDistricts(list, container) {
 
 // 즐겨찾기 상태 토글
 function toggleDistrictFavorite(name) {
-  const index = favoriteDistricts.indexOf(name);
-  if (index !== -1) favoriteDistricts.splice(index, 1);
-  else favoriteDistricts.push(name);
-  localStorage.setItem("favorite-districts", JSON.stringify(favoriteDistricts));
+	let favs = JSON.parse(localStorage.getItem("favorite-districts") || "[]");
+	const index = favs.indexOf(name);
+	if (index !== -1) favs.splice(index, 1);
+	else favs.push(name);
+	localStorage.setItem("favorite-districts", JSON.stringify(favs));
 }
 
 // 기존의 renderDistrictButtons 함수 수정
@@ -200,27 +201,27 @@ function showContent(section) {
     });
   } else if (section === 'cctv') {
 	content.innerHTML = `
-	          <h1>CCTV 검색</h1>
-	          <select id="cctv-type-select">
-	            <option value="local">국도</option>
-	            <option value="highway">고속도로 (서울권)</option>
-	          </select>
-	          <button id="load-cctv-btn">📡 CCTV 불러오기</button>
-	          <div id="map"></div>`;
-	        setTimeout(() => {
-	          mapInstance = L.map("map").setView([37.55, 127.0], 10);
-	          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-	            attribution: "&copy; OpenStreetMap contributors"
-	          }).addTo(mapInstance);
-	          markerCluster = L.markerClusterGroup();
-	          mapInstance.addLayer(markerCluster);
-	          document.getElementById("load-cctv-btn").addEventListener("click", () => {
-	            const sourceType = document.getElementById("cctv-type-select").value === "highway" ? "ex" : "its";
-	            markerCluster.clearLayers();
-	            loadCctv(sourceType);
-	          });
-	        }, 0);
-	      }
+      <h1>CCTV 검색</h1>
+      <select id="cctv-type-select">
+        <option value="local">국도</option>
+        <option value="highway">고속도로 (서울권)</option>
+      </select>
+      <button id="load-cctv-btn">📡 CCTV 불러오기</button>
+      <div id="map"></div>`;
+    setTimeout(() => {
+      mapInstance = L.map("map").setView([37.55, 127.0], 10);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors"
+      }).addTo(mapInstance);
+      markerCluster = L.markerClusterGroup();
+      mapInstance.addLayer(markerCluster);
+      document.getElementById("load-cctv-btn").addEventListener("click", () => {
+        const sourceType = document.getElementById("cctv-type-select").value === "highway" ? "ex" : "its";
+        markerCluster.clearLayers();
+        loadCctv(sourceType);
+      });
+    }, 0);
+  }
 }
 
 function loadCctv(sourceType) {

@@ -1,5 +1,10 @@
 package com.project.demo001.controller;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.project.demo001.domain.Location;
 import com.project.demo001.domain.User;
+import com.project.demo001.repository.LocationRepository;
 import com.project.demo001.repository.UserRepository;
 import com.project.demo001.service.UserService;
 
@@ -26,6 +33,7 @@ public class AllRestController {
 
 	private final UserRepository userRepository;
 	private final UserService userService;
+	private final LocationRepository locationRepository;
 	
 	@GetMapping("/api/check-email")
 	public boolean checkEmailDuplicate(@RequestParam String email) {
@@ -85,17 +93,48 @@ public class AllRestController {
         return ResponseEntity.ok("logged-out");
     }
 	
-	@GetMapping("/traffic-events")
-    public ResponseEntity<Object> getTrafficEvents() {
-        String apiKey = "dd094983b6bb4bd99860e397c52eae38";
-        String url = "https://openapi.its.go.kr:9443/eventInfo?apiKey=" + apiKey + "&type=all&getType=json";
-
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<Object> response = restTemplate.exchange(url, HttpMethod.GET, null, Object.class);
-
-        return response;
+	@GetMapping("/api/notice")
+    public String getTrafficEvents() throws Exception {
+		String apiUrl = "";
+		String apiKey = "";
+		String fullUrl = "";
+		
+		URL url = new URL(fullUrl);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestMethod("GET");
+		
+		BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+		StringBuilder result = new StringBuilder();
+		String line;
+		while ((line=rd.readLine())!=null){
+			result.append(line);
+		}
+		rd.close();
+		conn.disconnect();
+		
+		return result.toString(); // XML 그대로 반환 (또는 필요한 값만 추출해도 OK)
     }
 	
+	@PostMapping("/api/save-location")
+	public ResponseEntity<String> saveLocation(@RequestBody Map<String, Object> locationData){
+		
+	    try {
+	    	double latitude = Double.parseDouble(locationData.get("latitude").toString());
+	    	double longitude = Double.parseDouble(locationData.get("longitude").toString());
+	    	
+	    	Location loc = new Location();
+	    	loc.setLatitude(latitude);
+	    	loc.setLongitude(longitude);
+	    	
+	    	locationRepository.save(loc);
+	        // 위치 저장 처리
+	        return ResponseEntity.ok("위치 저장 성공");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류 발생");
+	    }
+	}
+	
+
 	
 	
 }

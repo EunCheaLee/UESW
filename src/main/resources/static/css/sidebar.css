@@ -24,7 +24,7 @@ button {
 /* ================= Sidebar ================= */
 /* 사이드바의 위치를 맨 왼쪽에 상하 여백 없이 두고, 버튼들을 중앙 정렬 */
 .sidebar {
-  width: 200px;
+  width: 150px;
   background-color: #263238;
   color: white;
   padding: 0; /* 상하 여백 제거 */

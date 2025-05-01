@@ -386,3 +386,6 @@ iframe{
       background: rgba(0, 0, 0, 0.1);
   }
   
+  #weather-content{
+	background-color: #ffffff;
+  }

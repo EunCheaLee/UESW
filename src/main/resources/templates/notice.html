@@ -1,106 +1,73 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>공지사항</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>공지사항</title>
+	<script th:src="@{/js/notice.js}"></script>
+	
+	<style>
+	/* 모달 배경 */
+	#notice-modal-container {
+	  display: none;
+	  position: fixed;
+	  top: 0;
+	  left: 0;
+	  width: 100vw;
+	  height: 100vh;
+	  background: rgba(0, 0, 0, 0.5);
+	  z-index: 9999;
+	  justify-content: center;
+	  align-items: center;
+	}
 
-  <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      background: #f5f6fa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+	/* 모달 내부 박스 */
+	#notice-modal-content {
+	  position: relative;
+	  background: white;
+	  padding: 20px;
+	  border-radius: 10px;
+	  width: 400px;
+	  max-width: 90%;
+	  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+	  text-align: center;
+	}
 
-    .modal-content {
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      width: 400px;
-      max-width: 90%;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      text-align: center;
-    }
+	/* 닫기 및 하루 안보기 버튼 묶음 */
+	#notice-modal-content .button-wrapper {
+	  position: absolute;
+	  bottom: 20px;
+	  left: 50%;
+	  transform: translateX(-50%);
+	  display: flex;
+	  gap: 10px;
+	}
 
-    .modal-content h2 {
-      margin-bottom: 20px;
-      font-size: 24px;
-      color: #d9534f;
-    }
+	/* 버튼 공통 스타일 */
+	#notice-modal-content button {
+	  padding: 10px 20px;
+	  border: none;
+	  border-radius: 5px;
+	  color: white;
+	  cursor: pointer;
+	}
 
-    .modal-content p {
-      font-size: 16px;
-      margin-bottom: 10px;
-      line-height: 1.6;
-    }
+	#modal-close-btn {
+	  background-color: #d9534f;
+	}
 
-    .modal-content ul {
-      text-align: left;
-      margin-top: 15px;
-      padding-left: 20px;
-    }
-
-    .modal-content ul li {
-      margin-bottom: 8px;
-      font-size: 15px;
-    }
-
-    .button-link {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #d9534f;
-      color: white;
-      border-radius: 5px;
-      text-decoration: none;
-    }
-
-    .close-btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 20px;
-      background-color: #ccc;
-      color: white;
-      border-radius: 5px;
-      text-decoration: none;
-    }
-  </style>
+	#modal-hide-btn {
+	  background-color: #5bc0de;
+	}
+	</style>
 </head>
 
 <body>
-
-	<div style="text-align: center; background: white; padding: 30px; border-radius: 10px; width: 400px; max-width: 90%;">
-	  <h2>🚨 사고 발생 안내</h2>
-	  <p><strong>⚠️ 사고 발생 지역:</strong> 서울특별시 강남구 테헤란로 인근</p>
-	  <p>2025년 4월 29일 오전 8시경<br>테헤란로 방면에서 <strong>3중 추돌 사고</strong>가 발생했습니다.</p>
-	  <p>인근 도로에 극심한 교통 체증이 예상되오니,<br><strong>우회 경로 이용</strong>을 권장드립니다.</p>
-	  <ul>
-	    <li>사고 시간: 2025-04-29 08:00</li>
-	    <li>장소: 서울시 강남구 테헤란로 XX 앞</li>
-	    <li>현재 상태: 처리 중 (일부 차로 통제)</li>
-	  </ul>
-	  <div style="">
-		  <button class="hide-today-btn" style="margin-top: 20px; padding: 10px 20px; background-color: #d9534f; color: white; border: none; border-radius: 5px;">닫기</button>
-	  </div>
+	<div id="noticeModal" class="modal-content" style="display:none;">
+	    <h2>📢 도로 돌발상황</h2>
+	    <div id="notice-content">불러오는 중...</div>
+	    <a href="#" class="button-link" onclick="document.getElementById('noticeModal').style.display='none'">닫기</a>
+	    <button class="hide-today-btn" onclick="hideToday()">오늘 하루 보지 않기</button>
 	</div>
-
-<script>
-  window.onload = function() {
-    if (localStorage.getItem('noticeDismissed') !== 'true') {
-      document.getElementById('noticeModal').style.display = 'block';
-    } else {
-      window.location.href = '/home.html';  // **중요: /main.html**
-    }
-
-    document.getElementById('closeNotice').onclick = function() {
-      localStorage.setItem('noticeDismissed', 'true');
-      window.location.href = '/home.html';  // 메인 페이지로 이동
-    };
-  };
-</script>
 </body>
 </html>

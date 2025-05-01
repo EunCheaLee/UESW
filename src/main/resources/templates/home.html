@@ -7,11 +7,54 @@
     <link rel="stylesheet" th:href="@{/css/home.css}">
 	<link rel="stylesheet" th:href="@{/css/sidebar.css}">
 	<script src="/js/home.js" defer></script>
-	<script th:src="@{/js/session.js}"></script>
+	<script th:src="@{/js/session.js}" defer></script>
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script type="text/javascript" 
+    <!--javascript 키-->
+	<script type="text/javascript" 
     src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=decabf1a98a2b15f0b977ba76ec9095c&autoload=false">
     </script>
+    <!--REST API 키-->
+	<script type="text/javascript" 
+    src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=393375d3d22851b3045f5e4712e02b0e&autoload=false">
+    </script>
+	<script th:replace="~{fragments/common :: headScript}"></script>
+	
+	<script th:fragment="headScript">
+	    document.addEventListener("DOMContentLoaded", function() {
+	        if (navigator.geolocation) {
+	            navigator.geolocation.getCurrentPosition(function(position) {
+	                const latitude = position.coords.latitude;
+	                const longitude = position.coords.longitude;
+
+	                // 위치 정보를 sessionStorage에 저장
+	                sessionStorage.setItem("latitude", latitude);
+	                sessionStorage.setItem("longitude", longitude);
+
+	                // 카카오 맵 초기화 및 위치 표시
+	                kakao.maps.load(function() {
+	                    const mapContainer = document.getElementById('home-map'); // 지도 표시할 div
+	                    const mapOption = {
+	                        center: new kakao.maps.LatLng(latitude, longitude), // 사용자의 위치
+	                        level: 3 // 줌 레벨
+	                    };
+
+	                    const map = new kakao.maps.Map(mapContainer, mapOption);
+
+	                    // 사용자 위치에 마커 표시
+	                    const markerPosition = new kakao.maps.LatLng(latitude, longitude);
+	                    const marker = new kakao.maps.Marker({
+	                        position: markerPosition
+	                    });
+	                    marker.setMap(map);
+	                });
+	            }, function(error) {
+	                alert("위치 정보를 가져오는 데 실패했습니다.");
+	            });
+	        } else {
+	            alert("위치 정보를 사용할 수 없습니다.");
+	        }
+	    });
+	    </script>
 </head>
 
 <body>
@@ -28,28 +71,94 @@
 					</td>
 				</tr>
 			</table>-->
-			<!-- 여기가 모달 -->
-			<div id="notice-modal-container" style="display: none; position: fixed; top: 0; left: 0;
-			  width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
-			  <div id="notice-modal-content"></div>
+			<!-- ✅ 모달 HTML -->
+			<div id="notice-modal-container">
+			  <div id="notice-modal-content">
+			    <div id="notice-html-wrapper">
+			      <h2>📢 도로 돌발상황</h2>
+			      <div id="notice-content">불러오는 중...</div>
+			    </div>
+
+			    <div class="button-wrapper">
+			      <button id="modal-close-btn" onclick="document.getElementById('notice-modal-container').style.display='none'">닫기</button>
+			      <button id="modal-hide-btn" onclick="hideToday()">오늘 하루 안보기</button>
+			    </div>
+			  </div>
 			</div>
 
 			<script>
-			  // '오늘 하루 그만보기' 기능 삭제하고, 무조건 모달 띄우기
-			  fetch('/notice')
-			    .then(res => res.text())
-			    .then(html => {
-			      document.getElementById('notice-modal-content').innerHTML = html;
-			      document.getElementById('notice-modal-container').style.display = 'flex';
+			  window.onload = function () {
+			    const today = new Date().toISOString().split('T')[0]; // "2025-05-01" 형식
+			    const dismissedDate = localStorage.getItem('noticeDismissedDate');
 
-			      // 닫기 버튼만 남기기 (있으면)
-			      const btn = document.querySelector('#notice-modal-content .hide-today-btn');
-			      if (btn) {
-			        btn.addEventListener('click', () => {
+			    if (dismissedDate === today) {
+			      // 이미 오늘은 안보기 선택했으면 모달 표시 안 함
+			      return;
+			    }
+
+			    // 로딩 표시 시작
+			    document.getElementById('notice-content').innerText = "불러오는 중...";
+
+			    // /notice에서 HTML 불러오기
+			    fetchWithTimeout('/notice', 5000)  // 5초 후 타임아웃
+			      .then(res => res.text())
+			      .then(html => {
+			        document.getElementById('notice-html-wrapper').innerHTML = html;
+			        document.getElementById('notice-modal-container').style.display = 'flex';
+
+			        // 닫기 버튼
+			        document.getElementById('modal-close-btn').addEventListener('click', () => {
+			          localStorage.setItem('noticeDismissedDate', today);
 			          document.getElementById('notice-modal-container').style.display = 'none';
 			        });
-			      }
+
+			        // 오늘 하루 안보기 버튼
+			        document.getElementById('modal-hide-btn').addEventListener('click', () => {
+			          localStorage.setItem('noticeDismissedDate', today);
+			          document.getElementById('notice-modal-container').style.display = 'none';
+			        });
+			      })
+			      .catch(error => {
+			        console.error('공지사항 불러오기 실패:', error);
+			        document.getElementById('notice-content').innerText = "불러오기에 실패했습니다.";
+			      });
+			  };
+
+			  // 타임아웃을 설정한 fetch 함수
+			  function fetchWithTimeout(url, timeout) {
+			    return new Promise((resolve, reject) => {
+			      const timeoutId = setTimeout(() => reject(new Error('요청 시간이 초과되었습니다.')), timeout);
+
+			      fetch(url)
+			        .then((response) => {
+			          clearTimeout(timeoutId);
+			          resolve(response);
+			        })
+			        .catch((error) => {
+			          clearTimeout(timeoutId);
+			          reject(error);
+			        });
 			    });
+			  }
+
+			  // 모달을 열면서 API 호출
+			  function openNoticeModal() {
+			    document.getElementById("notice-content").innerText = "불러오는 중...";
+
+			    fetchWithTimeout('/api/notice', 5000)  // 5초 후 타임아웃
+			      .then(response => response.json())
+			      .then(data => {
+			        // 예: data = { message: "영동고속도로 차량 정체 발생" }
+			        document.getElementById("notice-content").innerText = data.message;
+			      })
+			      .catch(error => {
+			        console.error("공지사항 불러오기 실패:", error);
+			        document.getElementById("notice-content").innerText = "불러오기에 실패했습니다.";
+			      });
+
+			    // 모달 열기
+			    document.getElementById("notice-modal-container").style.display = "block";
+			  }
 			</script>
 		</header>
 		
@@ -153,8 +262,9 @@
 			</div>
 		
 
-	    <div class="home-content1"> 
-			  <iframe src="monthly" width="80%" height="700px"style="border:none;"></iframe>
+	    <div class="home-content1" style="display: flex; align-items: center; justify-content: space-between;"> 
+			<!--<button onclick="openNoticeModal()">공지 보기</button>-->
+			<iframe src="monthly" width="70%" height="600px"style="border:none;"></iframe>
 		</div>
 		<div class="home-content2">
 			<div class="map-button">
