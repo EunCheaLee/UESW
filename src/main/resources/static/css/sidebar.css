@@ -1,0 +1,393 @@
+/* ================= Base Styles ================= */
+
+body {
+  display: flex;
+  color: #000;
+    flex-direction: column;  /* 위에서 아래로 정렬 */
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+h1 {
+	font-weight: 500;
+	color: rgb(0, 0, 0);
+}
+/* ================= Main Content ================= */
+.main-content {
+	display: flex;
+	width: 80%;
+	height: 100%;
+	flex: 1;
+	justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 정렬 시작 위치 */
+}
+
+/* ================= District Buttons ================= */
+.button-container {
+  margin-top: 10px;
+}
+
+.district-button {
+  padding: 8px 12px;
+  margin: 4px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  color: #222;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.district-button:hover {
+	font-weight: 600;
+  background-color: rgb(217, 217, 217);
+  color: rgb(0, 0, 0);
+}
+
+/* ================= Traffic Box ================= */
+.traffic-box ul {
+  list-style: none;
+  padding: 20px;
+  background-color: #fff3e0;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+}
+
+.traffic-box li {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.good { color: #388e3c; font-weight: bold; }
+.bad { color: #d32f2f; font-weight: bold; }
+.warn { color: #f57c00; font-weight: bold; }
+.normal { color: #1976d2; font-weight: bold; }
+
+/* ================= CCTV & Video ================= */
+.cctv-box {
+  padding: 5px;
+  border-radius: 12px;
+  height: 100vh;
+}
+
+video {
+  margin-bottom: 30px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+#cctv-type-select {
+	margin-top: 100px;
+	margin-left: 40%;
+	font-size: 16px;
+	width: 150px;
+	height: 30px;
+}
+
+#load-cctv-btn {
+	font-weight: 450;
+	color: #f0f0f0;
+	background-color: #0247a1;
+	transition: background-color 0.2s ease-in-out; /* 색상 변화가 빠르게 일어나도록 설정 */
+}
+
+#load-cctv-btn:active {
+	color: black;
+  background-color: #ffd35b; /* 클릭 시 버튼 색상 변경 */
+  
+}
+
+/* ================= Map ================= */
+
+.map-wrapper{
+	display: flex;
+	justify-content: center;  /* 가로 중앙 */
+	align-items: start
+}
+#traffic-map {
+	margin: 7% 0 0 0;
+	width: 80%;
+	height: 700px;
+	border-radius: 20px;
+}
+
+#amenities-map {
+	margin: 8% 0 10% 0 ;
+	width: 80%;
+	height: 700px;
+	border-radius: 20px;
+}
+
+#map {
+	width: 80%;
+	height: 700px;
+	border-radius: 20px;
+}
+
+/* ================= Traffic ================= */
+.traffic-map-wrapper{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;  /* 가로 중앙 */
+	align-items: center;      /* 세로 중앙 */
+	height: 100vh;
+}
+
+#traffic-toolbar, #amenities-toolbar {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  gap: 10px;
+  padding: 10px 20px;
+}
+
+#traffic-toolbar button, #amenities-toolbar button{
+  padding: 8px 14px;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  background-color: #0247a1;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#traffic-toolbar button:hover, #amenities-toolbar button:hover{
+  background-color: #ffd35b;
+  color: #0247a1;
+}
+
+#traffic-news-title{
+background-color: rgb(248, 248, 248);
+width: 100%;
+height: 50px;
+margin: 15px 0px;
+border-radius: 10px;
+position: relative;
+
+/* ✅ Flexbox로 중앙 정렬 */
+display: flex;
+justify-content: center; /* 가로 중앙 */
+align-items: center;     /* 세로 중앙 */
+
+font-weight: bold;
+font-size: 14px;
+
+overflow: hidden; /* 중요! */
+}
+
+/* 내부에 들어갈 텍스트 애니메이션 */
+#traffic-news-title .text {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(100%);
+  transition: all 0.6s ease;
+  color: #000;
+}
+
+/* 등장할 때 애니메이션 적용 */
+#traffic-news-title .text.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ================= Popup ================= */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popup-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  width: 420px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.popup-content h2 {
+  margin-top: 0;
+  color: #d32f2f;
+}
+
+.popup-content button {
+  margin-top: 20px;
+  padding: 8px 20px;
+  border-radius: 6px;
+  background-color: #f44336;
+  color: white;
+  cursor: pointer;
+}
+
+/* ================= Utilities ================= */
+.hidden {
+  display: none;
+}
+
+/* ================= Dark Mode ================= */
+body.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+body.dark-mode button {
+  background-color: #333;
+  color: #f0f0f0;
+}
+
+body.dark-mode .district-button {
+  background-color: #333;
+  color: #f0f0f0;
+  border: 1px solid #666;
+}
+
+body.dark-mode .weather-box {
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+  border: 1px solid #444;
+}
+
+body.dark-mode .weekly-weather > div {
+  background: #333;
+  color: #f0f0f0;
+}
+
+.sidebar.dark-mode,
+.main-content.dark-mode,
+.popup-content.dark-mode{
+  background-color: #1f1f1f;
+  color: #f0f0f0;
+}
+.favorite-icon {
+  cursor: pointer;
+  color: gray;
+  margin-right: 8px;
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+.favorite-icon.favorited {
+  color: gold;
+}
+
+/* 기존 스타일 유지 */
+video {
+  margin-bottom: 30px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+
+body.dark-mode {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
+.sidebar.dark-mode,
+.main-content.dark-mode,
+.popup-content.dark-mode,
+.traffic-map-wrapper.dark-mode{
+  background-color: #1f1f1f;
+  color: #f0f0f0;
+}
+
+.button-container {
+  margin-top: 10px;
+}
+
+.district-button {
+  margin: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+/* 기본 버튼 스타일 */
+button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  margin: 4px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  color: #333;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ===============TA ===============*/
+.box-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100px;
+  margin-left: 120px;
+  width: 350px;
+  height: 1000px;
+}
+
+.toggle-group {
+  margin-top: 15px;
+  width: 100%;
+}
+
+.toggle-header {
+  width: 300px;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.toggle-content {
+  display: block;
+  margin-left: 10px;
+}
+
+.toggle-content button {
+  margin: 5px 5px 5px 0;
+  background-color: rgb(192, 192, 192);
+}
+
+button {
+    font-size: 17px;
+    margin: 15px 5px;
+    cursor: pointer;
+	color: rgb(0, 0, 0);
+}
+
+/*button:hover {
+    box-shadow: 0px 4px 14px 6px rgb(128, 128, 128, 0.3);
+}*/
+
+button:active {
+    background-color: rgb(192, 192, 192);
+}
+#data-frame {
+  position: fixed;  /* 화면에 고정 */
+  margin-top: 7%;
+  margin-left: 25%;
+  width: 900px;
+  height: 750px;
+  border: none; 
+  }
+  

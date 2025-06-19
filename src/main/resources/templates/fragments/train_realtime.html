@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>서울 실시간 지하철 도착 정보</title>
+	<link rel="stylesheet" th:href="@{/css/subway.css}">
+	<script th:src="@{/js/session.js}" defer></script>
+	<script>
+		document.addEventListener('contextmenu', e => e.preventDefault());
+	</script>
+</head>
+
+<body>
+	<div class="container">
+		<h1>🚇 서울 실시간 지하철 도착 정보</h1>
+
+		<div id="message" th:if="${message}" th:text="${message}" ></div>
+
+		<form method="post" id="station-form" action="/train_realtime" class="station-form">
+			<input type="hidden" name="favonly" th:value="${favonly ? 1 : 0}" />
+			<input id="station-input" list="stations" name="station" placeholder="역 이름 입력 (예: 건대입구)">
+			<datalist id="stations">
+				<option th:each="s : ${stations}" th:value="${s}"></option>
+			</datalist>
+			<button type="button" name="action" value="add">➕ 추가</button>
+		</form>
+		<div style="margin-bottom:10px; text-align:center;">
+			<button id="fav-btn" type="button" onclick="filterFavorite(true)">⭐ 즐겨찾기만 보기</button>
+			<button id="all-btn" type="button" style="display: none;" onclick="filterFavorite(false)">📋 전체 보기</button>
+		</div>
+		<div class="main-container">
+			<div class="info-section" th:fragment="stationBlock">
+				<div class="station-block" th:each="station : ${data}">
+					<h2>
+						<div id="center-block">
+							<span th:text="${station.station}"></span>
+							<div class="btn-block">
+								<input type="hidden" name="station" th:value="${station.station}">
+								<button name="action" value="favorite" class="star-btn">
+									<i
+										th:class="${favorites.contains(station.station)} ? 'bi bi-star-fill' : 'bi bi-star'"></i>
+								</button>
+							</div>
+						</div>
+						<button class="del-btn" type="button" name="action"
+							th:attr="data-station-name=${station.station}">
+							<i class="bi bi-x-square-fill"></i>
+						</button>
+					</h2>
+
+					<div th:if="${station.arrivals != null and !station.arrivals.isEmpty()}">
+						<div class="arrival" th:each="a : ${station.arrivals}">
+							<span class="line" th:text="${a.line_name}"></span> -
+							<span class="train" th:text="${a.trainLineNm}"></span> /
+							<span class="dir" th:text="${a.updnLine + '방면'}"></span><br>
+							🕒 <span class="remain" th:attr="data-seconds=${a.remain_seconds}"
+								th:text="${a.remain_time}"></span>
+							<small class="desc" th:text="|(${a.arvlMsg2})|"></small>
+						</div>
+					</div>
+					<p class="no-data" th:if="${station.arrivals == null or station.arrivals.isEmpty()}">도착 정보가 없습니다.
+					</p>
+				</div>
+			</div>
+
+			<div class="map-section">
+				<img th:src="@{/img/seoul_subway_map.png}" alt="서울 지하철 노선도" class="subway-map-img" draggable="false">
+				<br>
+				<button class="popup-btn" onclick="openMapPopup()">🖼️ 노선도 크게 보기</button>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

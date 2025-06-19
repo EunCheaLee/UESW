@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판 목록</title>
+
+    <link rel="stylesheet" th:href="@{/css/home.css}"/>
+    <link rel="stylesheet" th:href="@{/css/board.css}"/>
+	<link rel="stylesheet" th:href="@{/css/fragments.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script th:src="@{/js/board.js}" defer></script>
+    <script th:src="@{/js/session.js}"></script>
+    <script th:src="@{/js/fragments.js}" defer></script>
+	<script src="/js/home.js" defer></script>
+</head>
+
+<body>
+    <!-- 네비게이션 바 -->
+    <div th:replace="~{fragments/nav :: mainNav}"></div>
+
+    <!-- 고정 사이드바 -->
+    <div th:replace="~{fragments/sidebar :: mainSidebar}"></div>
+	<div class="scroll-enabled">
+	<!-- 게시판 테이블 -->
+	    <table class="list">
+			<thead>
+				<tr>
+				    <td colspan="2"><h1>건의 게시판</h1></td>
+				    <td class="view-count" colspan="3">
+				        <form action="/board" method="get" style="display: flex; align-items: center; justify-content: end;">
+				            <label for="count">게시글 갯수:&nbsp;</label>
+				            <select name="count" id="count">
+				                <option value="10" th:selected="${count == 10}">10개</option>
+				                <option value="20" th:selected="${count == 20}">20개</option>
+				                <option value="30" th:selected="${count == 30}">30개</option>
+				            </select>
+				            <button class="little" type="submit">조회</button>
+				        </form>
+				    </td>
+				</tr>
+	            <tr class="list-type" style="text-align: center;">
+	                <td id="num"><a>번호</a></td>
+					<td id="title"><a>제목</a></td>
+	                <td id="writer"><a>작성자</a></td>
+	                <td id="writedate"><a>작성일</a></td>
+	                <td id="view"><a>조회수</a></td>
+	            </tr>
+			</thead>
+	        <tbody>
+				<!-- 공지글 먼저 출력 -->
+				<tr class="notice-board" th:each="board : ${noticeList}">
+				    <td>공지</td>
+				    <td>
+				        <a class="notice-title title" th:href="@{/board/select/{id}(id=${board.id})}"
+				           th:text="${board.title}"></a> <!-- getTitle() 통해 "[공지]" 자동 출력 -->
+				    </td>
+				    <td th:text="${board.user != null ? board.user.userName : '비회원'}"></td>
+				    <td id="notice-writedate" th:text="${#temporals.format(board.writeDate, 'yy-MM-dd')}"></td>
+				    <td id="notice-view" th:text="${board.viewNum}">0</td>
+				</tr>
+	            <tr class="board-content" th:each="board, iter : ${boardPage.content}">
+	                <td id="board-id" th:text="${board.id}"></td>
+	                <td>
+						<a class="title"
+						   th:href="@{/board/select/{id}(id=${board.id})}"
+						   th:text="${board.commentCount > 0 ? board.title + ' (' + board.commentCount + ')' : board.title}">
+						</a>
+	                </td>
+	                <td>
+	                    <span th:if="${board.user == null or board.user.userName == null or board.user.userName.startsWith('비회원')}" th:text="'비회원'"></span>
+	                    <span th:if="${board.user != null and board.user.userName != null and !board.user.userName.startsWith('비회원')}" th:text="${board.user.userName}"></span>
+	                </td>
+	                <td id="board-writedate" th:text="${#temporals.format(board.writeDate, 'yy-MM-dd')}"></td>
+	                <td id="board-view" th:text="${board.viewNum}">0</td>
+	            </tr>
+	        </tbody>
+	    </table>
+		<!-- 별도 테이블로 글쓰기 버튼 정렬 -->
+		<table style="width: 60%; margin-top: 10px;">
+		  <tr>
+		    <td style="text-align: right; padding: 10px 8%;">
+		      <button th:onclick="|location.href='@{/board/insert}'|"
+		              style="padding: 8px 16px; background-color: #0247a1; color: white; border: none; border-radius: 6px; cursor: pointer;">
+		        글쓰기
+		      </button>
+		    </td>
+		  </tr>
+		</table>
+
+	    <!-- 페이지네이션 및 검색 -->
+	    <table class="list-etc">
+	        <tr>
+				
+	            <td>
+	                <div class="index">
+	                    <ul>
+	                        <li th:if="${!boardPage.first}">
+	                            <a th:href="@{/board/list(page=${currentPage - 1}, count=${count}, keyword=${keyword})}">이전</a>
+	                        </li>
+	                        <li th:each="i : ${#numbers.sequence(0, boardPage.totalPages - 1)}"
+	                            th:classappend="${i == currentPage} ? 'active'">
+	                            <a th:href="@{/board/list(page=${i}, count=${count}, keyword=${keyword})}" th:text="${i + 1}">1</a>
+	                        </li>
+	                        <li th:if="${!boardPage.last}">
+	                            <a th:href="@{/board/list(page=${currentPage + 1}, count=${count}, keyword=${keyword})}">다음</a>
+	                        </li>
+	                    </ul>
+	                </div>
+	            </td>
+
+	        </tr>
+	        <tr>
+	            <td colspan="2">
+	                <div align="center">
+						<form th:action="@{/board/list}" method="get">
+						    <select name="searchType">
+						        <option value="title" th:selected="${searchType == 'title'}">제목</option>
+						        <option value="content" th:selected="${searchType == 'content'}">내용</option>
+						        <option value="writer" th:selected="${searchType == 'writer'}">작성자</option>
+						    </select>
+						    <input type="text" name="keyword" placeholder="검색어" th:value="${keyword}">
+						    <button id="search" type="submit">검색</button>
+						</form>
+	                </div>
+	            </td>
+	        </tr>
+	    </table>
+	</div>
+	<!-- 푸터 -->
+	<div th:replace="~{fragments/footer :: footer}"></div>
+	<!-- 위로가기 -->
+	<div th:replace="~{fragments/top-btn :: top-btn}"></div>   
+</body>
+</html>

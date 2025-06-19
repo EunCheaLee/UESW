@@ -1,0 +1,634 @@
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+    font-style: normal;
+}
+
+body {
+	font-family: 'Pretendard-Regular';
+	font-weight: 200;
+	overflow: scroll;         /* 스크롤 동작 유지 */
+	text-align: center;
+
+	/* 스크롤바 숨김 처리 */
+	scrollbar-width: none;      /* Firefox */
+	-ms-overflow-style: none;   /* IE 10+ */
+}
+
+body::-webkit-scrollbar {
+    display: none;              /* Chrome/Safari: 스크롤바 숨기기 */
+}
+
+/*==================[list]====================*/
+
+.scroll-enabled{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 3%;
+}
+
+.list {
+    margin-top: 150px;
+    width: 60%;
+	max-width: 1000px;
+    border-radius: 5px;
+    border-collapse: collapse;
+}
+
+
+.list td,
+.list th {
+    padding: 5px;
+    text-align: left;
+    color: #333333;  /* 기본 텍스트 색상 */
+	margin: 30px 10px;
+	border-bottom: 1px lightgray solid; 
+	height: 30px;
+	font-size: 14px;
+}
+
+/* 제목 */
+.list h1 {
+    margin: 10px 0;
+    font-size: 36px;
+	font-weight: bolder;
+    color: #0247a1;  /* 파란색 제목 */
+}
+
+#num {
+    width: 50px;
+}
+
+.little{	/* 게시글 갯수 조회 버튼 */
+	font-size: 14px;
+	width: 60px;
+	height: 20px;
+	margin: 10px;
+/* 가운데 정렬 */
+   display: flex;
+   align-items: center;   /* 수직 가운데 */
+   justify-content: center; /* 수평 가운데 */
+   
+   padding: 8px 16px; 
+   background-color: #0247a1; 
+   color: white; 
+   border: none; 
+   border-radius: 6px; 
+   cursor: pointer;
+}
+
+tr.list-type td {
+    border-top: 10px solid #0247a1;
+  font-weight: bold;
+  background-color: #f9f9f9; /* 배경 강조하고 싶다면 */
+}
+
+.list-type{
+	font-weight: bolder;
+	width: 80px;
+}
+
+tr.list-type td{
+	text-align: center;
+}
+
+tr.list-type #title a{
+	margin-left: 5%;
+}
+
+.notice-board, .notice-title{
+	color: crimson;
+	font-weight: bold;
+}
+
+#notice-role{
+	left: 60%;
+}
+
+#board-id,#board-writedate,#board-view,
+#notice-view,#notice-writedate,
+.board-writer, 
+tr.board-content td, tr.notice-board td{
+	text-align: center;
+}
+
+tbody tr td a.title {
+	display: block;  /* a 태그를 블록 요소로 변환 */
+	width: 420px;    /* 원하는 너비 적용 */
+	text-align: left; /* 왼쪽 정렬 */
+	text-decoration: none;
+	margin-left: 5%;
+	color: #000000;
+}
+
+table.list-etc {
+	width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.index {
+    text-align: center; /* 수평 정렬을 위해 가운데 정렬 */
+}
+
+.index ul {
+    list-style-type: none; /* 기본 목록 스타일 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+    display: inline-flex; /* 수평 정렬을 위해 inline-flex 사용 */
+    gap: 10px; /* 각 항목 간격 */
+}
+
+.index li {
+    display: inline-block; /* 목록 항목을 수평으로 나열 */
+}
+
+.index a {
+    text-decoration: none; /* 링크의 밑줄 제거 */
+    padding: 8px 12px; /* 패딩으로 클릭 영역 늘리기 */
+    color: #333; /* 글자 색 */
+    background-color: #f1f1f1; /* 배경색 */
+    border-radius: 5px; /* 테두리 둥글게 */
+}
+
+.index a:hover {
+    background-color: #ddd; /* 마우스 오버 시 배경색 변경 */
+}
+
+.index .active a {
+    font-weight: bold; /* 현재 페이지는 굵게 표시 */
+    background-color: #007bff; /* 활성화된 페이지 색 */
+    color: white; /* 글자 색 */
+}
+
+#search{
+	width: 70px;
+	height: 35px;
+	/* 가운데 정렬 */
+   display: inline-flex;
+   align-items: center;   /* 수직 가운데 */
+   justify-content: center; /* 수평 가운데 */
+   
+   padding: 8px 16px; 
+   background-color: #0247a1; 
+   color: white; 
+   border: none; 
+   border-radius: 6px; 
+   cursor: pointer;
+}
+
+/*==================[insert]====================*/
+
+/* 전체 작성 폼 컨테이너 */
+.insert {
+    width: 60%;
+    margin: 80px auto;
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 상단 제목 */
+#write-notice {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* 관리자용 공지 체크박스 영역 */
+#notice-role {
+    text-align: right;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+/* 제목 입력창 */
+.insert input[type="text"] {
+    width: 700px;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+/* Toast UI Editor 영역 */
+#editor {
+    width: 100% !important;
+    max-width: 700px;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+/* 첨부 파일 영역 */
+.file-text-message {
+    margin-top: 20px;
+    font-size: 0.95rem;
+    text-align: center;
+}
+
+.file-text-message input[type="file"] {
+    padding: 4px;
+}
+
+/* 버튼 스타일 */
+.insert .submit-btn button{
+    color: #ffffff;
+	background-color: #0247a1;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px 5px 0 0;
+    transition: background-color 0.2s ease;
+}
+
+
+/*==================[update]====================*/
+
+/* 전체 수정 컨테이너 */
+.update {
+    width: 60%;
+    margin: 80px auto;
+    padding: 30px 40px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 상단 제목 */
+#write-notice {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+/* 제목 입력 */
+.update input[type="text"] {
+    width: 700px;
+    padding: 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-top: 8px;
+    box-sizing: border-box;
+}
+
+/* 라벨 */
+.update label {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* Toast UI 에디터 영역 */
+#editor {
+    width: 100% !important;
+    max-width: 700px;
+    margin: 20px auto 0;
+}
+
+/* 버튼 스타일 */
+.update .submit-btn button{
+	background-color: #0247a1;
+    color: #ffffff;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px 5px 0 0;
+    transition: background-color 0.2s ease;
+}
+
+/*==================[select]====================*/
+
+/* 전체 컨테이너 */
+.view-container {
+    width: 60%;
+    margin: 40px auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+/* 카드형 콘텐츠 */
+.view-content {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
+}
+
+/* 게시글 테이블 */
+.select-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+/* 제목 줄 */
+.select-table td.select-title{
+	text-align: center;
+	border: none;
+} 
+
+td.view-num p{
+	display: flex;
+	justify-content: end;
+	align-items: end;
+	height: auto;
+}
+
+.view-num td{
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 20px 0;
+
+	display: flex;
+	justify-content: end;
+	align-items: center;
+	height: auto;
+}
+
+/* 테이블 기본 셀 */
+.select-table td,
+.select-table th {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    vertical-align: bottom;
+    border-bottom: 1px solid #ddd;
+}
+
+/* 마지막 줄: 작성자, 작성일 */
+.select-table tr:last-of-type td {
+    text-align: center;
+    border-bottom: none;
+}
+
+/* 첨부 파일 행 */
+.select-file-group th {
+    width: 120px;
+    text-align: left;
+}
+
+.select-file-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 5px;
+}
+
+/* 버튼 영역 */
+.view-button-container {
+    text-align: right;
+    margin-top: 30px;
+}
+
+.view-button {
+    background-color: #0247a1;
+    color: #ffffff;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    margin-left: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.view-button:hover {
+    background-color: #01367e;
+}
+
+/* Toast UI Viewer 영역 */
+#viewer-container {
+    margin: 30px auto;
+    width: 100%;
+    text-align: center;
+}
+
+#viewer {
+    background-color: #ffffff;
+    color: #333333;
+    padding: 20px;
+    border-radius: 8px;
+    display: inline-block;
+    text-align: left;
+    width: 100%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+/* 기타 요소 */
+.header {
+    background-color: rgb(218, 231, 255);
+    text-align: center;
+}
+
+.indent {
+    margin-left: 20px;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 10px;
+}
+
+/* ==================[댓글 관련]================ css */
+textarea {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+    resize: none; /* 크기 조정 불가 */
+}
+
+.reply-container {
+    width: 80%;
+    max-width: 800px;
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 30px auto;  /* 수직 여백 + 수평 가운데 정렬 */
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.reply-container label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+    color: #0247a1;
+    font-size: 16px;
+}
+
+.edit-textarea{
+	width: 100%;
+	resize: vertical;
+	margin-top: 5px;
+}
+
+/* 댓글 수정 폼 영역 */
+.edit-form {
+    margin-top: 5px;            /* 본문과 약간 간격 */
+}
+
+#reply-insert {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 14px;
+    resize: none;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.reply-button-wrapper {
+    display: flex;
+    justify-content: flex-end;  /* 버튼을 오른쪽으로 */
+    width: 100%;
+}
+
+#reply-button {
+	justify-content: right;
+    margin-top: 10px;
+    background-color: #0247a1;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#reply-button:hover {
+    background-color: #01367e;
+}
+
+.reply-item {
+    max-width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid rgb(222, 222, 222);
+	word-wrap: break-word;	/* 긴 단어 줄바꿈 */
+	overflow-wrap: break-word;  /* 단어 단위 줄바꿈 보조 */
+	position: relative;                 /* 하트의 절대 위치 기준 */
+    margin-left: calc(var(--depth, 0) * 30px);  /* JS 없이도 depth 대응 가능 */
+}
+
+.reply-indent {
+    display: inline-block;
+    max-width: 100%;
+}
+
+/* 댓글 상단 구조 (작성자 + 내용 + 좋아요 버튼 포함) */
+.reply-top {
+    display: flex;	/* 왼쪽/오른쪽 분리 */
+    justify-content: space-between;	/* 좌우 공간 분배 */
+    align-items: center; /* 이름 + 좋아요 수직 가운데 정렬 */
+    width: 100%;
+}
+
+/* 이름 + 댓글 */
+.reply-meta-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-grow: 1;
+}
+
+/* 작성자 이름 - 고정 너비 + 수직 중앙 정렬 */
+#reply-writer {
+    width: 100px;
+    text-align: center;
+    font-weight: bold;
+	margin-right: 15px;
+}
+
+/* 댓글 본문 - 왼쪽 정렬 */
+.reply-content {
+	margin-top: 10px;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.6;
+    word-break: break-word;
+    width: 90%;
+}
+
+/* ▶ 좋아요 버튼 */
+.reply-likes {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+	width: 100px;
+	min-width: 60px;            /* 좋아요 버튼 너비 확보 */
+}
+
+/* ▶ 두 번째 줄: 버튼만 오른쪽 정렬 */
+.reply-edit-info {
+    display: flex;
+    justify-content: flex-start;
+    font-size: 14px;
+	height: 40px;
+	color: rgb(27, 76, 155);
+}
+
+.like-button {
+    background-color: #ffffff;
+    border: 0px;
+    border-radius: 25px;
+    cursor: pointer;
+	font-size: 14px;
+}
+
+.like-button:hover {
+    background-color: #ddd;
+}
+
+.link-button {
+	background: none;
+	border: none;
+	color: #0066cc;
+	cursor: pointer;
+	padding: 0 4px;
+	font-size: 14px;
+	width: 45px;
+}
+.hidden {
+    display: none;
+}
+
+/*#comment-notice {
+    font-weight: bold;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 10px;
+    color: #0247a1;   파란색 
+}
+
+.comment-form {
+    display: flex;
+    flex-direction: column;  요소들을 세로로 정렬 
+    gap: 10px;  각 요소 간 간격 
+    align-items: flex-start;  왼쪽 정렬 
+}*/
+
+
+
+

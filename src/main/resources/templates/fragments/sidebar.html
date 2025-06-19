@@ -1,0 +1,31 @@
+<!-- templates/fragments/sidebar.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
+<body>
+	<div class="sidebar" th:fragment="mainSidebar">
+		<div class="button1" style="margin-left: 0px;"> 
+
+		  	<button class="menu-btn" th:onclick="'location.href=\'' + @{/weather} + '\''">
+				<i class="btn-icon bi bi-cloud-sun-fill" style="font-size: 32px;"></i> 
+				<a>날씨<br/> / 뉴스</a>
+		  	</button>
+		  	<button class="menu-btn" onclick="location.href='/sidebar?section=traffic'">
+		  		<i class="btn-icon bi bi-exclamation-triangle" style="font-size: 32px;"></i> 
+				<a>교통<br/>상황</a>
+		  	</button>
+		  	<button class="menu-btn" onclick="location.href='/sidebar?section=cctv'">
+		  		<i class="btn-icon bi bi-camera-video-fill" style="font-size: 32px;"></i> 
+				<a>CCTV</a>
+		  	</button>
+		  <button class="menu-btn" th:onclick="'location.href=\'' + @{/data_index} + '\''">
+		    	<i class="btn-icon bi bi-sign-merge-left-fill" style="font-size: 32px;"></i>
+		    	<a style="color: inherit; text-decoration: none;">교통<br/>자료</a>  <!-- 타임리프 동적 URL 생성 -->
+		  </button>
+		  	<button class="menu-btn" onclick="location.href='/info'">
+		  		<i class="btn-icon bi bi-person-circle" style="font-size: 32px;"></i> 
+				<a>마이<br/>페이지</a>
+		  	</button>
+	  	</div>
+	</div>
+</body>
+</html>

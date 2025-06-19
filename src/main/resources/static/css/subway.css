@@ -1,0 +1,312 @@
+body {
+	font-family: 'Arial', sans-serif;
+	overflow-x: hidden;
+	left: 0;
+	top: 0;
+	margin: 0;
+}
+
+h1 {
+	color: #2c3e50;
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.station-form {
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.station-form input[type="text"],
+.station-form input[list] {
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+}
+
+.station-form button {
+	padding: 8px 12px;
+	border: none;
+	background-color: #3498db;
+	color: white;
+	border-radius: 6px;
+	cursor: pointer;
+	margin-left: 5px;
+}
+
+.station-form button:hover {
+	background-color: #2980b9;
+}
+
+#message {
+	transform: translateX(-50%);
+	z-index: 999;
+	display: none;
+	position: fixed;
+	background: #ffefc2;
+	padding: 10px;
+	margin-bottom: 15px;
+	border-radius: 5px;
+	color: #8a6d3b;
+	text-align: center;
+}
+
+/* datalist는 css 제어가 거의 불가능함. 대신 input에 focus 줄 때 느낌만 강화 */
+#station-input:focus {
+  border-color: #0066cc;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 102, 204, 0.4);
+}
+
+/* 브라우저 힌트: 크롬 등에서 일부 효과 */
+#station-input::-webkit-calendar-picker-indicator {
+  display: none !important;
+}
+
+/* ✅ 2단 메인 레이아웃 */
+.main-container {
+	display: flex;
+	gap: 20px;
+	justify-content: center;
+	align-items: flex-start;
+	flex-wrap: wrap;
+}
+
+.info-section {
+	flex: 1 1 500px;
+}
+
+.map-section {
+	flex: 0 0 600px;
+	text-align: center;
+}
+
+/* 도착 카드 */
+.station-block {
+	background: white;
+	padding: 20px;
+	margin: 20px auto;
+	border-radius: 12px;
+	box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+	max-width: 50%;
+}
+
+.arrival {
+	border-bottom: 1px solid #eee;
+	padding: 10px 0;
+}
+
+.arrival:last-child {
+	border-bottom: none;
+}
+
+.line {
+	color: #27ae60;
+	font-weight: bold;
+}
+
+.train {
+	color: #8e44ad;
+}
+
+.dir {
+	color: #555;
+}
+
+.remain {
+	color: #2980b9;
+	font-weight: bold;
+}
+
+.desc {
+	color: #888;
+}
+
+.no-data {
+	color: #999;
+}
+
+.map-section {
+	margin-bottom: 10px;
+}
+
+.station-block>h2 {
+	border: none;
+	padding: 0;
+	margin: 0;
+	position: relative;
+	display: flex;
+	flex-direction: inherit;
+	justify-content: center;
+	text-align: center;
+	gap: 3px;
+}
+
+#center-block {
+	display: inline-flex;
+	align-items: center;
+}
+
+/* 이미지 및 버튼 */
+.subway-map-img {
+	max-width: 100%;
+	width: 500px;
+	height: auto;
+	border-radius: 10px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	user-select: none;
+	pointer-events: none;
+}
+
+.btn-block {
+	display: inline;
+	gap: 50px;
+	margin-left: 5px;
+}
+
+.star-btn {
+	border: none;
+	background: none;
+	font-size: 20px;
+	cursor: pointer;
+	vertical-align: middle;
+	color: #ffd35b;
+	padding: 0;
+}
+
+.del-btn {
+	position: absolute;
+	border: none;
+	font-size: 20px;
+	color: crimson;
+	background-color: #fff;
+	padding: 0;
+	cursor: pointer;
+	right: 0;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+#slideBox {
+	pointer-events: auto;
+	/* 클릭 가능 */
+	position: fixed;
+	bottom: -700px;
+	/* 시작 위치 (화면 아래에 숨김) */
+	left: 50%;
+	transform: translateX(-50%);
+	width: 700px;
+	height: 700px;
+	background-color: white;
+	box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+	border-radius: 16px 16px 0 0;
+	transition: bottom 0.5s ease-in-out;
+	z-index: 1000;
+	overflow-y: auto;
+	/* 내부 스크롤 활성화 */
+	scrollbar-width: none;
+	/* Firefox: 스크롤바 숨김 */
+	-ms-overflow-style: none;
+	/* IE/Edge: 스크롤바 숨김 */
+}
+
+#slideBox.active {
+	bottom: 0;
+	/* 올라오게 됨 */
+}
+
+#slideBox::-webkit-scrollbar {
+	display: none;
+	/* Chrome, Safari: 스크롤바 숨김 */
+}
+
+#public-map {
+	position: relative;
+	/* 또는 absolute */
+	margin-top: 150px;
+	margin-bottom: 5%;
+	width: 80%;
+	height: 700px;
+	border-radius: 20px;
+	left: 50%;
+	/* 브라우저 정중앙 기준 */
+	top: 0;
+	transform: translateX(-50%);
+	/* 자신의 너비만큼 왼쪽으로 이동해서 가운데 정렬 */
+}
+
+#public-toolbar {
+	position: fixed;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 1000;
+	background-color: white;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+	display: flex;
+	gap: 10px;
+	padding: 10px 20px;
+}
+
+#public-toolbar button {
+	padding: 8px 14px;
+	font-size: 15px;
+	font-weight: 500;
+	border: none;
+	background-color: #0247a1;
+	color: white;
+	border-radius: 6px;
+	cursor: pointer;
+}
+
+#public-toolbar button:hover {
+	background-color: #ffd35b;
+	color: #0247a1;
+}
+
+#searchHereBtn {
+	top: 0%;
+	left: 50%;
+	transform: translate(-50%, 50%);
+	/* 살짝 위로 올리기 */
+	position: absolute;
+	z-index: 1000;
+	background: white;
+	border: 1px solid #999;
+	padding: 8px 12px;
+	border-radius: 8px;
+	font-weight: bold;
+	cursor: pointer;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.custom-infowindow {
+	padding: 10px;
+	border-radius: 10px;
+	background: white;
+	border: 1px solid #ccc;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+	font-size: 13px;
+	font-weight: bold;
+	color: #333;
+	text-align: center;
+	white-space: nowrap;
+}
+
+#busInfoPanel {
+	position: absolute;
+	top: 10px;
+	right: 100px;
+	width: 250px;
+	max-height: 400px;
+	overflow-y: auto;
+	background-color: rgba(255, 255, 255, 0.9);
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	padding: 10px;
+	z-index: 10;
+	display: none;
+	/* 기본은 숨김 */
+}

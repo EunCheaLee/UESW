@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>월별 교통사고 통계</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        canvas {
+            margin-top: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        select {
+            margin: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+		/* select 요소 스타일 */
+		select {
+		    border: none;  /* 테두리 제거 */
+		    border-radius: 15px;  /* 둥근 테두리 */
+		    padding: 10px 20px;  /* 여백 */
+		    font-size: 16px;  /* 글자 크기 */
+		    background-color: rgb(2, 71, 161);  /* 배경 색상 */
+		    color: rgb(255, 255, 255);  /* 글자 색상 */
+		    appearance: none;  /* 기본 스타일 제거 */
+		    box-shadow: none;  /* 그림자 제거 */
+		    cursor: pointer;  /* 클릭 시 커서 모양 변경 */
+		}
+
+		/* select 요소에 포커스가 있을 때 스타일 */
+		select:focus {
+		    outline: none;  /* 포커스 시 외곽선 제거 */
+		    background-color: rgb(255, 255, 255);  /* 포커스 시 배경 색상 */
+			color: black;
+		}
+		
+    </style>
+</head>
+<body>
+    <h2 th:text="${title}">월별 교통사고 통계 시각화</h2>
+
+    <label for="year-select">연도 선택:</label>
+    <select id="year-select">
+        <option value="2018">2018년</option>
+        <option value="2019">2019년</option>
+        <option value="2020">2020년</option>
+        <option value="2021">2021년</option>
+        <option value="2022">2022년</option>
+        <option value="2023">2023년</option>
+    </select>
+
+    <label for="region-select">지역 선택:</label>
+    <select id="region-select">
+        <option value="종로구">종로구</option>
+        <option value="중구">중구</option>
+        <option value="용산구">용산구</option>
+        <option value="성동구">성동구</option>
+        <option value="광진구">광진구</option>
+        <option value="동대문구">동대문구</option>
+        <option value="중랑구">중랑구</option>
+        <option value="성북구">성북구</option>
+        <option value="강북구">강북구</option>
+        <option value="도봉구">도봉구</option>
+        <option value="노원구">노원구</option>
+        <option value="은평구">은평구</option>
+        <option value="서대문구">서대문구</option>
+        <option value="마포구">마포구</option>
+        <option value="양천구">양천구</option>
+        <option value="강서구">강서구</option>
+        <option value="구로구">구로구</option>
+        <option value="금천구">금천구</option>
+        <option value="영등포구">영등포구</option>
+        <option value="동작구">동작구</option>
+        <option value="관악구">관악구</option>
+        <option value="서초구">서초구</option>
+        <option value="강남구">강남구</option>
+        <option value="송파구">송파구</option>
+        <option value="강동구">강동구</option>
+    </select>
+
+    <canvas id="myChart" width="800" height="400"></canvas>
+
+    <script>
+        let chart;
+
+        async function fetchData(year, region) {
+            const res = await fetch(`/data/${year}/${region}`);
+            return await res.json();
+        }
+
+        async function drawChart() {
+            const year = document.getElementById('year-select').value;
+            const region = document.getElementById('region-select').value;
+            const data = await fetchData(year, region);
+
+            const ctx = document.getElementById('myChart').getContext('2d');
+            if (chart) chart.destroy();
+
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [
+                        {
+                            label: `${year}년 ${region} 사고건수`,
+                            data: data['사고건수'],
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                        },
+                        {
+                            label: `${year}년 ${region} 사망자수`,
+                            data: data['사망자수'],
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)'
+                        },
+                        {
+                            label: `${year}년 ${region} 부상자수`,
+                            data: data['부상자수'],
+                            backgroundColor: 'rgba(127, 219, 217, 0.6)'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (context.parsed.y !== null) {
+                                        label += ': ' + context.parsed.y.toLocaleString();
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { stacked: false },
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.getElementById('year-select').addEventListener('change', drawChart);
+        document.getElementById('region-select').addEventListener('change', drawChart);
+        window.onload = drawChart;
+    </script>
+</body>
+</html>

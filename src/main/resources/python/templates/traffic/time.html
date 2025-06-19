@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>시간대별 교통사고 시각화</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+    }
+    select {
+      font-size: 16px;
+      padding: 5px 10px;
+      margin: 10px;
+    }
+    canvas {
+      max-width: 900px;
+      margin: 30px auto;
+    }
+  </style>
+</head>
+<body>
+  <h2>서울시 시간대별 교통사고 통계</h2>
+
+  <label for="district-select">지역 선택:</label>
+  <select id="district-select">
+    {% for d in districts %}
+      <option value="{{ d }}">{{ d }}</option>
+    {% endfor %}
+  </select>
+
+  <label for="year-select">연도 선택:</label>
+  <select id="year-select">
+    {% for y in years %}
+      <option value="{{ y }}">{{ y }}년</option>
+    {% endfor %}
+  </select>
+
+  <canvas id="accidentChart" width="800" height="400"></canvas>
+
+  <script>
+    const timeLabels = {{ time_labels | tojson }};
+    const dataDict = {{ data_dict | tojson }};
+    const districtSelect = document.getElementById('district-select');
+    const yearSelect = document.getElementById('year-select');
+    const ctx = document.getElementById('accidentChart').getContext('2d');
+    let chart;
+
+    function drawChart(district, year) {
+      const data = dataDict[district][year];
+      const accidentData = data['사고건수'];
+      const deathData = data['사망자수'];
+      const injuryData = data['부상자수'];
+
+      if (chart) chart.destroy();
+
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: timeLabels,
+          datasets: [
+            {
+              label: '사고건수',
+              data: accidentData,
+              borderColor: 'rgba(54, 162, 235, 1)',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              fill: false,
+              tension: 0.3,
+              pointRadius: 4,
+              pointHoverRadius: 6
+            },
+            {
+              label: '사망자수',
+              data: deathData,
+              borderColor: 'rgba(255, 99, 132, 1)',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              fill: false,
+              tension: 0.3,
+              pointRadius: 4,
+              pointHoverRadius: 6
+            },
+            {
+              label: '부상자수',
+              data: injuryData,
+              borderColor: 'rgba(127, 219, 217, 1)',
+              backgroundColor: 'rgba(127, 219, 217, 0.2)',
+              fill: false,
+              tension: 0.3,
+              pointRadius: 4,
+              pointHoverRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          animation: {
+            duration: 1000,
+            easing: 'easeInOutQuart'
+          },
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: {
+                label: context => `${context.dataset.label}: ${context.parsed.y.toLocaleString()}건`
+              }
+            }
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: '시간대'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: value => value.toLocaleString()
+              },
+              title: {
+                display: true,
+                text: '건수'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    districtSelect.addEventListener('change', () => {
+      drawChart(districtSelect.value, yearSelect.value);
+    });
+
+    yearSelect.addEventListener('change', () => {
+      drawChart(districtSelect.value, yearSelect.value);
+    });
+
+    window.onload = () => {
+      drawChart(districtSelect.value, yearSelect.value);
+    };
+  </script>
+</body>
+</html>

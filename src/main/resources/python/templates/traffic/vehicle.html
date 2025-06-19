@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>차종별 교통사고 통계</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        h2 {
+            margin-top: 30px;
+        }
+        .chart-container {
+            width: 90%;
+            max-width: 800px;
+            margin: 30px auto 0 auto;
+            padding: 20px; 
+        }
+        canvas {
+            width: 100% !important;
+            height: auto !important;
+        }
+        select {
+            margin: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h2>차종별 교통사고 통계</h2>
+
+    <form method="get" action="/vehicle">
+        <label for="region-select">지역 선택:</label>
+        <select id="region-select" name="region" onchange="this.form.submit()">
+            {% for gu in ['종로구','중구','용산구','성동구','광진구','동대문구','중랑구','성북구','강북구','도봉구','노원구','은평구','서대문구','마포구','양천구','강서구','구로구','금천구','영등포구','동작구','관악구','서초구','강남구','송파구','강동구'] %}
+                <option value="{{ gu }}" {% if gu == region %}selected{% endif %}>{{ gu }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="year-select">연도 선택:</label>
+        <select id="year-select" name="year" onchange="this.form.submit()">
+            {% for y in range(2018, 2024) %}
+                <option value="{{ y }}" {% if year == y|string %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
+    </form>
+
+    <div class="chart-container">
+        <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+        const labels = {{ labels|tojson }};
+        const 사고건수 = {{ 사고건수|tojson }};
+        const 사망자수 = {{ 사망자수|tojson }};
+        const 부상자수 = {{ 부상자수|tojson }};
+        const region = "{{ region }}";
+        const year = "{{ year }}" === "all" ? "2018~2023 평균" : "{{ year }}년";
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: `${region} 사고건수`,
+                        data: 사고건수,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.1,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: `${region} 부상자수`,
+                        data: 부상자수,
+                        borderColor: 'rgba(127, 219, 217, 1)',
+                        backgroundColor: 'rgba(127, 219, 217, 0.2)',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.1,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: `${region} 사망자수`,
+                        data: 사망자수,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderWidth: 2,
+                        borderDash: [0, 0],
+                        fill: false,
+                        tension: 0.1,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,  // 비율 유지 안 함
+                plugins: {
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            maxRotation: 0,
+                            minRotation: 0,
+                            font: { size: 12 }
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: '사고건수 / 부상자수'
+                        },
+                        ticks: {
+                            precision: 0,
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        beginAtZero: true,
+                        min: 0,
+                        max: 10,
+                        grid: {
+                            drawOnChartArea: false
+                        },
+                        title: {
+                            display: true,
+                            text: '사망자수'
+                        },
+                        ticks: {
+                            precision: 0,
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

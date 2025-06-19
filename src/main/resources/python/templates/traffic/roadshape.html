@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title>도로형태별 교통사고 통계</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        canvas {
+            max-width: 800px;
+            margin: 30px auto;
+        }
+
+        label {
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        select {
+            margin: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+
+        /* 팝업 스타일 */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 9998;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 900px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+            z-index: 9999;
+            overflow: hidden;
+        }
+
+        .popup-header {
+            padding: 15px 20px;
+            background-color: #f4f4f4;
+            border-bottom: 1px solid #ddd;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        .popup-close {
+            float: right;
+            font-size: 22px;
+            cursor: pointer;
+            color: #888;
+            font-weight: bold;
+        }
+
+        .popup-content {
+            padding: 20px;
+            text-align: left;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h2>도로형태별 교통사고 통계</h2>
+
+    <label for="year-select">연도 선택:</label>
+    <select id="year-select" onchange="updateChart()">
+        {% for year in years %}
+        <option value="{{year}}">{{year}}</option>
+        {% endfor %}
+    </select>
+
+    <label for="district-select">지역 선택:</label>
+    <select id="district-select" onchange="updateChart()">
+        {% for dist in districts %}
+        <option value="{{dist}}">{{dist}}</option>
+        {% endfor %}
+    </select>
+
+
+
+    <canvas id="barChart" width="800" height="400"></canvas>
+
+    <div class="popup-overlay" id="popup-overlay" onclick="closePopup()"></div>
+    <div class="popup" id="popup">
+        <div class="popup-header">
+            도로형태별 통계
+            <span class="popup-close" onclick="closePopup()">×</span>
+        </div>
+        <div class="popup-content" id="popup-content">           
+        </div>
+    </div>
+
+    <script>
+        const data = {{ data|tojson }};
+        const yearSelect = document.getElementById('year-select');
+        const districtSelect = document.getElementById('district-select');
+        const ctx = document.getElementById('barChart').getContext('2d');
+
+        function getChartData() {
+            const year = yearSelect.value;
+            const district = districtSelect.value;
+            return data[year][district];
+        }
+
+        let chartData = getChartData();
+        let chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartData['도로형태'],
+                datasets: [
+                    {
+                        label: '사고건수',
+                        data: chartData['사고건수'],
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        fill: false,
+                        tension: 0.3,
+                        spanGaps: true
+                    },
+                    {
+                        label: '부상자수',
+                        data: chartData['부상자수'],
+                        borderColor: 'rgba(127, 219, 217, 1)',
+                        backgroundColor: 'rgba(127, 219, 217, 0.2)',
+                        fill: false,
+                        tension: 0.3,
+                        spanGaps: true
+                    },
+                    {
+                        label: '사망자수',
+                        data: chartData['사망자수'],
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        fill: false,
+                        tension: 0.3,
+                        spanGaps: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        ticks: {
+                            maxRotation: 0,  
+                            minRotation: 0   
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        function updateChart() {
+            const newData = getChartData();
+            chart.data.labels = newData['도로형태'];
+            chart.data.datasets[0].data = newData['사고건수'];
+            chart.data.datasets[1].data = newData['부상자수'];
+            chart.data.datasets[2].data = newData['사망자수'];
+            chart.update();
+        }
+
+        function openPopup(url) {
+            const popup = document.getElementById('popup');
+            const overlay = document.getElementById('popup-overlay');
+            const content = document.getElementById('popup-content');
+
+            fetch(url)
+                .then(res => res.text())
+                .then(html => {
+                    content.innerHTML = html;
+                    popup.style.display = 'block';
+                    overlay.style.display = 'block';
+                });
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('popup');
+            const overlay = document.getElementById('popup-overlay');
+            popup.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

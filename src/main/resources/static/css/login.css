@@ -1,0 +1,279 @@
+body{
+    margin:0;
+    color:#6a6f8c;
+    font:600 16px/18px 'Open Sans',sans-serif;
+	background:rgba(40,57,101,.9);
+    background-image: url('/img/login_background.png');
+    background-size: cover; /*화면에 꽉 차게*/
+    background-repeat: no-repeat; /* 반복하지 않게 */
+    background-position: center center; 
+    margin: 0;
+    padding: 0;
+  }
+
+  .addr {
+	margin-bottom:5px;
+  }
+  
+  .addrnum{
+	width: 60%;
+	border: none;
+	padding: 15px 20px;
+	border-radius: 25px;
+	background: rgba(255,255,255,.1);
+	margin: 5px;
+  }
+  
+  #addr-button{
+	width: 35%;
+	font-weight: 600;
+	background-color: #1c77da;  /* 파란색 */
+	color: #ffffff;
+	border: none;
+	padding: 13px 20px;
+	font-size: 14px;
+	cursor: pointer;
+	border-radius: 20px;    
+  }
+
+  *,:after,:before{box-sizing:border-box}
+  .clearfix:after,.clearfix:before{content:'';display:table}
+  .clearfix:after{clear:both;display:block}
+  a{color:inherit;text-decoration:none}
+  
+  div, label, a{
+    background:rgba(40,57,101,.9);
+  }
+
+  .login-wrap, 
+  .find-wrap{
+    width:100%;
+    margin:auto;
+    max-width:525px;
+    min-height:1000px;
+    position:relative;
+    box-shadow:0 12px 15px 0 rgba(0,0,0,.24),0 17px 50px 0 rgba(0,0,0,.19);
+  }
+
+  .login-html, 
+  .find-html{
+    width:100%;
+    height:100%;
+    position:absolute;
+    padding:90px 70px 50px 70px;
+    background:rgba(40,57,101,.9);
+  }
+  .login-html .sign-in-htm,
+  .login-html .sign-up-htm,
+  .find-html .find-id-htm,
+  .find-html .find-pw-htm{
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    position:absolute;
+    transform:rotateY(180deg);
+    backface-visibility:hidden;
+    transition:all .4s linear;
+    background:rgba(40,57,101,.9);
+
+  }
+  .login-html .sign-in,
+  .login-html .sign-up,
+  .login-form .group .check,
+  .find-html .find-id,
+  .find-html .find-pw,
+  .find-form .group .check{
+    display:none;
+  }
+  .login-html .tab,
+  .login-form .group .label,
+  .login-form .group .button,
+  .find-html .tab,
+  .find-form .group .label,
+  .find-form .group .button {
+    text-transform:uppercase;
+  }
+  .login-html .tab,
+  .find-html .tab {
+    font-size:22px;
+    margin-right:15px;
+    padding-bottom:5px;
+    margin:0 15px 10px 0;
+    display:inline-block;
+    border-bottom:2px solid transparent;
+  }
+  .login-html .sign-in:checked + .tab,
+  .login-html .sign-up:checked + .tab,
+  .find-html .find-id:checked + .tab,
+  .find-html .find-pw:checked + .tab {
+    color:#fff;
+    border-color:#1161ee;
+  }
+  .login-form,
+  .find-form {
+    min-height:345px;
+    position:relative;
+    perspective:1000px;
+    transform-style:preserve-3d;
+  }
+  .login-form .group,
+  .find-form .group {
+    margin-bottom:15px;
+  }
+  .login-form .group .label,
+  .login-form .group .input,
+  .login-form .group .button,
+  .find-form .group .label,
+  .find-form .group .input,
+  .find-form .group .button{
+    width:100%;
+    color:#fff;
+    display:block;
+  }
+  .login-form .group .input,
+  .find-form .group .input{
+	border: none;
+	padding: 15px 20px;
+	border-radius: 25px;
+	background: rgba(255,255,255,.1);
+	width: 100%;
+	color: #fff;
+	display: block; /* ✅ 수정: flex -> block */
+  }
+  .login-form .group .button,
+  .find-form .group .button {
+    border:none;
+    padding:15px 20px;
+    border-radius:25px;
+    background:rgba(255,255,255,.1);
+    display: flex;
+    flex-direction: column;
+  }
+  .login-form .group input[data-type="password"]{
+    -webkit-text-security:circle;
+  }
+  .login-form .group .label,
+  .find-form .group .label{
+    color:#aaa;
+    font-size:12px;
+  }
+  /* 버튼을 가로로 중앙 정렬 */
+  .login-form .group .button, 
+  .find-form .group .button{
+    background: #1161ee;
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 25px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;  /* 모든 변화가 0.3초에 걸쳐 일어나도록 */
+  }
+
+  .login-form .group label .icon,
+  .find-form .group label .icon{
+    width:15px;
+    height:15px;
+    border-radius:2px;
+    position:relative;
+    display:inline-block;
+    background:rgba(255,255,255,.1);
+  }
+  .login-form .group label .icon:before,
+  .login-form .group label .icon:after,
+  .find-form .group label .icon:before,
+  .find-form .group label .icon:after{
+    content:'';
+    width:10px;
+    height:2px;
+    background:#fff;
+    position:absolute;
+    transition:all .2s ease-in-out 0s;
+  }
+  .login-form .group label .icon:before,
+  .find-form .group label .icon:before{
+    left:3px;
+    width:5px;
+    bottom:6px;
+    transform:scale(0) rotate(0);
+  }
+  .login-form .group label .icon:after,
+  .find-form .group label .icon:after{
+    top:6px;
+    right:0;
+    transform:scale(0) rotate(0);
+  }
+  .login-form .group .check:checked + label,
+  .find-form .group .check:checked + label{
+    color:#fff;
+    
+  }
+  .login-form .group .check:checked + label .icon,
+  .find-form .group .check:checked + label .icon{
+    background:#1161ee;
+  }
+  .login-html .sign-in-htm,
+  .login-html .sign-up-htm,
+  .find-html .find-id-htm,
+  .find-html .find-pw-htm {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transition: all 0.4s ease;
+    transform: translateX(100%); /* 기본: 오른쪽에 숨김 */
+    opacity: 0;
+    z-index: 0;
+  }
+  
+  /* 로그인 탭 선택 시 로그인 폼이 슬라이드인 */
+  .login-html .sign-in:checked ~ .login-form .sign-in-htm,
+  .find-html .find-id:checked ~ .find-form .find-id-htm {
+    transform: translateX(0%);
+    opacity: 1;
+    z-index: 1;
+  }
+  
+  /* 회원가입 탭 선택 시 회원가입 폼이 슬라이드인 */
+  .login-html .sign-up:checked ~ .login-form .sign-up-htm, 
+  .find-html .find-pw:checked ~ .find-form .find-pw-htm {
+    transform: translateX(0%);
+    opacity: 1;
+    z-index: 1;
+  }
+
+  
+  .hr{
+    height:2px;
+    margin:60px 0 50px 0;
+    background:rgba(255,255,255,.2);
+  }
+  .foot-lnk{
+    text-align:center;
+  }
+
+  .button {
+    width: 100%;
+    font-weight: 600;
+    background-color: #1c77da;  /* 파란색 */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 20px;    
+    transition: all 0.3s ease;  /* 모든 변화가 0.3초에 걸쳐 일어나도록 */
+  }
+
+  .button:hover {
+    color: #022a55;
+    background-color: #0056b3;  /* hover 시 더 진한 파란색 */
+    transform: translateY(2px);  /* 위로 약간 올라가며 볼록한 효과 */
+  }
+
+  .sns-btn {
+  height: 45px; 
+  margin: 15px 10px;
+  }

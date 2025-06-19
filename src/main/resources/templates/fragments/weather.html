@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="/js/env.js"></script>
+	<title>weather</title>
+</head>
+
+<body>
+
+	<section th:fragment="mainWeather" style="width: 650px;">
+
+		<!-- 즐겨찾기 목록 -->
+		<div id="favorites-container" style="margin-top: 10px;">
+			<h4>즐겨찾기 목록
+				<ul id="favorites-list" style="list-style: none; padding-left: 0;"></ul>
+			</h4>
+		</div>
+
+		<!-- 드롭박스 -->
+		<div class="dropdown-container">
+			<!-- 첫번째 드롭다운 : 지역 선택 -->
+			<select id="region">
+				<option value="">지역 선택</option>
+				<option value="east">동부</option>
+				<option value="west">서부</option>
+				<option value="south">남부</option>
+				<option value="north">북부</option>
+			</select>
+
+			<!-- 두번째 드롭다운 : 구 선택 -->
+			<select id="district">
+				<option value="">구 선택</option>
+			</select>
+
+			<div id="selected-region">
+				선택한 지역: <span class="region-display">종로구</span>
+				<button id="add-favorite-btn">즐겨찾기 추가</button>
+			</div>
+
+		</div>
+
+		<!-- 첫 번째 : 기상정보 -->
+		<div class="weather-box" id="weather-box"></div>
+
+
+		<!-- 두 번째 : 기상차트  -->
+		<div class="temperature-chart-container">
+			<h3>시간별 기온</h3>
+			<canvas id="temperatureChart"></canvas>
+		</div>
+
+		<script>
+			const API_KEY = CONFIG.WEATHER_API_KEY;
+			const API_URL = 'https://api.openweathermap.org/data/2.5/forecast';
+
+			let regionCoords = {
+				east: {districts: {}},
+				west: {districts: {}},
+				south: {districts: {}},
+				north: {districts: {}}
+			};
+
+			// 데이터를 다 불러오고 난 다음 실행하는 초기화 함수
+			function initializePage() {
+				regionSelect.value = 'north';
+				updateDistricts();
+				districtSelect.value = '종로구';
+				regionDisplay.textContent = '종로구';
+				fetchWeatherData('north', '종로구');
+			}
+
+			fetch('/api/seoul/all')
+				.then(response => response.json())
+				.then(data => {
+					data.forEach(item => {
+						const region = item.region;  // east, west, south, north
+						const gu = item.gu;          // 구 이름
+						const lat = item.lat;
+						const lon = item.lon;
+
+						// JS 객체에 추가
+						if (regionCoords[region]) {
+							regionCoords[region].districts[gu] = {lat: lat, lon: lon};
+						}
+					});
+
+					// 📌 regionCoords 다 로드된 이후에 초기화 시작
+					initializePage();
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+
+			const value = JSON.parse(localStorage.getItem('key'));
+			const regionSelect = document.getElementById('region');
+			const districtSelect = document.getElementById('district');
+			const weatherBox = document.getElementById('weather-box');
+			const addFavoriteBtn = document.getElementById('add-favorite-btn');
+			const favoritesList = document.getElementById('favorites-list');
+			const regionDisplay = document.querySelector('.region-display');
+
+			// 🎯 1. 저장된 즐겨찾기 불러오기
+			let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+			updateFavoritesUI();
+
+			// 🎯 2. 즐겨찾기 UI 업데이트
+			function updateFavoritesUI() {
+				favoritesList.innerHTML = '';
+				favorites.forEach(fav => {
+					const btn = document.createElement('button');
+					btn.textContent = fav;
+
+					// ✅ 삭제 버튼 클릭 시 삭제 함수 호출
+					btn.addEventListener('click', () => {
+						console.log('삭제 버튼 클릭됨:', fav);
+						removeFavorite(fav);
+					});
+
+					favoritesList.appendChild(btn);
+				});
+			}
+
+			// 🎯 3. 즐겨찾기 추가 함수
+			function addFavorite(region) {
+				if (!region) {
+					alert("지역을 선택하세요.");
+					return;
+				}
+
+				if (favorites.includes(region)) {
+					alert("이미 즐겨찾기에 추가된 지역입니다.");
+					return;
+				}
+
+				if (favorites.length >= 3) {
+					alert("즐겨찾기는 최대 3개까지만 가능합니다.");
+					return;
+				}
+
+				favorites.push(region);
+				localStorage.setItem('favorites', JSON.stringify(favorites));
+				updateFavoritesUI();
+			}
+
+			// 🎯 4. 즐겨찾기 삭제 함수
+			function removeFavorite(region) {
+				favorites = favorites.filter(f => f !== region);
+				localStorage.setItem('favorites', JSON.stringify(favorites));
+				updateFavoritesUI();
+			}
+
+			// 🎯 5. 추가 버튼 클릭 시 동작
+			addFavoriteBtn.addEventListener('click', () => {
+				const selectedRegion = regionDisplay.textContent.trim();
+
+				if (!selectedRegion) {
+					alert('지역을 먼저 선택하세요.');
+					return;
+				}
+
+				if (favorites.includes(selectedRegion)) {
+					alert('이미 즐겨찾기에 추가된 지역입니다.');
+					return;
+				}
+
+				if (favorites.length >= 3) {
+					alert('즐겨찾기는 최대 3개까지 추가할 수 있습니다.');
+					return;
+				}
+
+				favorites.push(selectedRegion);
+				localStorage.setItem('favorites', JSON.stringify(favorites)); // localStorage저장
+				updateFavoritesUI();
+			});
+
+			// 지역 선택 시 선택 지역 텍스트도 변경되도록 수정 (기존 코드에 추가)
+			districtSelect.addEventListener('change', () => {
+				if (regionSelect.value && districtSelect.value) {
+					fetchWeatherData(regionSelect.value, districtSelect.value);
+					// 선택된 구를 표시
+					regionDisplay.textContent = districtSelect.value;
+				}
+			});
+
+			// 차트 전역변수
+			let temperatureChart = null;
+			// API에서 받은 전체 3시간 데이터 저장
+			let currentWeatherList = [];
+
+			function updateDistricts() {
+				const selectedRegion = regionSelect.value;
+				districtSelect.innerHTML = '<option value="">구를 선택하세요</option>';
+
+				if (selectedRegion) {
+					const districts = regionCoords[selectedRegion].districts;
+					for (const district in districts) {
+						const option = document.createElement('option');
+						option.value = district;
+						option.text = district;
+						districtSelect.appendChild(option);
+					}
+				}
+			}
+
+			async function fetchWeatherData(region, district) {
+				const {lat, lon} = regionCoords[region].districts[district];
+
+				try {
+					const response = await fetch(`${API_URL}?lat=${lat}&lon=${lon}&units=metric&cnt=40&appid=${API_KEY}`);
+					const data = await response.json();
+
+					if (!data.list || data.list.length === 0) {
+						weatherBox.innerHTML = '<p>데이터가 없습니다.</p>';
+						return;
+					}
+
+					currentWeatherList = data.list;
+					displayWeatherSummary(data.list);
+					
+					// ✅ 여기에 추가!
+					checkRainCondition(data.list);
+					
+					// 기본으로 첫 날짜 그래프 표시 (첫 데이터 날짜)
+					if (data.list.length > 0) {
+						const firstDate = new Date(data.list[0].dt * 1000).toISOString().slice(0, 10);
+						renderTemperatureChartForDate(firstDate);
+					}
+				} catch (error) {
+					console.error("날씨 데이터를 가져오는 중 오류 발생:", error);
+					weatherBox.innerHTML = '<p>날씨 데이터를 불러오는 데 실패했습니다.</p>';
+				}
+			}
+
+			function displayWeatherSummary(list) {
+				// 날짜별로 그룹핑: 날짜(yyyy-mm-dd)별 첫 아이템 대표로 요약 카드 생성
+				const dailyMap = {};
+				list.forEach(item => {
+					const dateObj = new Date(item.dt * 1000);
+					dateObj.setHours(dateObj.getHours());  // 한국 시간 보정
+					const dateStr = dateObj.toISOString().slice(0, 10);
+					if (!dailyMap[dateStr]) {
+						dailyMap[dateStr] = item;
+					}
+				});
+
+				weatherBox.innerHTML = '';
+				for (const dateStr in dailyMap) {
+					const item = dailyMap[dateStr];
+
+					// ✅ dateObj 새로 선언해야 함
+					const itemDateObj = new Date(item.dt * 1000);
+					itemDateObj.setHours(itemDateObj.getHours());
+					const day = itemDateObj.getDate();
+
+					// ✅ 해당 날짜 전체 데이터 추출 (보정 포함)
+					const itemsOfDay = list.filter(i => {
+						const dateObj = new Date(i.dt * 1000);
+						dateObj.setHours(dateObj.getHours());
+						const itemDateStr = dateObj.toISOString().slice(0, 10);
+						return itemDateStr === dateStr;
+					});
+
+					// ✅ 아이콘 빈도수 계산
+					const iconCount = {};
+					itemsOfDay.forEach(i => {
+						const iconCode = i.weather[0].icon;
+						iconCount[iconCode] = (iconCount[iconCode] || 0) + 1;
+					});
+
+					// ✅ 가장 많이 나온 아이콘 선택
+					const mostFrequentIcon = Object.keys(iconCount).reduce((a, b) => iconCount[a] > iconCount[b] ? a : b);
+					const iconUrl = `https://openweathermap.org/img/wn/${mostFrequentIcon}@2x.png`;
+					// ✅ 최고/최저 온도 계산 (보정 포함)
+					const tempsOfDay = itemsOfDay.map(i => i.main.temp);
+					const tempMax = Math.max(...tempsOfDay).toFixed(1);
+					const tempMin = Math.min(...tempsOfDay).toFixed(1);
+
+
+					const div = document.createElement('div');
+					div.className = 'weather-item';
+					div.dataset.date = dateStr;
+					div.className = 'weather-item';  // div에 클래스명 추가
+					div.innerHTML = `
+			    <h4 class="weather-day">${day}일</h4>
+			    <img src="${iconUrl}" alt="weather icon" class="weather-icon" />
+			    <div class="weather-bottom">
+			        <div class="temp-max">${tempMax}</div>
+			        <div class="temp-min">${tempMin}</div>
+			    </div>
+			`;
+
+					// 클릭 이벤트로 해당 날짜의 시간별 온도 그래프 표시
+					div.addEventListener('click', () => {
+						renderTemperatureChartForDate(dateStr);
+					});
+
+					weatherBox.appendChild(div);
+				}
+			}
+
+			function renderTemperatureChartForDate(dateStr) {
+				// dateStr 기준으로 currentWeatherList에서 시간별 온도 추출
+				const filtered = currentWeatherList.filter(item => {
+					const dateObj = new Date(item.dt * 1000);
+					dateObj.setHours(dateObj.getHours());
+					const itemDateStr = dateObj.toISOString().slice(0, 10);
+					return itemDateStr === dateStr;
+				});
+				if (filtered.length === 0) {
+					alert('해당 날짜의 데이터가 없습니다.');
+					return;
+				}
+
+				const labels = filtered.map(item => {
+					const d = new Date(item.dt * 1000);
+					return d.toLocaleTimeString('ko-KR', {hour: '2-digit', minute: '2-digit'});
+				});
+
+				// 강수량 
+				const rains = filtered.map(item => (item.rain && item.rain['3h']) ? item.rain['3h'] : 0);
+				// 최저, 최고 기온
+				const temps = filtered.map(item => item.main.temp);
+
+				if (temperatureChart) {
+					temperatureChart.destroy();
+				}
+
+				const ctx = document.getElementById('temperatureChart').getContext('2d');
+				const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+
+				gradient.addColorStop(0, '#ffc7b1c2');      // 분홍 시작 (0%)
+				gradient.addColorStop(0.25, '#ff956f91');     // 분홍->노랑 중간색 (살짝 노란 느낌)
+				gradient.addColorStop(0.95, '#fff51675');        // 노랑 끝 (100%)
+
+
+
+				temperatureChart = new Chart(ctx, {
+					type: 'line',
+					data: {
+						labels,
+						datasets: [
+							{
+								type: 'line',
+								label: `시간별 기온 (°C)`,
+								data: temps,
+								borderColor: '#ffc7b1c2',
+								backgroundColor: gradient,
+								fill: true,
+								tension: 0.4,
+								yAxisID: 'y2',
+								order: 2
+							},
+							{
+								type: 'line',
+								label: '시간별 강수량 (mm)',
+								data: rains,
+								borderColor: '#5ab9ffe0',
+								backgroundColor: '#8cceff99',
+								fill: true,
+								tension: 0.4,
+								yAxisID: 'y1',
+								order: 1
+							}
+						]
+					},
+					options: {
+						responsive: true,
+						scales: {
+							y2: {
+								type: 'linear',
+								position: 'left',
+								min: 0,           // 👈 최저 기온 고정
+								max: 40,            // 👈 최고 기온 고정
+								title: {
+									display: true,
+									text: '기온 (°C)'
+								}
+							},
+							y1: {
+								type: 'linear',
+								position: 'right',
+								min: 0,
+								max: Math.max(...rains) + 1,
+								grid: {
+									drawOnChartArea: false, // y2축 눈금은 배경에 표시하지 않음
+								},
+								title: {
+									display: true,
+									text: '강수량 (mm)'
+								}
+							},
+							x: {
+								title: {
+									display: true,
+									text: '시간'
+								}
+							}
+						}
+					}
+				});
+			}
+
+			regionSelect.addEventListener('change', () => {
+				updateDistricts();
+				districtSelect.value = '';  // 구 초기화
+				regionDisplay.textContent = '';  // 선택한 지역 표시도 초기화 (있으면)
+			});
+
+			districtSelect.addEventListener('change', () => {
+				if (regionSelect.value && districtSelect.value) {
+					fetchWeatherData(regionSelect.value, districtSelect.value);
+					regionDisplay.textContent = districtSelect.value;
+				}
+			});
+		</script>
+
+
+</body>
+
+</html>

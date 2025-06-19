@@ -1,0 +1,59 @@
+<!-- templates/fragments/nav.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav class="navbar navbar-scrolled" th:fragment="mainNav">
+  <div class="container-fluid">
+    <a th:href="@{/home}">
+      <img th:src="@{/img/Logo.png}" alt="Logo" class="logo">
+    </a>
+
+    <ul class="menu menu-scrolled">
+      <li>
+        <a>교통안전</a>
+        <ul class="submenu">
+          <li><a th:href="@{/sidebar(section='traffic')}">사고정보</a></li>
+          <li><a th:href="@{/sidebar(section='amenities')}">교통편의</a></li>
+          <li><a th:href="@{/subway}">대중교통</a></li>
+        </ul>
+      </li>
+      <li>
+        <a>교통정보</a>
+        <ul class="submenu">
+          <li><a th:href="@{/weather}">날씨&nbsp;/&nbsp;뉴스</a></li>
+          <li><a th:href="@{/data_index}">분석자료</a></li>
+          <li><a th:href="@{/sidebar(section='cctv')}">C C T V</a></li>
+        </ul>
+      </li>
+      	<li><a>게시판</a>
+			<ul class="submenu">
+				<li><a th:href="@{/chatting}">소통게시판</a></li>
+				<li><a th:href="@{/board}">건의게시판</a></li>
+				<li><a th:href="@{/access-denied}">에러페이지</a></li>
+			</ul>
+		</li>
+      <li>
+        <a>회원정보</a>
+        <ul class="submenu">
+          <li><a th:href="@{/login}">로그인 / 회원가입</a></li>
+          <li><a th:href="@{/info}">마이페이지</a></li>
+        </ul>
+      </li>
+    </ul>
+
+    <a th:href="@{/login}" class="login-button">
+      <img id="login-img" src="/img/Login.png" alt="Login Icon" class="icon2">
+		<span id="login-txt" th:text="${isLoggedIn} ? 'Logout' : 'Login'"></span>
+    </a>
+
+	<!-- 다크모드 체크박스 -->
+	<input type="checkbox" id="toggle" hidden> 
+
+	<label for="toggle" class="toggleSwitch">
+	  <span class="toggleButton"></span>
+	</label>
+
+  </div>
+</nav>
+</body>
+</html>

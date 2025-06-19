@@ -1,0 +1,172 @@
+body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 600px;
+      height: 85vh;
+      margin: 100px auto 2% auto;
+      border: 1px solid #ccc;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      margin-right: 10px;
+    }
+
+    .chat-input button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 20px;
+      background-color: #28a745;
+      color: white;
+      cursor: pointer;
+    }
+	
+	.bubble-wrapper {
+	  display: flex;
+	  flex-direction: column;
+	  margin: 10px;
+	}
+
+	/* 이름 정렬 */
+	.bubble-wrapper.me .sender {
+	  text-align: right;
+	}
+
+	.bubble-wrapper.you .sender {
+	  text-align: left;
+	}
+
+	.bubble-row {
+	  display: flex;
+	  align-items: flex-end;
+	  gap: 6px;
+	}
+
+	/* 정렬 방향 */
+	.bubble-wrapper.me .bubble-row {
+	  justify-content: flex-end;
+	  flex-direction: row-reverse;
+	  margin-left: auto; /* ✅ 오른쪽 정렬 핵심! */
+	}
+
+	.bubble-wrapper.you .bubble-row {
+	  justify-content: flex-start;
+	  flex-direction: row;
+	}
+
+	/* 말풍선 */
+	.bubble {
+	  max-width: 70%;
+	  padding: 10px 14px;
+	  border-radius: 15px;
+	  word-break: break-word;
+	  position: relative;
+	}
+
+	.bubble.me {
+	  background-color: #dcf8c6;
+	  border: 1px solid #c6e5b3;
+	}
+
+	.bubble.you {
+	  background-color: #fff;
+	  border: 1px solid #ddd;
+	}
+	
+	/* ✅ 내 메시지 꼬리 (초록 배경, 테두리 있음) */
+	.bubble.me::after {
+	  content: "";
+	  position: absolute;
+	  top: 12px;
+	  right: -10px;
+	  width: 0;
+	  height: 0;
+	  border-top: 6px solid transparent;
+	  border-bottom: 6px solid transparent;
+	  border-left: 10px solid #dcf8c6; /* 배경색 */
+	}
+
+	.bubble.me::before {
+	  content: "";
+	  position: absolute;
+	  top: 11px;
+	  right: -12px;
+	  width: 0;
+	  height: 0;
+	  border-top: 7px solid transparent;
+	  border-bottom: 7px solid transparent;
+	  border-left: 11px solid #c6e5b3; /* 테두리색 */
+	}
+
+	/* ✅ 상대 메시지 꼬리 (흰 배경, 테두리 있음) */
+	.bubble.you::after {
+	  content: "";
+	  position: absolute;
+	  top: 12px;
+	  left: -10px;
+	  width: 0;
+	  height: 0;
+	  border-top: 6px solid transparent;
+	  border-bottom: 6px solid transparent;
+	  border-right: 10px solid #fff; /* 배경색 */
+	}
+
+	.bubble.you::before {
+	  content: "";
+	  position: absolute;
+	  top: 11px;
+	  left: -12px;
+	  width: 0;
+	  height: 0;
+	  border-top: 7px solid transparent;
+	  border-bottom: 7px solid transparent;
+	  border-right: 11px solid #ddd; /* 배경색 */
+	}
+
+	/* 시간 */
+	.time {
+	  font-size: 0.75rem;
+	  color: gray;
+	  white-space: nowrap;
+	  margin: 0 4px;
+	  align-self: flex-end;
+	}
+	
+	.system-message {
+	  text-align: center;
+	  font-size: 0.85rem;
+	  color: #888;
+	  margin: 10px 0;
+	  animation: fadeIn 0.6s ease;
+	}
+
+	@keyframes fadeIn {
+	  from { opacity: 0; transform: translateY(5px); }
+	  to   { opacity: 1; transform: translateY(0); }
+	}

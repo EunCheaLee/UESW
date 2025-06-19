@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>사고유형별 교통사고 통계</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <style>
+        body {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        canvas {
+            margin-top: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        select {
+            margin: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+  <h2>사고유형별 교통사고 통계 시각화</h2>
+
+  <label>지역 선택:</label>
+  <select id="gu-select">
+    {% for gu in gu_list %}
+      <option value="{{ gu }}">{{ gu }}</option>
+    {% endfor %}
+  </select>
+
+  <label>연도 선택:</label>
+  <select id="year-select">
+    {% for year in years %}
+      <option value="{{ year }}">{{ year }}</option>
+    {% endfor %}
+  </select>
+
+  <canvas id="chart" width="800" height="400"></canvas>
+
+  <script>
+    const 전체데이터 = {{ 전체데이터 | tojson }};
+    const labels = {{ type_list | tojson }};
+    let chart;
+
+    function drawChart(gu, year) {
+      const data = 전체데이터[gu]?.[year];
+
+      if (!data) {
+        alert("선택한 지역/연도에 데이터가 없습니다.");
+        return;
+      }
+
+      const 사고 = labels.map(t => data['사고건수'][t] ?? 0);
+      const 사망 = labels.map(t => data['사망자수'][t] ?? 0);
+      const 부상 = labels.map(t => data['부상자수'][t] ?? 0);
+
+      const ctx = document.getElementById('chart').getContext('2d');
+      if (chart) chart.destroy();
+
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: '사고건수',
+              data: 사고,
+              borderColor: 'rgba(54, 162, 235, 1)',
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              tension: 0.3,
+              pointRadius: 4
+            },
+            {
+              label: '사망자수',
+              data: 사망,
+              borderColor: 'rgba(255, 99, 132, 1)',
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              tension: 0.3,
+              pointRadius: 4
+            },
+            {
+              label: '부상자수',
+              data: 부상,
+              borderColor: 'rgba(127, 219, 217, 1)',
+              backgroundColor: 'rgba(127, 219, 217, 0.2)',
+              tension: 0.3,
+              pointRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          interaction: {
+            mode: 'index',
+            intersect: false
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: v => v.toLocaleString()
+              }
+            }
+          }
+        }
+      });
+    }
+
+    const guSel = document.getElementById('gu-select');
+    const yearSel = document.getElementById('year-select');
+
+    guSel.addEventListener('change', () => drawChart(guSel.value, yearSel.value));
+    yearSel.addEventListener('change', () => drawChart(guSel.value, yearSel.value));
+
+    window.onload = () => drawChart(guSel.value, yearSel.value);
+  </script>
+</body>
+</html>

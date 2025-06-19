@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 작성</title>
+    <link rel="stylesheet" th:href="@{/css/chat.css}"/>
+	<link rel="stylesheet" th:href="@{/css/fragments.css}">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+	<script th:src="@{/js/session.js}"></script>
+	<script th:src="@{/js/home.js}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
+</head>
+<body>
+	<!-- 넷바 -->
+	<div th:replace="~{fragments/nav :: mainNav}"></div>
+	  
+	<!-- 고정 사이드바 -->
+	<div th:replace="~{fragments/sidebar :: mainSidebar}"></div>
+	
+	<!-- 로그인한 사용자 이름 (JS에서 사용) -->
+	<span id="sender-name" th:text="${username}" style="display:none;"></span>
+	
+	<div class="chat-container">
+	  <div class="chat-box" id="chat"></div>
+	  <div class="chat-input">
+	    <input type="text" id="content" placeholder="메시지를 입력하세요..." />
+	    <button onclick="sendMessage()">전송</button>
+	  </div>
+	</div>
+	<!-- 푸터 -->
+	<div th:replace="~{fragments/footer :: footer}"></div>
+
+	<script>
+	  let stompClient = null;
+		const currentUser = document.getElementById("sender-name")?.textContent;
+
+		if (!currentUser) {
+		  alert("로그인한 사용자만 채팅할 수 있습니다.");
+		  location.href = "/login"; // 혹은 메인 페이지 등으로 리다이렉트
+		}
+
+		function connect() {
+		  const socket = new SockJS('/ws');
+		  stompClient = Stomp.over(socket);
+
+		  stompClient.connect({}, function () {
+		    // 1. 메시지 수신
+		    stompClient.subscribe('/topic/public', function (message) {
+		      const msg = JSON.parse(message.body);
+		      renderMessage(msg);
+		    });
+
+		    // ✅ 2. 입장 메시지 전송
+		    stompClient.send("/app/chat.addUser", {}, JSON.stringify({
+		      sender: currentUser,
+		      type: "JOIN"
+		    }));
+		  });
+		}
+
+	  function renderMessage(msg) {
+	    const chatBox = document.getElementById("chat");
+	    const isMe = msg.sender.trim() === currentUser.trim();
+
+
+		// ✅ JOIN 타입은 중앙에 시스템 메시지로 표시
+		if (msg.type === "JOIN") {
+		  const joinNotice = document.createElement("div");
+		  joinNotice.className = "system-message";
+		  joinNotice.textContent = msg.messageContent;
+		  chatBox.appendChild(joinNotice);
+		  chatBox.scrollTop = chatBox.scrollHeight;
+		  return;
+		}
+		
+		// 일반 채팅일 때
+	    const bubbleWrapper = document.createElement("div");
+	    bubbleWrapper.className = "bubble-wrapper " + (isMe ? "me" : "you");
+
+		bubbleWrapper.innerHTML = `
+		  <div class="sender">${msg.sender}</div>
+		  <div class="bubble-row ${isMe ? "me" : "you"}">
+		    <div class="bubble ${isMe ? "me" : "you"}">${msg.messageContent}</div>
+		    <div class="time">${msg.time || ""}</div>
+		  </div>
+		`;
+
+	    chatBox.appendChild(bubbleWrapper);
+	    chatBox.scrollTop = chatBox.scrollHeight;
+	  }
+
+	  function sendMessage() {
+	    const content = document.getElementById("content").value.trim();
+	    if (!content) return;
+
+	    const message = {
+	      sender: currentUser,
+	      messageContent: content,  // ✅ 변수명 바로 content
+		  type: "CHAT"
+	    };
+
+	    stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(message));
+	    document.getElementById("content").value = '';
+	  }
+
+
+	  window.onload = function () {
+	    connect();
+
+	    // ✅ Enter 키로 메시지 전송
+	    const input = document.getElementById("content");
+	    input.addEventListener("keydown", function (e) {
+	      if (e.key === "Enter") {
+	        e.preventDefault(); // 줄바꿈 방지
+	        sendMessage();
+	      }
+	    });
+	  };
+	</script>
+</body>
+</html>

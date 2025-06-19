@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>서울시 법규위반별 교통사고 통계</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    canvas {
+      max-width: 900px;
+      height: 400px;
+      margin: 0 auto;
+    }
+    select {
+      padding: 6px 10px;
+      font-size: 16px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>법규 위반 유형별 연도별 사고 통계</h2>
+
+  <form method="get" action="/violation/law">
+    <label for="district">지역 선택:</label>
+    <select name="district" id="district" onchange="this.form.submit()">
+      {% for d in districts %}
+        <option value="{{ d }}" {% if d == selected_district %}selected{% endif %}>{{ d }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="year">연도:</label>
+    <select name="year" id="year" onchange="this.form.submit()">
+      {% for y in years %}
+        <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}년</option>
+      {% endfor %}
+    </select>
+
+  </form>
+
+  <canvas id="lawChart" width="800" height="400"></canvas>
+
+  <script>
+    const ctx = document.getElementById('lawChart').getContext('2d');
+
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: {{ law_types | tojson }},
+        datasets: [
+          {
+            label: '사고 건수',
+            data: {{ accident_data | tojson }},
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'transparent',
+            fill: false,
+            tension: 0.3,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          },
+          {
+            label: '사망자 수',
+            data: {{ death_data | tojson }},
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'transparent',
+            fill: false,
+            tension: 0.3,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          },
+          {
+            label: '부상자 수',
+            data: {{ injury_data | tojson }},
+            borderColor: 'rgba(127, 219, 217, 1)',
+            backgroundColor: 'transparent',
+            fill: false,
+            tension: 0.3,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        animation: {
+          duration: 1500,
+          easing: 'easeInOutQuart'
+        },
+        plugins: {
+          legend: {
+            position: 'top'
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return `${context.dataset.label}: ${context.parsed.y.toLocaleString()}명`;
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            min: 0,
+            max: 5000,
+            ticks: {
+              precision: 0,
+              callback: value => value.toLocaleString()
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

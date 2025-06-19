@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>도로종류별 교통사고 통계</title>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        canvas {
+            margin-top: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        select {
+            margin: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h2>도로종류별 교통사고 통계</h2>
+
+    <label for="district-select">지역 선택:</label>
+    <select id="district-select">
+        {% for district in districts %}
+        <option value="{{ district }}">{{ district }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="year-select">연도 선택:</label>
+    <select id="year-select">
+        {% for year in years %}
+        <option value="{{ year }}">{{ year }}</option>
+        {% endfor %}
+    </select>
+
+    <canvas id="roadChart" width="800" height="400"></canvas>
+
+    <script>
+        let chart;
+		
+        async function fetchData(district, year) {
+			console.log("fetchData");
+			console.log('요청할 값:', district, year);
+			const res = await fetch(`http://127.0.0.1:5000/data/roadtype/${encodeURIComponent(district)}/${year}`);
+			const raw = await res.text();
+			console.log('[응답 내용]', raw);
+
+			// JSON 파싱 시도
+			try {
+			    const json = JSON.parse(raw);
+			    console.log('파싱 성공', json);
+			} catch (e) {
+			    console.error('JSON 파싱 오류', e);
+			}
+			
+			const jsonData = JSON.parse(raw);
+			return jsonData;
+        }
+
+        async function drawChart() {
+			
+			console.log("drawChart");
+            const district = document.getElementById('district-select').value;
+            const year = document.getElementById('year-select').value;
+
+			if (chart) chart.destroy();
+
+		    const rawData = await fetchData(district, year);
+
+		    if (!rawData) return;
+	
+			// ✨ 복제해서 깨끗한 배열로
+			const data = {
+				사고건수: rawData["사고건수"] || [],
+		        사망자수: rawData["사망자수"] || [],
+		        부상자수: rawData["부상자수"] || []
+			};
+			
+			
+            const ctx = document.getElementById('roadChart').getContext('2d');
+
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: {{ road_types | tojson }},
+                    datasets: [
+                        {
+                            label: `${district} (${year}) 사고건수`,
+                            data: data['사고건수'],
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            fill: false,
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: `${district} (${year}) 사망자수`,
+                            data: data['사망자수'],
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            fill: false,
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: `${district} (${year}) 부상자수`,
+                            data: data['부상자수'],
+                            borderColor: 'rgba(127, 219, 217, 1)',
+                            backgroundColor: 'rgba(127, 219, 217, 0.2)',
+                            fill: false,
+                            tension: 0.3,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'auto' },
+                        tooltip: { mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0,
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.getElementById('district-select').addEventListener('change', drawChart);
+        document.getElementById('year-select').addEventListener('change', drawChart);
+        window.onload = drawChart;
+		
+    </script>
+	
+</body>
+</html>

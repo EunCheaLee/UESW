@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>연도별 교통사고 피해자 통계</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    canvas {
+      max-width: 800px;
+      height: 400px;
+      margin: 0 auto;
+    }
+    select {
+      padding: 6px 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>연도별 교통사고 피해자 통계</h2>
+
+  <label for="year-select">연도 선택:</label>
+  <select id="year-select">
+    {% for y in years %}
+    <option value="{{ y }}">{{ y }}년</option>
+    {% endfor %}
+  </select>
+
+  <canvas id="accidentChart" width="800" height="400"></canvas>
+
+  <script>
+    const years = {{ years | tojson }};
+    const 전체데이터 = {{ 전체데이터 | tojson }};
+    let chart;
+
+    function drawChart(selectedYear) {
+      const index = years.indexOf(selectedYear);
+      const 사고건수 = 전체데이터['사고건수'][index];
+      const 사망자수 = 전체데이터['사망자수'][index];
+      const 중상자수 = 전체데이터['중상자수'][index];
+      const 부상자수 = 전체데이터['부상자수'][index];
+
+      const ctx = document.getElementById('accidentChart').getContext('2d');
+      if (chart) chart.destroy();
+
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['사고건수', '사망자수', '중상자수', '부상자수'],
+          datasets: [{
+            label: `${selectedYear}년 서울`,
+            data: [사고건수, 사망자수, 중상자수, 부상자수],
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            fill: false,
+            tension: 0.2,
+            pointRadius: 5,
+            pointHoverRadius: 7
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { position: 'top' },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const labels = ['사고건수', '사망자수', '중상자수', '부상자수'];
+                  const 단위 = labels.includes(context.label) && context.label !== '사고건수' ? '명' : '건';
+                  return `${context.label}: ${context.parsed.y.toLocaleString()}${단위}`;
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0,
+                callback: value => value.toLocaleString()
+              }
+            }
+          }
+        }
+      });
+    }
+
+    document.getElementById('year-select').addEventListener('change', function() {
+      drawChart(this.value);
+    });
+
+    window.onload = () => {
+      const latest = years[years.length - 1];
+      document.getElementById('year-select').value = latest;
+      drawChart(latest);
+    };
+  </script>
+</body>
+</html>

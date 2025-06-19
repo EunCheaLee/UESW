@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시글 작성</title>
+    <link rel="stylesheet" th:href="@{/css/board.css}"/>
+	<link rel="stylesheet" th:href="@{/css/fragments.css}">
+    <script th:src="@{/js/board.js}" defer></script>
+	<script th:src="@{/js/session.js}"></script>
+	<!-- Toast UI Editor CSS & JS -->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</head>
+<body>
+	<!-- 네비게이션 바 -->
+	<div th:replace="~{fragments/nav :: mainNav}"></div>
+
+	<!-- 고정 사이드바 -->
+	<div th:replace="~{fragments/sidebar :: mainSidebar}"></div>
+	<script src="/js/sidebar.js"></script>
+	
+	
+	<div class="insert"> 
+		<form th:action="@{/board/save}" method="post" th:object="${board}" enctype="multipart/form-data">
+		<h2 id="write-notice">게시글 작성</h2>
+			
+			<div id="notice-role" th:if="${session.loggedInUser != null and session.loggedInUser.role == 'ADMIN'}">
+			    <label>
+			        <input type="checkbox" name="notice" th:field="*{notice}"  /> 공지로 등록
+			    </label>
+			</div>
+			
+		    <!-- 제목 -->
+		    <div>
+		        <input type="text" name="title" placeholder="제목" required th:field="*{title}" />
+		    </div>
+	
+		    <!-- Toast UI Editor -->
+			<div style="display: flex; justify-content: center; margin-top:10px">
+			    <div id="editor" style="width: 500px; margin: 0 auto;"></div>
+			    <textarea name="content" id="content" th:field="*{content}" style="display: none;"></textarea>
+			</div>
+	
+		    <!-- 첨부파일 -->
+		    <div class="file-text-message" style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+		        <label>첨부 파일</label>
+		        <input type="file" name="file" />
+		        <div th:if="${board != null}">
+		            <div th:if="${board.boardFile == null}">첨부된 파일이 없습니다.</div>
+		            <div th:if="${board.boardFile != null}">
+		                <a th:href="@{'/boardupload/' + ${board.boardFile}}" th:text="${board.boardFile}"></a>
+		            </div>
+		        </div>
+		    </div>
+	
+		    <!-- 제출 -->
+		    <div class="submit-btn" style="margin-top: 10px;">
+		        <button type="submit">작성</button>
+		        <a href="/board/list">
+					<button type="button">목록</button>
+				</a>
+		    </div>
+	
+		</form>
+	</div>
+
+	<script>
+		const editor = new toastui.Editor({
+		        el: document.querySelector('#editor'),
+		        height: '400px',
+		        initialEditType: 'wysiwyg',  // WYSIWYG 편집기로 기본 설정
+		        previewStyle: 'vertical',    // 미리보기 스타일 설정 (선택적)
+		        useCommandShortcut: true,    // 단축키 사용 여부 설정
+		        viewer: false                // 기본적으로 편집기 활성화
+		    });
+	    document.querySelector('form').addEventListener('submit', function (e) {
+	        document.querySelector('#content').value = editor.getMarkdown();
+	        alert('작성 완료!');
+	    });
+	</script>
+</body>
+</html>

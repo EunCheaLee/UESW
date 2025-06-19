@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>UESW 교통안전페이지</title>
+	<link rel="stylesheet" th:href="@{/css/home.css}">
+	<link rel="stylesheet" th:href="@{/css/fragments.css}">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+	<script type="text/javascript"
+		src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=(키)&autoload=false&libraries=services">
+		</script>
+	<script src="/js/fragments.js" defer></script>
+	<script src="/js/home.js" defer></script>
+	<script src="/js/env.js"></script>
+	<script th:src="@{/js/session.js}" defer></script>
+	<!--javascript 키-->
+</head>
+
+<body>
+	<!-- 넷바 -->
+	<div th:replace="~{fragments/nav :: mainNav}"></div>
+
+	<div class="home-container">
+
+		<div class="scrollBox">
+			<div class="scroll_ani">
+				<p>Scroll Here !</p>
+			</div>
+
+			<div class="home-section" id="home-content0">
+				<article class="police_main_info flex flex_column" style="width: 901px; color: #fff;">
+					<span class="medium_font" style="font-size: 34px;">서울경찰청</span>
+					<h2 class="bold_font" style="font-size: 51px;">교통정보센터</h2>
+					<p style="font-size: 28px;">교통정보센터는 교통안전 및 원활한 소통 확보를 위해<br>
+						신호운영, CCTV 관제를 통한 무선 지령 및 교통정보 제공 등을<br>
+						수행하는 '컨트롤 타워' 역할을 수행하고 있습니다.</p>
+					<button class="btn_go medium_font" onclick="scrollToBottom()">센터소개</button>
+				</article>
+
+				<div class="triangle"></div>
+
+				<div class="scroll-wrapper">
+					<div class="scroll-track">
+						<img src="/img/traffic.png" alt="교통 이미지">
+						<img src="/img/traffic.png" alt="교통 이미지">
+						<img src="/img/traffic.png" alt="교통 이미지">
+						<img src="/img/traffic.png" alt="교통 이미지">
+					</div>
+				</div>
+			</div>
+
+			<div class="home-section" id="home-content1">
+				<iframe src="/weather"></iframe>
+			</div>
+
+			<div class="home-section" id="home-content2">
+				<div class="navigation">
+					<div id="navi-wrapper">
+						<div id="search-controls">
+							<button class="swap-button" onclick="swapPlaces()">↕</button>
+							<div class="input-row">
+								<div class="input-group">
+									<div>
+										<input type="text" id="start" placeholder="출발지 입력" autocomplete="off">
+										<div id="start-list" class="autocomplete-list"></div>
+									</div>
+									<div>
+										<input type="text" id="end" placeholder="도착지 입력" autocomplete="off">
+										<div id="end-list" class="autocomplete-list"></div>
+									</div>
+								</div>
+								<div class="button-group">
+									<button onclick="setCurrentLocation()">현재위치</button>
+									<button id="search-btn" onclick="findRoutes()" disabled>검색</button>
+								</div>
+							</div>
+							<div class="start-time">
+								<label>출발시간: <input type="time" id="departureTime"></label>
+							</div>
+						</div>
+						<div id="result">
+							<div class="route-card">
+								<div class="route-title">경로 탐색을 기다리고 있어요</div>
+								<div class="route-info">출발지와 도착지를 입력한 뒤 <strong>검색</strong> 버튼을 눌러보세요.</div>
+							</div>
+						</div>
+
+						<div id="fav-btn-wrapper">
+							<button onclick="addToFavorites()"><i class="bi bi-star-fill"></i></button>
+						</div>
+
+						<div class="section">
+							<h3>최근 검색 경로</h3>
+							<div id="history-list" class="card">기록 없음</div>
+						</div>
+						<div class="section">
+							<h3>즐겨찾기 목록</h3>
+							<div id="favorite-list" class="card">즐겨찾기 없음</div>
+						</div>
+					</div>
+
+					<div id="map-wrapper">
+						<div id="map"></div>
+						<div id="loading">경로를 탐색 중입니다...</div>
+						<div id="map-click-assign">
+							<button onclick="setClickedPoint('start')">출발지로 지정</button>
+							<button onclick="setClickedPoint('end')">도착지로 지정</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="home-section" id="home-content3">
+				<main class="main-content">
+					<h2 id="main-title">UESW</h2>
+					<h2 id="sub-title">User
+						Enabled<br>Safety Web</h2>
+					<div>
+						<div class="intro-container">
+							<div class="intro-box">
+								<p class="desc">사용자 맞춤형<br /> 안전 서비스 통합 제공</p>
+								<p>
+									서울시민의 생활 안전과 교통 편의를 위해<br>
+									기상·교통 데이터를 기반으로 실시간 정보를<br>
+									통합 제공하는 스마트 플랫폼을 구축했습니다.<br>
+									사용자 위치와 관심 정보를 반영해<br>
+									맞춤형 서비스를 제공합니다.
+								</p>
+							</div>
+
+							<div class="intro-box">
+								<p class="desc">스마트 교통 환경 실현</p>
+								<p>
+									기온·강수량·교통 혼잡도·돌발 상황 등을<br>
+									한눈에 확인할 수 있는 시각화 기능을 통해<br>
+									시민 누구나 쉽고 빠르게<br>
+									서울시 교통 상황을 파악할 수 있도록<br>
+									지원합니다.
+								</p>
+							</div>
+						</div>
+				</main>
+				<div class="contact-dropdown">
+					<button class="dropdown-toggle" onclick="toggleDropdown()">
+						<a>Contact Us</a> <span id="dropdownArrow"> ▶ </span>
+					</button>
+
+					<ul class="dropdown-menu" id="contactMenu">
+						<a>마우스를 올려보세요! ▼</a>
+						<li>
+							<span class="email" data-tooltip="팀장, 개발자, 취미: 요리" onclick="openGmail('ecl0527@naver.com')">
+								<span class="icon">🌞</span>
+								<span class="email-text"><i class="bi bi-emoji-sunglasses-fill"></i> 이은채<br><i
+										class="bi bi-envelope-at-fill"></i> ecl0527@naver.com<br><i
+										class="bi bi-github"></i> EunCheaLee</span>
+							</span>
+						</li>
+						<li>
+							<span class="email" data-tooltip="팀원, 개발자, 취미: 게임"
+								onclick="openGmail('sinhyeonu56@gmail.com')">
+								<span class="icon">🎮</span>
+								<span class="email-text"><i class="bi bi-emoji-sunglasses-fill"></i> 신현우<br><i
+										class="bi bi-envelope-at-fill"></i> sinhyeonu56@gmail.com<br><i
+										class="bi bi-github"></i> mad0526</span>
+							</span>
+						</li>
+						<li>
+							<span class="email" data-tooltip="팀원, 개발자, 취미: 여행"
+								onclick="openGmail('joonick90301@gmail.com')">
+								<span class="icon">👽</span>
+								<span class="email-text"><i class="bi bi-emoji-sunglasses-fill"></i> 이준익<br><i
+										class="bi bi-envelope-at-fill"></i> joonick90301@gmail.com<br><i
+										class="bi bi-github"></i> dlwnsdlr0301</span>
+							</span>
+						</li>
+						<li>
+							<span class="email" data-tooltip="팀원, 개발자, 취미: 독서"
+								onclick="openGmail('yjitstudy@gmail.com')">
+								<span class="icon">🦄</span>
+								<span class="email-text"><i class="bi bi-emoji-sunglasses-fill"></i> 최윤주<br><i
+										class="bi bi-envelope-at-fill"></i> yjitstudy@gmail.com<br><i
+										class="bi bi-github"></i> Jootori</span>
+							</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="triangle2"></div>
+			<div class="traffic-pic">
+				<img src="img/container4.png" />
+			</div>
+
+			<div class="dot-nav" id="dotNav">
+				<div class="dot" data-index="0"></div>
+				<div class="dot" data-index="1"></div>
+				<div class="dot" data-index="2"></div>
+				<div class="dot" data-index="3"></div>
+			</div>
+
+			<div th:replace="~{fragments/top-btn :: top-btn}"></div>
+		</div>
+	</div>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const scrollBox = document.querySelector('.scroll_ani');
+
+			if (scrollBox) {
+				// 내부 스크롤을 허용하도록 설정
+				scrollBox.style.overflow = 'auto';
+
+				// 휠 스크롤 이벤트 처리
+				scrollBox.addEventListener('wheel', (e) => {
+					// 기본 휠 동작을 막지 않음
+					const direction = e.deltaY > 0 ? 1 : -1;
+					console.log(`Scroll direction: ${direction}`);
+
+					// 페이지 스크롤
+					window.scrollBy({
+						top: direction * window.innerHeight,
+						behavior: 'smooth'
+					});
+				}, {passive: true}); // passive: true로 설정하여 기본 동작을 허용
+			} else {
+				console.warn('.scroll_ani 요소를 찾을 수 없습니다!');
+			}
+		});
+	</script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const toggleCheckbox = document.getElementById("toggle");
+			const darkModeClassList = [
+				document.body,
+				document.querySelector(".sidebar"),
+				document.getElementById("main-content"),
+				document.querySelector(".popup-content")
+			];
+
+			// 초기 상태 설정
+			const savedMode = localStorage.getItem("dark-mode");
+			if (savedMode === "true") {
+				toggleCheckbox.checked = true;
+				darkModeClassList.forEach(el => el?.classList.add("dark-mode"));
+			}
+
+			// 상태 변경 시 이벤트
+			toggleCheckbox.addEventListener("change", () => {
+				const isDark = toggleCheckbox.checked;
+				darkModeClassList.forEach(el => el?.classList.toggle("dark-mode", isDark));
+				localStorage.setItem("dark-mode", isDark);
+			});
+		});
+	</script>
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			const dots = document.querySelectorAll('.dot');
+			const container = document.querySelector('.scrollBox');
+			const sections = document.querySelectorAll('.home-section');
+
+			// 클릭 시 해당 섹션으로 스크롤
+			dots.forEach((dot, idx) => {
+				dot.addEventListener('click', () => {
+					sections[idx].scrollIntoView({behavior: 'smooth'});
+				});
+			});
+
+			// 현재 화면에 가장 가까운 섹션 인덱스를 찾아 dot 갱신
+			function updateActiveDot() {
+				let closestIndex = 0;
+				let minDiff = Infinity;
+				sections.forEach((section, index) => {
+					const rect = section.getBoundingClientRect();
+					const diff = Math.abs(rect.top); // 화면 상단과의 거리
+					if (diff < minDiff) {
+						minDiff = diff;
+						closestIndex = index;
+					}
+				});
+
+				dots.forEach(dot => dot.classList.remove('active'));
+				dots[closestIndex]?.classList.add('active');
+			}
+
+			// 스크롤 시 dot 상태 갱신
+			window.addEventListener('scroll', updateActiveDot);
+
+			// 초기 강조
+			dots[0].classList.add('active');
+		});
+	</script>
+	<script>
+		function toggleDropdown() {
+			const menu = document.getElementById('contactMenu');
+			const arrow = document.getElementById('dropdownArrow');
+
+			const isOpen = menu.style.display === 'block';
+			menu.style.display = isOpen ? 'none' : 'block';
+			arrow.classList.toggle('rotated', !isOpen);
+		}
+		function openGmail(email) {
+			const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}`;
+			window.open(gmailUrl, '_blank', 'width=600,height=700,toolbar=no,menubar=no,scrollbars=yes,resizable=yes');
+		}
+	</script>
+
+	<script>
+		function scrollToBottom() {
+			const lastSection = document.getElementById('home-content3');  // 페이지 맨 아래 섹션
+			lastSection.scrollIntoView({behavior: 'smooth'});
+		}
+	</script>
+
+
+</body>
+
+</html>

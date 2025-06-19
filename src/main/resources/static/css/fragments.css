@@ -1,0 +1,1261 @@
+@font-face {
+	font-family: 'LINESeedKR-Bd';
+	src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
+	font-weight: 700;
+	font-style: normal;
+}
+
+* {
+	font-family: 'LINESeedKR-Bd';
+}
+
+/* =================== [네비게이션 바(navbar)] =================== */
+.navbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 98%;
+	height: 90px;
+	background-color: #0247a1;
+	display: grid;
+	grid-template-columns: 1fr;
+	align-items: center;
+	padding: 0 20px;
+	pointer-events: auto;
+	z-index: 550;
+}
+
+.navbar-scroll-catcher {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 70px;
+	z-index: 5;
+	pointer-events: auto;
+}
+
+/* =================== [로고 및 브랜드 영역] =================== */
+.navbar-brand {
+	display: flex;
+	align-items: center;
+	font-size: 25px;
+	font-weight: 600;
+	color: white;
+	text-decoration: none;
+}
+
+.navbar-brand .logo {
+	width: 250px;
+	height: auto;
+	transition: transform 0.3s ease;
+}
+
+.logo {
+	width: 170px;
+	height: auto;
+	object-fit: contain;
+}
+
+/* =================== [메뉴 영역] =================== */
+.menu {
+	height: fit-content;
+	list-style: none;
+	padding: 10px;
+	background-color: #0247a1;
+	font-size: 22px;
+	font-weight: 600;
+	display: flex;
+	justify-content: flex-end;
+	margin: 0;
+	margin-left: 50px;
+	margin-bottom: 10px;
+	gap: 0px;
+	letter-spacing: 0px;
+}
+
+.menu>li {
+	position: relative;
+}
+
+.menu>li>a {
+	padding: 20px 30px;
+	color: white;
+	text-decoration: none;
+}
+
+/* =================== [드롭다운 메뉴] =================== */
+.submenu {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	margin-left: -10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	min-width: 160px;
+	z-index: 1000;
+	transition: 0.2s ease;
+	text-align: center;
+}
+
+.submenu li a {
+	display: block;
+	padding: 10px 18px;
+	color: #ffffff;
+	background-color: #0247a1;
+	text-decoration: none;
+	font-size: 17px;
+	font-weight: bold;
+	transition: max-height 0.3s ease, opacity 0.5s ease;
+}
+
+.submenu li a:hover {
+	color: #ffd35b;
+	background-color: #0247a1;
+	transition: 0.5s ease;
+}
+
+.menu>li:hover .submenu {
+	display: block;
+	transition: 0.5s ease;
+}
+
+
+/* =================== [로그인 영역] =================== */
+.icon2 {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+	color: #ffffff;
+	margin-left: 20px;
+}
+
+.navbar>div,
+.navbar .container-fluid {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+.login-button {
+	display: flex;
+	align-items: center;
+	height: 100%;
+	text-decoration: none;
+	margin-right: -350px;
+}
+
+.login-button span {
+	color: white;
+	font-weight: 500;
+	font-size: 17px;
+	padding: 7px 5px;
+	border: 0px solid white;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	text-decoration: none;
+}
+
+.login-button span:hover {
+	color: #ffd35b;
+	transition: 0.3s ease;
+	transform: translateY(-3px);
+}
+
+#login-img {
+	width: 30px;
+	height: auto;
+	margin-left: 75px;
+}
+
+#login-img:hover {
+	opacity: 0.5;
+	transition: opacity 0.3s ease;
+}
+
+
+/* =================== toggleSwitch =================== */
+.toggleSwitch {
+	width: 40px;
+	height: 20px;
+	display: block;
+	position: relative;
+	border-radius: 30px;
+	background-color: rgb(157, 192, 206);
+	cursor: pointer;
+	margin: 30px;
+}
+
+.toggleSwitch .toggleButton {
+	width: 25px;
+	height: 25px;
+	position: absolute;
+	top: 50%;
+	left: 0px;
+	transform: translateY(-50%);
+	border-radius: 50%;
+	background-color: #01a;
+}
+
+#toggle:checked~.toggleSwitch {
+	background-color: rgb(69, 69, 69);
+}
+
+#toggle:checked~.toggleSwitch .toggleButton {
+	background-color: #ffd35b;
+	left: calc(120% - 28px);
+}
+
+.toggleSwitch,
+.toggleButton {
+	transition: all 0.4s ease-in;
+}
+
+/* ======== 다크모드 설정시 ========== */
+body.dark-mode,
+html.dark-mode,
+#main-content.dark-mode,
+.sidebar.dark-mode,
+.popup-content.dark-mode {
+	background-color: #121212 !important;
+	color: #f0f0f0 !important;
+}
+
+
+.dark-mode {
+	background-color: #121212;
+	color: #f0f0f0;
+}
+
+.sidebar.dark-mode {
+	background-color: #1e1e1e;
+}
+
+.popup-content.dark-mode {
+	background-color: #2c2c2c;
+	color: white;
+}
+
+.toggle-image {
+	height: 430px;
+	border-radius: 0.75rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	transition: all 0.3s ease-in-out;
+}
+
+/* =================== [사이드바] =================== */
+.button1 {
+	width: 80px;
+	height: 100vh;
+	position: fixed;
+	top: 0px;
+	/* nav 아래로 정확히 맞추기 */
+	left: 0;
+	margin-left: -20px;
+	z-index: 500;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: normal;
+	margin-top: 45px;
+}
+
+.btn-icon {
+	display: block;
+	width: 35px;
+	height: 35px;
+	margin-left: 15px;
+	margin-bottom: 10px;
+}
+
+.menu-btn {
+	width: 80px;
+	height: 175px;
+	font-size: 15px;
+	font-weight: 500;
+	font-family: Arial, Helvetica, sans-serif;
+	color: rgb(255, 255, 255);
+	background: #0247a1;
+	border-radius: 0%;
+	margin: 0%;
+	letter-spacing: -2px;
+	/* 음수값으로 자간 좁힘 */
+	text-decoration: none;
+	border: none;
+}
+
+/* 마우스 올렸을 때 */
+.menu-btn:hover {
+	background: linear-gradient(45deg, #ffd35b, rgb(255, 255, 255));
+	transition: background-color 0.3s ease, color 0.3s ease;
+	font-weight: 600;
+	color: #0247a1;
+}
+
+/* 클릭 후 선택된 버튼 스타일 */
+.menu-btn.clicked {
+	background: rgb(61, 155, 250);
+	/* 클릭 시 배경색 */
+	color: black;
+	border: 2px solid #007bff;
+	/* 강조 테두리 */
+}
+
+
+/* 다크 모드 버튼 스타일 */
+body.dark-mode button {
+	background-color: #333;
+	color: #f0f0f0;
+	border: 1px solid #555;
+}
+
+body.dark-mode button:hover {
+	background-color: #444;
+	color: #0247a1;
+}
+
+/* 일반 모드와 다크 모드에서 구분되는 버튼 */
+.district-button {
+	padding: 8px 12px;
+	margin: 4px;
+	border: 1px solid #ccc;
+	background-color: #f9f9f9;
+	color: #222;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 다크 모드에서의 버튼 */
+body.dark-mode .district-button {
+	background-color: #333;
+	color: #0247a1;
+}
+
+body.dark-mode .district-button:hover {
+	background-color: #444;
+	color: #0247a1;
+}
+
+.news-container {
+	margin: 50px;
+	width: 80vh;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.district-wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.district-button {
+	margin-right: 4px;
+}
+
+.favorite-districts {
+	position: fixed;
+	top: 80px;
+	left: 10px;
+	background: #222;
+	color: white;
+	padding: 10px;
+	border-radius: 8px;
+	max-width: 120px;
+}
+
+.sidebar-fav-btn {
+	display: block;
+	width: 100%;
+	background: gold;
+	color: black;
+	border: none;
+	margin: 5px 0;
+	padding: 5px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.fav-alert-box {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	background: #222;
+	color: #fff;
+	padding: 12px 16px;
+	margin-top: 10px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+	z-index: 9999;
+	animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.sidebar.collapsed {
+	width: 60px;
+	/* 또는 원하는 최소 너비 */
+}
+
+.sidebar.collapsed .sidebar-text {
+	display: none;
+}
+
+/* =================== [날씨&뉴스] =================== */
+
+.main-content {
+	display: flex;
+	width: 100%;
+	height: 100vh;
+	flex: 1;
+	justify-content: center;
+	/* 수평 중앙 정렬 */
+	align-items: center;
+	/* 수직 정렬 시작 위치 */
+	position: absolute;
+	overflow: hidden;
+	margin: 0;
+	gap: 60px;
+}
+
+.box-a,
+.box-b {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.weather-news-container {
+	margin: -10px 10px -10px -10px;
+	position: relative;
+	height: 100vh;
+	transition: background 1s;
+}
+
+.daytime {
+	background: linear-gradient(to bottom, #fff, #fff, #E0FFFF, #87CEFA, #00BFFF);
+	color: black;
+	/* 낮에는 글씨 검정색 */
+}
+
+.nighttime {
+	background: linear-gradient(to bottom, #1e1b3a, #2c3e50, #34495e, #3b4c69);
+	color: white;
+	background-color: rgba(255, 255, 255, 0.7);
+}
+
+#rain-canvas {
+	position: fixed;
+	top: 0;
+	left: 0;
+	margin: 0;
+	width: 100vw;
+	height: 100vh;
+	pointer-events: none;
+	z-index: 999;
+}
+
+/* =================== [날씨] =================== */
+#favorites-container {
+	height: 80px;
+	width: 650px;
+	border-radius: 20px;
+	border: 0;
+	margin-bottom: 10px;
+	margin-top: 26px;
+	padding-top: 10px;
+	background-color: rgba(255, 255, 255, 0.3);
+	box-shadow: 0 1px 12px rgba(0, 0, 0, 0.1);
+}
+
+#favorites-container h4 {
+	text-align: center;
+	margin-top: 8px;
+	font-size: 19px;
+	color: #0f2a4d;
+	letter-spacing: -0.6px;
+}
+
+#favorites-list {
+	list-style: none;
+	margin: 3px;
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+}
+
+#favorites-list li {
+	padding: 5px 10px;
+	background: #f0f0f0;
+	margin-bottom: 5px;
+	border-radius: 4px;
+	cursor: default;
+}
+
+#add-favorite-btn,
+#favorites-list button {
+	color: rgb(40, 70, 140);
+	background: rgb(85, 121, 206, 10%);
+	border: 0;
+	border-radius: 5px;
+	padding: 5px 7px;
+	font-size: 16px;
+	margin-top: 5px;
+	font-weight: 600;
+	text-align: center;
+}
+
+#favorites-list button {
+	display: flex;
+	flex-direction: initial;
+	justify-content: center;
+	align-items: center;
+}
+
+.nighttime #district,
+.nighttime #region,
+.nighttime #selected-region,
+.nighttime #add-favorite-btn {
+	color: inherit;
+}
+
+.weather-box {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+.dropdown-container {
+	width: 650px;
+	display: flex;
+	margin-bottom: 10px;
+}
+
+#region,
+#district {
+	background: rgb(255, 255, 255, 10%);
+	border: none;
+	padding: 5px 5px;
+	color: #0f2a4d;
+	font-weight: bold;
+	font-size: 16px;
+	border-radius: 15px;
+	cursor: pointer;
+	transition: box-shadow 0.3s ease;
+	font-family: 'PyeojinGothic-Bold', sans-serif;
+	width: 100px;
+	text-align: center;
+}
+
+#selected-region {
+	margin-left: 27%;
+	align-content: center;
+	color: #0f2a4d;
+	font-size: 17px;
+	font-weight: 600;
+}
+
+.area-region-select:hover,
+.area-district-select:hover {
+	background-color: rgb(123, 199, 255);
+	border: none;
+}
+
+.area-district-select {
+	margin-left: 20px;
+}
+
+.selected-location-name {
+	font-size: 16px;
+	letter-spacing: 0.2px;
+	color: #333;
+	margin-left: 233px;
+	margin-top: 12px;
+	font-family: 'PyeojinGothic-Bold', sans-serif;
+	/* 폰트 적용 */
+}
+
+.selected-district {
+	margin-top: 10px;
+	font-size: 14px;
+	color: #555;
+	display: inline-block;
+	/* 가로로 표시 */
+	margin-left: 10px;
+	/* 구 드롭다운과 간격 */
+}
+
+/* 왼쪽 작은 div들 */
+
+.weather-day {
+	text-align: center;
+	font-size: 14px;
+	font-weight: 600;
+}
+
+.weather-day h4 {
+	height: 20px;
+	margin: 0;
+}
+
+.weather-bottom {
+	display: flex;
+	align-items: center;
+	gap: 0px;
+}
+
+.weather-icon {
+	width: 50px;
+	height: 50px;
+}
+
+.temp-info {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	line-height: 1.2;
+}
+
+.temp-max {
+	font-size: 16px;
+	font-weight: bold;
+	color: rgb(82, 82, 82);
+}
+
+.temp-min {
+	font-size: 16px;
+	font-weight: bold;
+	color: rgb(149 148 148);
+	margin-left: 6px;
+}
+
+.left-panel {
+	display: flex;
+	width: 640px;
+	height: 138px;
+	overflow: hidden;
+	border-radius: 26px;
+	background: linear-gradient(45deg, #8cceffba, #ffffff);
+	padding: 13px;
+	box-sizing: border-box;
+	justify-content: space-between;
+	box-shadow: 0 2px 4px rgb(0 0 0 / 36%);
+
+}
+
+#temperature-btn,
+#precipitation-btn {
+	display: none;
+}
+
+.weather-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background: linear-gradient(225deg, rgba(255, 255, 255, 0.2), rgba(140, 206, 255, 0.3), rgba(38, 176, 251, 0.4));
+	cursor: pointer;
+	border: none;
+	border-radius: 18px;
+	transition: background-color 0.2s;
+	width: 101px;
+	height: 128px;
+	box-shadow: 0 1px 4px rgba(0, 0, 200, 0.2);
+}
+
+/* 아이콘 및 기온을 나란히 배치할 컨테이너 */
+.weather-item2 {
+	display: flex;
+}
+
+.weather-item:hover {
+	background-color: rgba(38, 176, 251, 0.1);
+}
+
+.weather-item.active {
+	background-color: #ffffff;
+}
+
+.weather-icon {
+	width: 63px;
+	height: auto;
+	margin-left: -3px;
+	margin-top: -20px;
+}
+
+.weather-temp-summary,
+.weather-date {
+	font-size: 17px;
+	font-weight: 600;
+	margin-bottom: 18px;
+	color: #55555580;
+}
+
+.right-panel {
+	border-radius: 21px;
+	padding: 15px;
+	box-sizing: border-box;
+	height: 443px;
+	width: 640px;
+	overflow-y: auto;
+	background: linear-gradient(45deg, #8cceffba, #ffffff);
+	margin-top: 12px;
+	padding: 37px;
+	box-shadow: 0 2px 4px rgb(0 0 0 / 36%);
+}
+
+.temperature-chart-container {
+	margin-top: 10px;
+	text-align: center;
+	border-radius: 15px;
+	background-color: rgba(255, 255, 255, 0.5);
+	box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
+	height: 400px;
+	padding: 9px;
+}
+
+.temperature-chart-container h3 {
+	height: 48px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+/* 차트 크기 조정 */
+#temperatureChart {
+	width: 100%;
+	height: 400px;
+}
+
+.chart-buttons {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.chart-buttons button {
+	padding: 6px 12px;
+	font-weight: bold;
+	cursor: pointer;
+	background-color: #ececec;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+#weatherChart {
+	width: 100%;
+	max-height: 300px;
+}
+
+/* 화살표 버튼 스타일 */
+.arrow-button {
+	background-color: #b9b9b9;
+	border: none;
+	color: #ffffff;
+	font-size: 24px;
+	padding: 10px;
+	cursor: pointer;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 10;
+	border-radius: 4px;
+	transition: background-color 0.3s ease;
+}
+
+.arrow-button:hover {
+	background-color: rgb(176, 176, 176);
+	/* 호버 시 색상 변경 */
+}
+
+.prev-button {
+	left: -30px;
+}
+
+button.next-day,
+button.prev-day {
+	background: rgba(255, 255, 255, 0.5);
+	border: none;
+	border-radius: 7px;
+	width: 40px;
+	height: 230px;
+	font-size: 20px;
+	font-weight: bold;
+	color: rgb(117 117 117 / 44%);
+	box-shadow: 0 2px 4px rgb(0 0 0 / 36%);
+	cursor: pointer;
+	transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button.next-day:hover,
+button.prev-day:hover {
+	background: rgb(219, 219, 219);
+	/* 호버 시 좀 더 진해짐 */
+}
+
+/* 차트 컨테이너 스타일 */
+.chart-container {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+}
+
+.weather-item.highlight {
+	background-color: #ffffff;
+	/* 하얀 배경 */
+	transition: background-color 0.3s ease-in-out;
+	/* 부드러운 전환 효과 */
+}
+
+#add-favorite-btn {
+	margin-left: 15px;
+}
+
+/* =================== [뉴스] =================== */
+.news-container {
+	font-family: 'Inter', sans-serif;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-height: 100vh;
+	width: 650px;
+	margin-top: 250px;
+}
+
+.news-container h1 {
+	color: #333;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.news-container ul {
+	list-style-type: none;
+	padding: 0;
+	width: 100%;
+	max-width: 600px;
+}
+
+.rolling-news-box {
+	width: 100%;
+	height: 30px;
+	overflow: hidden;
+	position: relative;
+	background-color: rgba(255 255 255, 0.5);
+	box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
+	text-align: center;
+	border-radius: 50px;
+	margin-top: 10px;
+	margin-left: 12px;
+}
+
+#rolling-news {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	animation: rollNews 20s linear infinite;
+}
+
+#rolling-news li {
+	height: 30px;
+	line-height: 30px;
+	padding-left: 50px;
+	color: #333;
+}
+
+#rolling-news li a {
+	text-decoration: none;
+	font-weight: bold;
+	color: #0049a9;
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+@keyframes rollNews {
+	0% {
+		transform: translateY(0);
+	}
+
+	10% {
+		transform: translateY(0);
+	}
+
+	20% {
+		transform: translateY(-30px);
+	}
+
+	30% {
+		transform: translateY(-30px);
+	}
+
+	40% {
+		transform: translateY(-60px);
+	}
+
+	50% {
+		transform: translateY(-60px);
+	}
+
+	60% {
+		transform: translateY(-90px);
+	}
+
+	70% {
+		transform: translateY(-90px);
+	}
+
+	80% {
+		transform: translateY(-120px);
+	}
+
+	90% {
+		transform: translateY(-120px);
+	}
+
+	100% {
+		transform: translateY(0);
+	}
+}
+
+.loading {
+	text-align: center;
+	font-size: 1.2em;
+	color: #555;
+}
+
+.error-message {
+	color: #d9534f;
+	font-weight: bold;
+	background-color: #f2dede;
+	border: 1px solid #ebccd1;
+	padding: 10px;
+	border-radius: 5px;
+	margin-top: 20px;
+	text-align: center;
+	max-width: 800px;
+	word-wrap: break-word;
+}
+
+.no-results {
+	color: #555;
+	text-align: center;
+	margin-top: 20px;
+}
+
+/* 큰 메인 뉴스 스타일 - 조정된 버전 (이전과 동일) */
+.main-news-large {
+	width: 100%;
+	max-width: 800px;
+	height: 200px;
+	margin-top: 10px;
+	border: none;
+	border-radius: 8px;
+	background-color: rgba(255, 255, 255, 0.3);
+	box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
+	overflow: hidden;
+	display: flex;
+	/* 플렉스박스 사용 */
+	flex-direction: row;
+	/* 기본은 가로 배치 (썸네일 | 텍스트) */
+	align-items: flex-start;
+	/* 상단 정렬 */
+	padding: 15px;
+	/* 내부 패딩 추가 */
+}
+
+.main-news-large a {
+	text-decoration: none;
+	color: inherit;
+	display: flex;
+	margin: 13px;
+}
+
+.main-news-large .thumbnail-container {
+	flex-shrink: 0;
+	/* 썸네일이 줄어들지 않도록 */
+	width: 200px;
+	/* 썸네일 고정 너비 */
+	height: 150px;
+	/* 썸네일 고정 높이 */
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #eee;
+	border-radius: 8px;
+	/* 모서리 둥글게 */
+	margin-right: 20px;
+	/* 썸네일과 텍스트 사이 간격 */
+}
+
+.main-news-large .thumbnail-container img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 8px;
+	/* 썸네일 컨테이너와 동일하게 */
+}
+
+.main-news-large .text-content {
+	flex-grow: 1;
+	/* 텍스트 부분이 남은 공간을 채우도록 */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	position: relative;
+}
+
+.main-news-large h2 {
+	font-size: 20px;
+	font-weight: bold;
+	margin-top: 6px;
+	margin-bottom: 8px;
+	line-height: 1.4;
+	color: #333;
+}
+
+.main-news-large p {
+	font-size: 15px;
+	color: #555;
+	line-height: 1.6;
+	margin-bottom: 15px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	margin-top: 1px;
+	margin-right: 27px;
+}
+
+.main-news-large a.read-more {
+	display: flex;
+	position: absolute;
+	background-color: #ddd;
+	color: #444;
+	padding: 5px 5px 5px 15px;
+	margin: 0;
+	border-radius: 5px;
+	text-decoration: none;
+	font-size: 0.9em;
+	transition: background-color 0.3s;
+	width: 90px;
+	height: 20px;
+	text-align: center;
+	right: 0;
+	bottom: -20px;
+}
+
+.main-news-large a.read-more:hover {
+	background-color: rgb(194, 197, 226);
+}
+
+
+/* 작은 뉴스 목록 스타일 - 썸네일 추가 */
+.small-news-list-container {
+	width: 100%;
+	max-width: 800px;
+	border-radius: 8px;
+	background-color: rgba(255, 255, 255, 0.3);
+	box-shadow: 0 1px 12px rgba(0, 0, 0, 0.2);
+	padding: 20px 3px 35px 32px;
+}
+
+.small-news-list-container h2 {
+	margin-top: 0;
+	margin-bottom: 15px;
+	color: #333;
+}
+
+.small-news-list-container ul {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	/* 2열로 나눔 */
+	gap: 15px 10px;
+	/* 세로/가로 간격 */
+}
+
+.small-news-list-container li {
+	padding: 0;
+	margin-bottom: 0;
+	border-bottom: none;
+}
+
+.small-news-list-container li a {
+	display: flex;
+	/* 썸네일과 텍스트를 나란히 */
+	align-items: center;
+	/* 세로 중앙 정렬 */
+	padding: 8px 0;
+	/* 패딩 조정 */
+	color: #333;
+	text-decoration: none;
+	font-size: 0.95em;
+	border-bottom: 1px dotted #eee;
+	/* 각 뉴스 링크 아래 점선 */
+	transition: background-color 0.2s;
+}
+
+.small-news-list-container li a:hover {
+	color: #007bff;
+	background-color: #f9f9f9;
+	text-decoration: none;
+	/* 호버 시 밑줄 제거 */
+}
+
+/* 그리드 마지막 행의 하단 보더 제거 */
+.small-news-list-container ul:last-child>li:nth-last-child(-n+2)>a {
+	border-bottom: none;
+}
+
+.small-news-list-container .small-thumbnail {
+	flex-shrink: 0;
+	/* 썸네일이 줄어들지 않도록 */
+	width: 60px;
+	/* 작은 썸네일 너비 */
+	height: 45px;
+	/* 작은 썸네일 높이 */
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #eee;
+	border-radius: 5px;
+	margin-right: 10px;
+	/* 썸네일과 텍스트 사이 간격 */
+}
+
+.small-news-list-container .small-thumbnail img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 5px;
+}
+
+.small-news-list-container .small-news-title {
+	flex-grow: 1;
+	/* 제목이 남은 공간을 채우도록 */
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	/* 최대 2줄까지만 표시 */
+	-webkit-box-orient: vertical;
+	line-height: 1.4;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 600px) {
+	.main-news-large {
+		margin: 10px;
+		width: calc(100% - 20px);
+		flex-direction: column;
+		padding: 10px;
+	}
+
+	.main-news-large .thumbnail-container {
+		width: 100%;
+		height: 180px;
+		margin-right: 0;
+		margin-bottom: 10px;
+	}
+
+	.main-news-large h2 {
+		font-size: 1.3em;
+	}
+
+	.main-news-large p {
+		font-size: 0.95em;
+	}
+
+	.small-news-list-container {
+		margin: 10px;
+		width: calc(100% - 20px);
+	}
+
+	.small-news-list-container ul {
+		grid-template-columns: 1fr;
+		/* 모바일에서는 1열 */
+		gap: 10px 0;
+	}
+
+	.small-news-list-container li a {
+		border-bottom: 1px dotted #eee;
+	}
+
+	.small-news-list-container li:last-child a {
+		border-bottom: none;
+	}
+}
+
+/* =================== [탑버튼] =================== */
+.scroll-top-btn {
+	position: fixed;
+	border-radius: 50%;
+	bottom: 40px;
+	right: 40px;
+	width: 50px;
+	height: 50px;
+	z-index: 9999;
+	color: #ffd35b;
+	font-size: 20px;
+	background-color: rgba(2, 71, 161, 0.8);
+	border: 0px;
+}
+
+/* =================== [푸터] =================== */
+
+.fixed-footer {
+	background-color: #333;
+	color: #fff;
+	padding: 15px 0;
+	text-align: center;
+	font-size: 14px;
+	position: relative;
+	left: 0;
+	bottom: 0;
+}
+
+.footer-content {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+}
+
+.social-icons {
+	margin-top: 8px;
+}
+
+.social-icons a {
+	color: #aaa;
+	margin: 0 10px;
+	font-size: 18px;
+	text-decoration: none;
+}
+
+.social-icons a:hover {
+	color: #fff;
+}

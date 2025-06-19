@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>오늘의 뉴스</title>
+</head>
+
+<body>
+	<div th:fragment="mainNews" style="width: 650px;">
+		<!-- 롤링 뉴스 영역 -->
+		<div class="news-container">
+			<div class="rolling-news-box">
+				<ul id="rolling-news"></ul>
+			</div>
+				<section class="main-news-large" id="main-news-article">
+					<p class="loading">주요 뉴스 로드 중...</p>
+				</section>
+
+				<div class="small-news-list-container">
+					<h2>이 시각 주요 뉴스</h2>
+					<ul id="small-news-list">
+						<p class="loading">뉴스 목록 로드 중...</p>
+					</ul>
+				</div>
+			</div>
+			<script>
+				fetch('/api/news.json')
+					.then(response => response.json())
+					.then(data => {
+						const newsContainer = document.getElementById('rolling-news');
+						data.forEach(news => {
+							const li = document.createElement('li');
+							const a = document.createElement('a');
+							a.href = news.link;
+							a.textContent = news.title;
+							a.target = "_blank";
+							li.appendChild(a);
+							newsContainer.appendChild(li);
+						});
+					});
+			</script>
+			<script>
+				let newsData = [];
+
+				async function fetchNewsData() {
+					try {
+						const response = await fetch('/api/news.json');
+						if (!response.ok) {
+							throw new Error(`HTTP error! status: ${response.status}`);
+						}
+						newsData = await response.json();
+						console.log('뉴스 데이터 로드 완료:', newsData);
+
+						if (newsData.length > 0) {
+							renderMainLargeNews(newsData[0]); // 첫 번째 기사를 크게 표시
+							renderSmallNewsList(newsData.slice(1)); // 나머지 기사들을 목록으로 표시
+						} else {
+							document.getElementById('main-news-article').innerHTML = '<p class="no-results">표시할 뉴스가 없습니다.</p>';
+							document.getElementById('small-news-list').innerHTML = '<p class="no-results">표시할 뉴스가 없습니다.</p>';
+						}
+
+					} catch (error) {
+						console.error('뉴스 데이터를 불러오는 데 실패했습니다:', error);
+						document.getElementById('main-news-article').innerHTML = '<p class="error-message">뉴스 데이터를 불러오는 데 실패했습니다.</p>';
+						document.getElementById('small-news-list').innerHTML = '<p class="error-message">뉴스 목록 로드 실패.</p>';
+					}
+				}
+
+				function renderMainLargeNews(newsItem) {
+					const mainArticleDiv = document.getElementById('main-news-article');
+					mainArticleDiv.innerHTML = ''; // 기존 로딩 메시지 제거
+
+					if (!newsItem) {
+						mainArticleDiv.innerHTML = '<p class="no-results">표시할 주요 뉴스가 없습니다.</p>';
+						return;
+					}
+
+					const link = document.createElement('a');
+					link.href = newsItem.link;
+					link.target = '_blank';
+					link.style.textDecoration = 'none';
+					link.style.color = 'inherit';
+
+					const thumbnailContainer = document.createElement('div');
+					thumbnailContainer.className = 'thumbnail-container';
+					const img = document.createElement('img');
+					img.src = newsItem.thumbnail;
+					img.alt = '뉴스 썸네일';
+					img.onerror = function () {this.onerror = null; this.src = 'https://placehold.co/800x250/E0E0E0/555555?text=No+Image';};
+					thumbnailContainer.appendChild(img);
+
+					const textContent = document.createElement('div');
+					textContent.className = 'text-content';
+
+					const title = document.createElement('h2');
+					title.textContent = newsItem.title;
+
+					const description = document.createElement('p');
+					description.textContent = newsItem.description || '';
+
+					const readMoreLink = document.createElement('a');
+					readMoreLink.href = newsItem.link;
+					readMoreLink.target = '_blank';
+					readMoreLink.textContent = '기사 원문 보기';
+					readMoreLink.className = 'read-more';
+
+
+					textContent.appendChild(title);
+					textContent.appendChild(description);
+					textContent.appendChild(readMoreLink);
+
+
+					link.appendChild(thumbnailContainer);
+					link.appendChild(textContent);
+
+					mainArticleDiv.appendChild(link);
+				}
+
+
+				function renderSmallNewsList(newsItems) {
+					const smallNewsListUl = document.getElementById('small-news-list');
+					smallNewsListUl.innerHTML = ''; // 기존 로딩 메시지 제거
+
+					if (newsItems.length === 0) {
+						smallNewsListUl.innerHTML = '<p class="no-results">표시할 뉴스가 없습니다.</p>';
+						return;
+					}
+
+					// 🔥 여기서 개수 제한: 최대 8개만 표시
+					const limitedNewsItems = newsItems.slice(0, 8);
+
+					limitedNewsItems.forEach(news => {
+						const li = document.createElement('li');
+						const a = document.createElement('a');
+						a.href = news.link;
+						a.target = "_blank";
+						a.style.textDecoration = 'none'; /* 밑줄 제거 */
+						a.style.color = 'inherit'; /* 색상 상속 */
+
+						// 썸네일 컨테이너 생성
+						const thumbnailDiv = document.createElement('div');
+						thumbnailDiv.className = 'small-thumbnail';
+						const img = document.createElement('img');
+						img.src = news.thumbnail;
+						img.alt = '뉴스 썸네일';
+						img.onerror = function () {this.onerror = null; this.src = 'https://placehold.co/60x45/E0E0E0/555555?text=No+Image';}; // 작은 대체 이미지
+						thumbnailDiv.appendChild(img);
+
+						// 뉴스 제목 컨테이너 생성
+						const titleSpan = document.createElement('span');
+						titleSpan.className = 'small-news-title';
+						titleSpan.textContent = news.title;
+
+						a.appendChild(thumbnailDiv); // 썸네일 추가
+						a.appendChild(titleSpan);    // 제목 추가
+						li.appendChild(a);
+						smallNewsListUl.appendChild(li);
+					});
+				}
+
+				fetchNewsData();
+
+				const refreshInterval = 60 * 60 * 1000;
+				setTimeout(() => {
+					window.location.reload();
+				}, refreshInterval);
+
+				console.log(`페이지가 ${refreshInterval / 1000 / 60}분 후에 새로고침됩니다.`);
+			</script>
+		</div>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--javascript 키-->
+	<script type="text/javascript" 
+	src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=(키)&autoload=false&libraries=services,clusterer">
+	</script>
+	<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+	<script th:src="@{/js/env.js}" defer></script>
+	<script th:src="@{/js/session.js}" defer></script>
+	<script th:src="@{/js/subway.js}" defer></script>
+    <title>대중교통</title>
+	<link rel="stylesheet" th:href="@{/css/fragments.css}">
+	<link rel="stylesheet" th:href="@{/css/subway.css}">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+	<style>
+		
+	</style>
+</head>
+<body>
+	
+	<!-- 넷바 -->
+	<div th:replace="~{fragments/nav :: mainNav}"></div>
+			
+	<div class="container">
+		
+			<div id="mapWrapper" style="position: relative;">
+				<div id="busInfoPanel"></div>
+		  	    <div id="public-map"></div>
+				<button id="searchHereBtn" style="display: none;">
+					🧭 여기서 검색
+				</button>
+			</div>
+		  	    <div id="public-toolbar">
+		  	      <button onclick="toggleSubwayState()">지하철역</button>
+		  	      <button id="toggleSubway" onclick="toggleSubway()">실시간 지하철</button>
+		  	      <button id="toggleBus" onclick="toggleBusState()">버스정류소</button>
+		  	      <button onclick="clearMap()">🧹 지도<br/>초기화</button>
+		  	    </div>
+	</div>
+	<!-- 푸터 -->
+	<div th:replace="~{fragments/footer :: footer}"></div>
+	<!-- ✅ 실시간 지하철 슬라이드 박스 추가 -->
+	<div id="slideBox" class="slide-box"></div>
+</body>
+</html>
