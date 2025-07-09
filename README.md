@@ -15,11 +15,11 @@
 <div>
   <h2>⚒️사용 기술 및 언어</h2>
   <ul>
-    <li>SpringBoot: JDK17, WAR, Maven</li>
-    <li>Python: Flask, Pandas</li>
-    <li>HTML: ThymeLeaf</li>
-    <li>CSS: BootStrap</li>
-    <li>JS(ES6): Chart.js</li>
+    <li><strong>SpringBoot</strong>: JDK17, WAR, Maven</li>
+    <li><strong>Python</strong>: Flask, Pandas</li>
+    <li><strong>HTML</strong>: ThymeLeaf</li>
+    <li><strong>CSS</strong>: BootStrap</li>
+    <li><strong>JS(ES6)</strong>: Chart.js</li>
   </ul>
 </div>
 <div align="left">
