@@ -14,6 +14,13 @@
 </div>
 <div>
   <h2>⚒️사용 기술 및 언어</h2>
+  <ul>
+    <li>SpringBoot: JDK17, WAR, Maven</li>
+    <li>Python: Flask, Pandas</li>
+    <li>HTML: ThymeLeaf</li>
+    <li>CSS: BootStrap</li>
+    <li>JS(ES6): Chart.js</li>
+  </ul>
 </div>
 <div align="left">
   <h2>🎥시연영상: https://youtu.be/Sket4iKwSU4</h2>
